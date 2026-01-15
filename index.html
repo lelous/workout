@@ -30,24 +30,14 @@
             --shadow: rgba(233, 69, 96, 0.3);
             --glow: 0 0 20px rgba(233, 69, 96, 0.6);
         }
-        
-        [data-theme="light"] {
-            --bg-primary: #f0e6ff;
-            --bg-secondary: #ffffff;
-            --bg-accent: #e8d5ff;
-            --text-primary: #2d1b4e;
-            --text-secondary: #5a4078;
-            --text-tertiary: #8a7099;
-            --border-color: #e94560;
-            --shadow: rgba(233, 69, 96, 0.2);
-        }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-        
+
         body {
             font-family: 'Orbitron', sans-serif;
             background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
@@ -56,574 +46,153 @@
             color: var(--text-primary);
             overflow-x: hidden;
         }
-        
+
+        /* RPG Grid Background */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(233, 69, 96, 0.03) 2px, rgba(233, 69, 96, 0.03) 4px);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(233, 69, 96, 0.03) 2px, rgba(233, 69, 96, 0.03) 4px);
             pointer-events: none;
             z-index: 1;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #e94560 0%, #c7315a 100%);
             color: white;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 20px var(--shadow), inset 0 -3px 0 rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 4px solid var(--gold);
-            position: relative;
         }
-        
-        .header::before {
-            content: '⚔️';
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-            animation: float 2s ease-in-out infinite;
-        }
-        
-        .header::after {
-            content: '⚔️';
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%) scaleX(-1);
-            font-size: 24px;
-            animation: float 2s ease-in-out infinite;
-            animation-delay: 1s;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(-50%) translateY(0px); }
-            50% { transform: translateY(-50%) translateY(-10px); }
-        }
-        
+
         .header h1 {
             font-family: 'Press Start 2P', cursive;
-            font-size: 16px;
-            font-weight: 700;
-            text-shadow: 3px 3px 0 rgba(0,0,0,0.5), 0 0 20px rgba(255,215,0,0.5);
-            letter-spacing: 2px;
+            font-size: 14px;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
         }
-        
-        .header-actions {
-            position: absolute;
-            right: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            gap: 8px;
-        }
-        
-        .icon-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.5);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.3s;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        
-        .icon-btn:hover {
-            background: rgba(255,255,255,0.3);
-            box-shadow: 0 0 20px rgba(255,215,0,0.6);
-            transform: scale(1.1);
-        }
-        
-        .back-btn {
-            position: absolute;
-            left: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.5);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 700;
-        }
-        
-        .back-btn:hover {
-            background: rgba(255,255,255,0.3);
-            box-shadow: 0 0 20px rgba(255,215,0,0.6);
-        }
-        
+
         .container {
-            padding: 20px;
+            padding: 15px;
             max-width: 600px;
             margin: 0 auto;
             position: relative;
             z-index: 2;
         }
-        
+
         .card {
             background: var(--bg-secondary);
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 0 0 2px var(--border-color);
             position: relative;
-            overflow: hidden;
         }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            animation: shimmer 3s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .card h2 {
-            font-size: 18px;
-            margin-bottom: 12px;
-            color: var(--gold);
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .card h3 {
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-weight: 700;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-        
-        .exercise-description {
-            background: var(--bg-accent);
-            padding: 12px;
-            border-radius: 8px;
-            margin: 12px 0;
-            font-size: 12px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-            border-left: 3px solid var(--primary);
-        }
-        
-        .description-title {
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: 3px solid var(--primary);
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 12px;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Orbitron', sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::before {
-            content: '▶';
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover::before {
-            opacity: 1;
-            left: 15px;
-        }
-        
-        .btn:active {
-            transform: scale(0.95);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+
+        /* iOS INPUT FIXES */
+        input[type="number"], input[type="text"], textarea {
+            font-size: 16px !important; /* Prevents iOS Zoom */
+            background: var(--bg-primary);
             color: white;
-            box-shadow: 0 4px 15px var(--shadow), inset 0 -3px 0 rgba(0,0,0,0.3);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'Orbitron', sans-serif;
+            -webkit-appearance: none;
+            appearance: none;
         }
-        
-        .btn-primary:hover {
-            box-shadow: 0 0 30px var(--glow), inset 0 -3px 0 rgba(0,0,0,0.3);
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
-            color: #000;
-            box-shadow: 0 4px 15px rgba(0,255,136,0.4), inset 0 -3px 0 rgba(0,0,0,0.3);
-            border-color: var(--success);
-        }
-        
-        .btn-success:hover {
-            box-shadow: 0 0 30px rgba(0,255,136,0.8), inset 0 -3px 0 rgba(0,0,0,0.3);
-        }
-        
-        .btn-secondary {
-            background: var(--bg-accent);
-            color: var(--text-primary);
-            border-color: var(--text-tertiary);
-        }
-        
-        .day-card {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 0 0 2px var(--primary);
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 6px solid var(--gold);
-            position: relative;
-        }
-        
-        .day-card::after {
-            content: '▶';
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gold);
-            font-size: 20px;
-            transition: all 0.3s;
-        }
-        
-        .day-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 6px 30px rgba(233,69,96,0.6), inset 0 0 0 2px var(--gold);
-        }
-        
-        .day-card:hover::after {
-            right: 15px;
-        }
-        
-        .day-card:active {
-            transform: translateX(5px) scale(0.98);
-        }
-        
-        .day-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--gold);
-            text-transform: uppercase;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-            letter-spacing: 1px;
-        }
-        
-        .day-focus {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-        
+
         .set-row {
             display: flex;
             gap: 8px;
             align-items: center;
             margin-bottom: 10px;
-            position: relative;
             background: var(--bg-accent);
             padding: 8px;
             border-radius: 8px;
-            border: 2px solid transparent;
-            transition: all 0.3s;
         }
-        
-        .set-row:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(233,69,96,0.3);
+
+        .set-input {
+            width: 75px;
+            text-align: center;
+            font-weight: bold;
         }
-        
+
         .set-label {
             width: 50px;
-            font-weight: 700;
+            font-size: 10px;
             color: var(--gold);
-            font-size: 12px;
-            flex-shrink: 0;
-            text-transform: uppercase;
+            font-family: 'Press Start 2P';
         }
-        
-        .set-input {
-            width: 70px;
-            padding: 10px 8px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            text-align: center;
-            font-size: 16px;
-            flex-shrink: 0;
+
+        /* BOSS BAR */
+        .boss-container {
+            position: sticky;
+            top: 75px;
+            z-index: 50;
             background: var(--bg-secondary);
-            color: var(--text-primary);
+            border: 2px solid var(--gold);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .hp-bar-bg {
+            width: 100%;
+            height: 15px;
+            background: #000;
+            border: 1px solid #fff;
+            margin-top: 5px;
+        }
+
+        .hp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff4757);
+            transition: width 0.4s ease-out;
+            box-shadow: 0 0 10px #ff0000;
+        }
+
+        /* SHAKE ANIMATION */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px); }
+            25% { transform: translate(-1px, -1px); }
+            50% { transform: translate(-1px, 1px); }
+            75% { transform: translate(1px, -1px); }
+            100% { transform: translate(0, 0); }
+        }
+        .hit-shake { animation: shake 0.2s; }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
             font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
-        
-        .set-input:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 15px rgba(255,215,0,0.5);
-        }
-        
-        .set-note-btn {
-            background: var(--bg-accent);
-            border: 2px solid var(--primary);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 14px;
-            color: var(--gold);
-            cursor: pointer;
-            margin-left: 4px;
-            transition: all 0.3s;
-        }
-        
-        .set-note-btn:hover {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 0 15px rgba(233,69,96,0.6);
-        }
-        
-        .last-workout {
-            font-size: 10px;
-            color: var(--text-tertiary);
-            margin-top: 4px;
-            font-style: italic;
-        }
-        
-        .pr-badge {
-            background: var(--gold);
-            color: #000;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            margin-left: 8px;
+            font-weight: bold;
             text-transform: uppercase;
-            animation: pulse-gold 2s infinite;
+            cursor: pointer;
+            margin-top: 10px;
         }
-        
-        @keyframes pulse-gold {
-            0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.5); }
-            50% { box-shadow: 0 0 20px rgba(255,215,0,1); }
-        }
-        
-        .timer-display {
-            position: fixed;
-            bottom: 110px;
-            right: 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 50%;
-            font-size: 18px;
-            font-weight: 700;
-            box-shadow: 0 8px 30px var(--shadow), inset 0 0 0 3px var(--gold);
-            z-index: 90;
-            min-width: 80px;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Press Start 2P', cursive;
-            border: 4px solid var(--gold);
-        }
-        
-        .timer-display.finished {
-            background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
-            animation: victory-pulse 0.5s infinite;
-        }
-        
-        @keyframes victory-pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(0,255,136,0.8); }
-            50% { transform: scale(1.1); box-shadow: 0 0 50px rgba(0,255,136,1); }
-        }
-        
+
+        .btn-success { background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%); color: #000; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #fff; }
+
         .nav {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-            border-top: 3px solid var(--border-color);
+            bottom: 0; left: 0; right: 0;
+            background: var(--bg-secondary);
             display: flex;
             justify-content: space-around;
-            padding: 12px 8px;
-            box-shadow: 0 -4px 30px rgba(0,0,0,0.8);
+            padding: 10px;
+            border-top: 2px solid var(--primary);
+            z-index: 1000;
         }
-        
-        .nav-btn {
-            background: none;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.3s;
-            min-width: 60px;
-            position: relative;
-        }
-        
-        .nav-btn.active {
-            background: var(--bg-accent);
-            box-shadow: 0 0 20px rgba(233,69,96,0.5), inset 0 0 0 2px var(--primary);
-        }
-        
-        .nav-btn.active::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 3px;
-            background: var(--gold);
-            border-radius: 0 0 3px 3px;
-        }
-        
-        .nav-icon {
-            font-size: 20px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-        
-        .nav-label {
-            font-size: 9px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .nav-btn.active .nav-label {
-            color: var(--gold);
-        }
-        
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .stat-card {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 0 0 2px var(--primary);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gold);
-        }
-        
-        .stat-value {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--gold) 0%, #ffed4e 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-            font-family: 'Press Start 2P', cursive;
-        }
-        
-        .stat-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            margin-top: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-        
-        textarea, input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            transition: all 0.3s;
-        }
-        
-        textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 20px rgba(255,215,0,0.4);
-        }
-        
-        .info-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--gold) 0%, #ffed4e 100%);
-            color: #000;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-top: 8px;
-            text-transform: uppercase;
-            box-shadow: 0 2px 10px rgba(255,215,0,0.5);
-        }
-        
-        /* Level up animation */
-        @keyframes levelUp {
-            0% { transform: scale(0) rotate(0deg); opacity: 0; }
-            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
-            100% { transform: scale(1) rotate(360deg); opacity: 1; }
-        }
-        
-        .level-up {
-            animation: levelUp 0.5s ease-out;
-        }
+
+        .nav-btn { background: none; border: none; color: var(--text-secondary); font-size: 20px; text-align: center; }
+        .nav-btn.active { color: var(--gold); }
     </style>
 </head>
 <body>
@@ -632,1180 +201,145 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Workout data with descriptions
         const WORKOUTS = {
-            monday: {
-                name: "Upper Push + Core",
-                focus: "Chest, Shoulders, Triceps",
-                exercises: [
-                    { name: "Flat Barbell Bench Press", sets: 4, reps: "6-8", rest: 240, description: "Lie on flat bench, feet flat on floor. Lower bar to mid-chest, press up. Keep shoulder blades retracted. Control the descent, explosive press." },
-                    { name: "Incline Dumbbell Press", sets: 3, reps: "8-10", rest: 180, description: "Set bench to 30-45°. Press dumbbells up from chest level. Elbows at 45° angle. Squeeze chest at top." },
-                    { name: "Standing Overhead Press", sets: 4, reps: "6-8", rest: 180, description: "Stand with barbell at shoulders. Press overhead, lock out arms. Keep core tight. Bar path straight up and down." },
-                    { name: "Cable Flyes", sets: 3, reps: "12-15", rest: 90, description: "Set cables at chest height. Bring handles together in front of chest. Slight bend in elbows. Squeeze chest hard." },
-                    { name: "Lateral Raises", sets: 3, reps: "12-15", rest: 60, description: "Raise dumbbells out to sides until parallel to floor. Lead with elbows. Control on the way down. Don't swing." },
-                    { name: "Dips", sets: 3, reps: "8-12", rest: 120, description: "Lean forward slightly for chest emphasis. Lower until upper arms parallel to floor. Don't bounce at bottom." },
-                    { name: "Tricep Pushdowns", sets: 3, reps: "12-15", rest: 60, description: "Keep elbows pinned to sides. Push down until arms fully extended. Squeeze triceps at bottom. Control the return." },
-                    { name: "Cable Woodchops", sets: 3, reps: "12/side", rest: 45, description: "Stand sideways to cable. Pull from high to low across body. Rotate through core, not just arms. Control the movement." },
-                    { name: "Hanging Leg Raises", sets: 3, reps: "10-15", rest: 60, description: "Hang from bar. Raise legs to 90°. Keep legs straight if possible. Control the swing. Lower abs pull legs up." }
-                ]
-            },
-            tuesday: {
-                name: "Lower + Core",
-                focus: "Quads, Hamstrings, Glutes",
-                exercises: [
-                    { name: "Squats", sets: 4, reps: "6-8", rest: 240, description: "Feet shoulder-width. Sit back and down. Knees track over toes. Chest up. Drive through heels. ACL: Control depth, stop before pain." },
-                    { name: "Romanian Deadlifts", sets: 4, reps: "8-10", rest: 180, description: "Slight knee bend. Hinge at hips. Push hips back. Feel stretch in hamstrings. Keep bar close to legs. Neutral spine." },
-                    { name: "Bulgarian Split Squats", sets: 3, reps: "10-12/leg", rest: 120, description: "Rear foot elevated on bench. Lower front knee to 90°. Torso upright. Drive through front heel. ACL: Control descent, reduce weight if needed." },
-                    { name: "Leg Press", sets: 3, reps: "12-15", rest: 120, description: "Feet shoulder-width on platform. Lower until knees at 90°. Push through heels. Don't lock out knees at top." },
-                    { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Curl heels toward glutes. Squeeze hamstrings at top. Control the lowering phase. Keep hips down on pad." },
-                    { name: "Walking Lunges", sets: 3, reps: "12/leg", rest: 90, description: "Step forward, lower back knee toward ground. Front knee stays over ankle. Push through front heel. ACL: Bodyweight or light dumbbells only." },
-                    { name: "Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Rise up on balls of feet. Full range of motion. Hold squeeze at top. Control the descent. Stretch at bottom." },
-                    { name: "Med Ball Slams", sets: 3, reps: "10/side", rest: 45, description: "Rotate and slam ball to outside of foot. Pick up, rotate other way. Explosive movement. Engage obliques." },
-                    { name: "Pallof Press", sets: 3, reps: "12/side", rest: 60, description: "Stand sideways to cable at chest height. Press straight out. Resist rotation. Hold briefly. Return to chest." }
-                ]
-            },
-            thursday: {
-                name: "Upper Pull + Core",
-                focus: "Back, Rear Delts",
-                exercises: [
-                    { name: "Pull-Ups", sets: 4, reps: "6-10", rest: 180, description: "Hands slightly wider than shoulders. Pull chest to bar. Lead with chest. Full extension at bottom. Vary grip: overhand (lats), neutral (biceps), chin-ups (max biceps)." },
-                    { name: "T-Bar Rows", sets: 4, reps: "8-10", rest: 180, description: "Stand on platform for better ROM. Hinge at hips. Pull to lower chest. Squeeze shoulder blades. Keep chest up." },
-                    { name: "Barbell/DB Rows", sets: 4, reps: "8-12", rest: 180, description: "Barbell: underhand for biceps, overhand for lats. Dumbbell: better ROM, unilateral. Pull to hip/lower chest. Retract shoulder blades." },
-                    { name: "Cable Rows", sets: 3, reps: "10-12", rest: 120, description: "Sit upright. Pull handle to lower chest. Squeeze shoulder blades. Full stretch forward. Constant tension." },
-                    { name: "Face Pulls", sets: 3, reps: "15-20", rest: 90, description: "Rope attachment. Pull to face level. External rotation at end. Elbows high. Critical for shoulder health." },
-                    { name: "Chest-Supported Rows", sets: 3, reps: "12-15", rest: 90, description: "Set bench to 30-45° incline. Lie chest-down. Pull dumbbells or handles to lower chest. Squeeze shoulder blades hard at top. Control the negative. Removes lower back fatigue." },
-                    { name: "Cable Oblique Twists", sets: 3, reps: "12/side", rest: 45, description: "Single handle at chest. Stand sideways. Pull across body. Focus on oblique contraction, not arm pull." },
-                    { name: "RKC Plank", sets: 3, reps: "30-45 sec", rest: 60, description: "Regular plank position. Maximum tension - squeeze glutes, quads. Pull elbows toward toes. Full-body tension. Harder than regular plank." }
-                ]
-            },
-            friday: {
-                name: "Lower + Core",
-                focus: "Quads, Hamstrings, Glutes",
-                exercises: [
-                    { name: "Front/Goblet Squat", sets: 4, reps: "8-10", rest: 180, description: "Front: bar racked on front delts. Goblet: hold dumbbell at chest. Torso upright. Elbows up. ACL: Control tempo, stop before pain." },
-                    { name: "Leg Press", sets: 4, reps: "10-12", rest: 120, description: "Feet shoulder-width, mid-platform. Lower to 90°. Push through full foot. Don't lock knees. Control the weight." },
-                    { name: "Hack Squat", sets: 3, reps: "12-15", rest: 90, description: "Shoulders under pads. Feet forward on platform. Lower controlled. Drive through heels. Quad focus. ACL: Skip leg extensions if issue, add extra hack squats." },
-                    { name: "Stiff-Leg Deadlifts", sets: 3, reps: "10-12", rest: 120, description: "Slight knee bend throughout. Hinge at hips. Feel stretch in hamstrings. Keep back flat. Bar stays close to legs." },
-                    { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Lying or seated. Curl heels to glutes. Squeeze at top. Slow negative. Focus on hamstring contraction." },
-                    { name: "Reverse Lunges", sets: 3, reps: "10/leg", rest: 90, description: "Hold goblet dumbbell. Step back. Lower back knee down. Front knee stays over ankle. Push through front heel. ACL: Slower tempo, more control." },
-                    { name: "Seated Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Knees bent targets soleus. Full ROM. Hold top squeeze. Slow controlled negative. Deep stretch at bottom." },
-                    { name: "Copenhagen Plank", sets: 3, reps: "20-30 sec/side", rest: 60, description: "Side plank. Top foot on bench. Bottom leg hovering. Intense adductor and oblique work. Modification: bottom knee can touch ground." },
-                    { name: "Mountain Climbers", sets: 3, reps: "20 total", rest: 45, description: "Plank position. Drive knees to chest alternating. Keep hips level. Controlled movement. Dynamic core and hip flexor work." }
-                ]
-            }
+            monday: { name: "Upper Push", focus: "Chest/Shoulders", exercises: [{ name: "Bench Press", sets: 3, reps: "8-10", rest: 90, description: "Keep elbows at 45 degrees." }, { name: "Overhead Press", sets: 3, reps: "8-10", rest: 90, description: "Core tight, full lockout." }] },
+            tuesday: { name: "Lower Body", focus: "Quads/Hams", exercises: [{ name: "Squats", sets: 4, reps: "6-8", rest: 120, description: "Chest up, drive through heels." }] },
+            thursday: { name: "Upper Pull", focus: "Back/Biceps", exercises: [{ name: "Pull Ups", sets: 3, reps: "MAX", rest: 90, description: "Chin over bar." }] },
+            friday: { name: "Lower Body 2", focus: "Glutes/Legs", exercises: [{ name: "Deadlifts", sets: 3, reps: "5", rest: 180, description: "Flat back, pull slack out of bar." }] }
         };
 
         function App() {
             const [view, setView] = useState('home');
             const [selectedDay, setSelectedDay] = useState(null);
             const [workoutLog, setWorkoutLog] = useState({});
-            const [customWorkouts, setCustomWorkouts] = useState(WORKOUTS);
-            const [measurements, setMeasurements] = useState([]);
-            const [personalRecords, setPersonalRecords] = useState({});
-            const [darkMode, setDarkMode] = useState(true);
-            const [loading, setLoading] = useState(true);
-
-            useEffect(() => {
-                const savedLog = localStorage.getItem('workouts');
-                const savedCustom = localStorage.getItem('custom-workouts');
-                const savedMeasurements = localStorage.getItem('measurements');
-                const savedPRs = localStorage.getItem('personal-records');
-                const savedDarkMode = localStorage.getItem('dark-mode');
-                
-                if (savedLog) {
-                    try { setWorkoutLog(JSON.parse(savedLog)); } catch (e) {}
-                }
-                if (savedCustom) {
-                    try { setCustomWorkouts(JSON.parse(savedCustom)); } catch (e) {}
-                }
-                if (savedMeasurements) {
-                    try { setMeasurements(JSON.parse(savedMeasurements)); } catch (e) {}
-                }
-                if (savedPRs) {
-                    try { setPersonalRecords(JSON.parse(savedPRs)); } catch (e) {}
-                }
-                if (savedDarkMode === 'false') {
-                    setDarkMode(false);
-                    document.documentElement.setAttribute('data-theme', 'light');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                }
-                
-                setLoading(false);
-            }, []);
-
-            useEffect(() => {
-                if (!loading) {
-                    localStorage.setItem('workouts', JSON.stringify(workoutLog));
-                    localStorage.setItem('custom-workouts', JSON.stringify(customWorkouts));
-                    localStorage.setItem('measurements', JSON.stringify(measurements));
-                    localStorage.setItem('personal-records', JSON.stringify(personalRecords));
-                    localStorage.setItem('dark-mode', darkMode);
-                }
-            }, [workoutLog, customWorkouts, measurements, personalRecords, darkMode, loading]);
-
-            const toggleDarkMode = () => {
-                setDarkMode(!darkMode);
-                document.documentElement.setAttribute('data-theme', !darkMode ? 'dark' : 'light');
-            };
-
-            if (loading) {
-                return <div className="container"><h2 style={{textAlign: 'center', color: 'var(--gold)'}}>⚔️ Loading Quest... ⚔️</h2></div>;
-            }
-
+            
             return (
                 <div>
-                    <Header 
-                        view={view} 
-                        setView={setView} 
-                        setSelectedDay={setSelectedDay}
-                        darkMode={darkMode}
-                        toggleDarkMode={toggleDarkMode}
-                    />
+                    <div className="header">
+                        <h1>{view === 'workout' ? '⚔️ ACTIVE QUEST ⚔️' : '⚔️ WORKOUT QUEST ⚔️'}</h1>
+                    </div>
                     
                     <div className="container">
-                        {view === 'home' && <Home setView={setView} workoutLog={workoutLog} />}
-                        {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} customWorkouts={customWorkouts} personalRecords={personalRecords} setPersonalRecords={setPersonalRecords} />}
-                        {view === 'stats' && <Stats workoutLog={workoutLog} customWorkouts={customWorkouts} />}
-                        {view === 'measurements' && <Measurements measurements={measurements} setMeasurements={setMeasurements} />}
-                        {view === 'edit' && <EditWorkouts customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} setView={setView} />}
-                        {view === 'history' && <History workoutLog={workoutLog} customWorkouts={customWorkouts} />}
+                        {view === 'home' && <Home setView={setView} />}
+                        {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} setView={setView} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} />}
                     </div>
 
-                    <Nav view={view} setView={setView} />
-                </div>
-            );
-        }
-
-        function Header({ view, setView, setSelectedDay, darkMode, toggleDarkMode }) {
-            const titles = {
-                home: '⚔️ WORKOUT QUEST ⚔️',
-                workout: '⚔️ BATTLE LOG ⚔️',
-                stats: '📊 STATS & RECORDS 📊',
-                measurements: '📏 HERO STATUS 📏',
-                edit: '⚙️ QUEST EDITOR ⚙️',
-                history: '📜 QUEST LOG 📜'
-            };
-
-            const exportData = () => {
-                const data = {
-                    workouts: JSON.parse(localStorage.getItem('workouts') || '{}'),
-                    measurements: JSON.parse(localStorage.getItem('measurements') || '[]'),
-                    personalRecords: JSON.parse(localStorage.getItem('personal-records') || '{}')
-                };
-                
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `workout-quest-data-${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                
-                alert('⚔️ Quest data exported! ⚔️');
-            };
-
-            return (
-                <div className="header" style={{position: 'relative'}}>
-                    {view !== 'home' && (
-                        <button className="back-btn" onClick={() => { setView('home'); setSelectedDay(null); }}>
-                            ◀ BACK
-                        </button>
-                    )}
-                    <h1>{titles[view]}</h1>
-                    <div className="header-actions">
-                        <button className="icon-btn" onClick={toggleDarkMode} title="Toggle Theme">
-                            {darkMode ? '☀️' : '🌙'}
-                        </button>
-                        {view === 'home' && (
-                            <button className="icon-btn" onClick={exportData} title="Export Data">
-                                💾
-                            </button>
-                        )}
+                    <div className="nav">
+                        <button className={`nav-btn ${view === 'home' ? 'active' : ''}`} onClick={() => setView('home')}>🏠</button>
+                        <button className={`nav-btn ${view === 'workout' ? 'active' : ''}`} onClick={() => setView('workout')}>⚔️</button>
                     </div>
                 </div>
             );
         }
 
-        function Nav({ view, setView }) {
-            return (
-                <div className="nav">
-                    <button className={`nav-btn ${view === 'home' ? 'active' : ''}`} onClick={() => setView('home')}>
-                        <div className="nav-icon">🏠</div>
-                        <div className="nav-label">Home</div>
-                    </button>
-                    <button className={`nav-btn ${view === 'workout' ? 'active' : ''}`} onClick={() => setView('workout')}>
-                        <div className="nav-icon">⚔️</div>
-                        <div className="nav-label">Battle</div>
-                    </button>
-                    <button className={`nav-btn ${view === 'stats' ? 'active' : ''}`} onClick={() => setView('stats')}>
-                        <div className="nav-icon">📊</div>
-                        <div className="nav-label">Stats</div>
-                    </button>
-                    <button className={`nav-btn ${view === 'measurements' ? 'active' : ''}`} onClick={() => setView('measurements')}>
-                        <div className="nav-icon">💪</div>
-                        <div className="nav-label">Hero</div>
-                    </button>
-                    <button className={`nav-btn ${view === 'history' ? 'active' : ''}`} onClick={() => setView('history')}>
-                        <div className="nav-icon">📜</div>
-                        <div className="nav-label">Log</div>
-                    </button>
-                </div>
-            );
-        }
-
-        function Home({ setView, workoutLog }) {
-            const today = new Date().toISOString().split('T')[0];
-            const todayWorkout = workoutLog[today];
-
-            const currentWeek = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 1)) / (1000 * 60 * 60 * 24 * 7));
-            const weekWorkouts = Object.keys(workoutLog).filter(key => {
-                const logDate = new Date(key);
-                const logWeek = Math.floor((logDate - new Date(logDate.getFullYear(), 0, 1)) / (1000 * 60 * 60 * 24 * 7));
-                return logWeek === currentWeek && workoutLog[key].completed;
-            }).length;
-
-            let streak = 0;
-            const dates = Object.keys(workoutLog).sort().reverse();
-            for (let i = 0; i < dates.length; i++) {
-                const date = new Date(dates[i]);
-                const expected = new Date();
-                expected.setDate(expected.getDate() - i);
-                if (date.toISOString().split('T')[0] === expected.toISOString().split('T')[0]) {
-                    if (workoutLog[dates[i]].completed) streak++;
-                    else break;
-                } else break;
-            }
-
+        function Home({ setView }) {
             return (
                 <div>
-                    <div className="stat-grid">
-                        <div className="stat-card">
-                            <div className="stat-value">{weekWorkouts}/5</div>
-                            <div className="stat-label">Weekly Quests</div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-value" style={{WebkitTextFillColor: todayWorkout?.completed ? '#00ff88' : '#666'}}>
-                                {todayWorkout?.completed ? '✓' : '—'}
-                            </div>
-                            <div className="stat-label">Today</div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-value">{streak} 🔥</div>
-                            <div className="stat-label">Day Streak</div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-value">{Object.keys(workoutLog).length}</div>
-                            <div className="stat-label">Total Battles</div>
-                        </div>
-                    </div>
-
-                    <button className="btn btn-primary" onClick={() => setView('workout')}>
-                        ⚔️ Begin Battle
-                    </button>
-
-                    <button className="btn btn-success" onClick={() => setView('stats')}>
-                        📊 View Records
-                    </button>
-
                     <div className="card">
-                        <h2>⚔️ Weekly Quest Schedule</h2>
-                        <div style={{fontSize: '13px', lineHeight: '2', color: 'var(--text-secondary)'}}>
-                            <div><strong style={{color: 'var(--gold)'}}>Monday:</strong> Upper Push + Core</div>
-                            <div><strong style={{color: 'var(--gold)'}}>Tuesday:</strong> Lower + Core</div>
-                            <div><strong style={{color: 'var(--gold)'}}>Wednesday:</strong> Cardio + Mobility</div>
-                            <div><strong style={{color: 'var(--gold)'}}>Thursday:</strong> Upper Pull + Core</div>
-                            <div><strong style={{color: 'var(--gold)'}}>Friday:</strong> Lower + Core</div>
-                        </div>
+                        <h2 style={{color: 'var(--gold)', fontSize: '14px', marginBottom: '10px'}}>WELCOME, WARRIOR</h2>
+                        <p style={{fontSize: '12px', color: 'var(--text-secondary)'}}>Your journey to the Iron Throne begins here.</p>
                     </div>
-
-                    <div className="card">
-                        <h2>🎯 Daily Targets</h2>
-                        <div style={{fontSize: '13px', lineHeight: '2', color: 'var(--text-secondary)'}}>
-                            <div>Protein: <strong style={{color: 'var(--gold)'}}>220g</strong></div>
-                            <div>Calories: <strong style={{color: 'var(--gold)'}}>2,400-2,500</strong></div>
-                            <div>Carbs: <strong style={{color: 'var(--gold)'}}>200-220g</strong> (training)</div>
-                            <div>Fats: <strong style={{color: 'var(--gold)'}}>70-80g</strong></div>
-                        </div>
-                    </div>
+                    <button className="btn btn-primary" onClick={() => setView('workout')}>Begin New Battle</button>
                 </div>
             );
         }
-        
-        function Workout({ selectedDay, setSelectedDay, workoutLog, setWorkoutLog, customWorkouts, personalRecords, setPersonalRecords }) {
+
+        function Workout({ selectedDay, setSelectedDay, setView, workoutLog, setWorkoutLog }) {
             const [sets, setSets] = useState([]);
-            const [notes, setNotes] = useState('');
-            const [expandedEx, setExpandedEx] = useState({});
-            const [editMode, setEditMode] = useState(false);
-            const [workoutExercises, setWorkoutExercises] = useState([]);
-            const [timer, setTimer] = useState(null);
-            const [restTime, setRestTime] = useState(0);
-            const [showPlateCalc, setShowPlateCalc] = useState(false);
-            const [plateCalcWeight, setPlateCalcWeight] = useState('');
-            const timerRef = useRef(null);
+            const [isHitting, setIsHitting] = useState(false);
 
             useEffect(() => {
                 if (selectedDay) {
-                    const workout = customWorkouts[selectedDay];
-                    setWorkoutExercises([...workout.exercises]);
-                    
-                    const lastWorkout = getLastWorkout(selectedDay);
-                    
+                    const workout = WORKOUTS[selectedDay];
                     setSets(workout.exercises.map(ex => ({
                         name: ex.name,
-                        logs: Array(ex.sets).fill().map(() => ({ reps: '', weight: '', note: '' }))
+                        logs: Array(ex.sets).fill().map(() => ({ reps: '', weight: '' }))
                     })));
-                    setExpandedEx({});
-                    setEditMode(false);
                 }
-            }, [selectedDay, customWorkouts]);
+            }, [selectedDay]);
 
-            useEffect(() => {
-                if (timer !== null) {
-                    if (restTime > 0) {
-                        timerRef.current = setTimeout(() => {
-                            setRestTime(restTime - 1);
-                        }, 1000);
-                    } else if (restTime === 0 && timer !== null) {
-                        if (navigator.vibrate) {
-                            navigator.vibrate([200, 100, 200]);
-                        }
-                    }
-                }
-                return () => clearTimeout(timerRef.current);
-            }, [restTime, timer]);
-
-            const getLastWorkout = (day) => {
-                const dates = Object.keys(workoutLog).sort().reverse();
-                for (let date of dates) {
-                    if (workoutLog[date].day === day) {
-                        return workoutLog[date];
-                    }
-                }
-                return null;
-            };
-
-            const startRestTimer = (seconds) => {
-                setRestTime(seconds);
-                setTimer(Date.now());
-            };
-
-            const stopTimer = () => {
-                setTimer(null);
-                setRestTime(0);
-            };
-
-            const checkPR = (exerciseName, weight, reps) => {
-                const key = exerciseName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-                const oneRM = calculate1RM(parseFloat(weight), parseInt(reps));
-                const currentPR = personalRecords[key] || 0;
-                
-                if (oneRM > currentPR) {
-                    setPersonalRecords({
-                        ...personalRecords,
-                        [key]: oneRM
-                    });
-                    return true;
-                }
-                return false;
-            };
-
-            const calculate1RM = (weight, reps) => {
-                if (reps === 1) return weight;
-                return weight * (1 + reps / 30);
-            };
-
-            const calculatePlates = (weight) => {
-                const barWeight = 45;
-                const perSide = (weight - barWeight) / 2;
-                const plates = [45, 25, 10, 5, 2.5];
-                const result = [];
-                let remaining = perSide;
-                
-                for (let plate of plates) {
-                    const count = Math.floor(remaining / plate);
-                    if (count > 0) {
-                        result.push(`${plate}lb × ${count}`);
-                        remaining -= plate * count;
-                    }
-                }
-                
-                return result.length > 0 ? result.join(' + ') : 'No plates needed';
+            const triggerHaptic = () => {
+                if (navigator.vibrate) navigator.vibrate(40);
+                setIsHitting(true);
+                setTimeout(() => setIsHitting(false), 200);
             };
 
             if (!selectedDay) {
                 return (
                     <div>
-                        <h2 style={{marginBottom: '20px', fontSize: '16px', textAlign: 'center', color: 'var(--gold)', textTransform: 'uppercase'}}>⚔️ Select Your Quest ⚔️</h2>
-                        {Object.entries(customWorkouts).map(([key, workout]) => (
-                            <div key={key} className="day-card" onClick={() => setSelectedDay(key)}>
-                                <div className="day-name">{key}</div>
-                                <div className="day-focus">{workout.name}</div>
+                        <h3 style={{textAlign: 'center', marginBottom: '15px'}}>CHOOSE YOUR PATH</h3>
+                        {Object.keys(WORKOUTS).map(day => (
+                            <div key={day} className="card" onClick={() => setSelectedDay(day)} style={{cursor: 'pointer', borderLeft: '5px solid var(--gold)'}}>
+                                <strong style={{textTransform: 'uppercase'}}>{day}</strong> - {WORKOUTS[day].name}
                             </div>
                         ))}
                     </div>
                 );
             }
 
-            const workout = customWorkouts[selectedDay];
-            const lastWorkout = getLastWorkout(selectedDay);
-
-            const saveWorkout = () => {
-                const today = new Date().toISOString().split('T')[0];
-                
-                let newPRs = [];
-                sets.forEach((exercise, idx) => {
-                    exercise.logs.forEach(log => {
-                        if (log.reps && log.weight) {
-                            if (checkPR(exercise.name, log.weight, log.reps)) {
-                                newPRs.push(exercise.name);
-                            }
-                        }
-                    });
-                });
-                
-                setWorkoutLog({
-                    ...workoutLog,
-                    [today]: {
-                        day: selectedDay,
-                        exercises: sets,
-                        notes,
-                        completed: true,
-                        timestamp: new Date().toISOString()
-                    }
-                });
-                
-                stopTimer();
-                setSelectedDay(null);
-                
-                if (newPRs.length > 0) {
-                    alert(`🎉 NEW RECORD! 🎉\n${newPRs.join(', ')}\n⚔️ LEVEL UP! ⚔️`);
-                } else {
-                    alert('⚔️ QUEST COMPLETE! ⚔️\nVictory is yours, warrior! 💪');
-                }
-            };
-
-            const toggleDescription = (idx) => {
-                setExpandedEx({...expandedEx, [idx]: !expandedEx[idx]});
-            };
-
-            const removeExercise = (idx) => {
-                if (confirm('Remove this challenge from today\'s quest?')) {
-                    const newExercises = workoutExercises.filter((_, i) => i !== idx);
-                    const newSets = sets.filter((_, i) => i !== idx);
-                    setWorkoutExercises(newExercises);
-                    setSets(newSets);
-                }
-            };
-
-            const addQuickExercise = () => {
-                const name = prompt('Challenge name:');
-                if (!name) return;
-                
-                const setsCount = prompt('How many battles?', '3');
-                if (!setsCount) return;
-
-                const newEx = {
-                    name: name,
-                    sets: parseInt(setsCount),
-                    reps: '10-12',
-                    rest: 90,
-                    description: ''
-                };
-
-                setWorkoutExercises([...workoutExercises, newEx]);
-                setSets([...sets, {
-                    name: name,
-                    logs: Array(parseInt(setsCount)).fill().map(() => ({ reps: '', weight: '', note: '' }))
-                }]);
-            };
+            const totalSets = sets.reduce((s, ex) => s + ex.logs.length, 0);
+            const doneSets = sets.reduce((s, ex) => s + ex.logs.filter(l => l.reps !== '' && l.weight !== '').length, 0);
+            const hp = totalSets > 0 ? Math.max(0, 100 - (doneSets / totalSets * 100)) : 100;
 
             return (
-                <div>
-                    <div className="card">
-                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px'}}>
-                            <div>
-                                <h2>{workout.name}</h2>
-                                <div style={{color: 'var(--text-secondary)', fontSize: '12px', marginTop: '4px'}}>
-                                    {workout.focus} • {workoutExercises.length} challenges
-                                </div>
-                            </div>
-                            <div style={{display: 'flex', gap: '8px'}}>
-                                <button
-                                    onClick={() => setShowPlateCalc(!showPlateCalc)}
-                                    style={{
-                                        background: 'var(--bg-accent)',
-                                        border: '2px solid var(--primary)',
-                                        padding: '8px 12px',
-                                        borderRadius: '8px',
-                                        fontSize: '13px',
-                                        color: 'var(--gold)',
-                                        fontWeight: '700',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    🔢
-                                </button>
-                                <button
-                                    onClick={() => setEditMode(!editMode)}
-                                    style={{
-                                        background: editMode ? 'var(--primary)' : 'var(--bg-accent)',
-                                        border: '2px solid var(--primary)',
-                                        padding: '8px 16px',
-                                        borderRadius: '8px',
-                                        fontSize: '13px',
-                                        color: editMode ? 'white' : 'var(--gold)',
-                                        fontWeight: '700',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {editMode ? '✓ DONE' : '✏️ EDIT'}
-                                </button>
-                            </div>
+                <div className={isHitting ? 'hit-shake' : ''}>
+                    <div className="boss-container">
+                        <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '10px', fontFamily: '"Press Start 2P"'}}>
+                            <span>BOSS HP</span>
+                            <span>{Math.ceil(hp)}%</span>
                         </div>
+                        <div className="hp-bar-bg"><div className="hp-bar-fill" style={{width: `${hp}%`}}></div></div>
                     </div>
 
-                    {showPlateCalc && (
-                        <div className="card" style={{background: 'var(--bg-accent)', borderColor: 'var(--gold)'}}>
-                            <h3>🔢 Plate Calculator</h3>
-                            <input
-                                type="number"
-                                value={plateCalcWeight}
-                                onChange={(e) => setPlateCalcWeight(e.target.value)}
-                                placeholder="Enter total weight (lbs)"
-                                style={{marginBottom: '12px'}}
-                            />
-                            {plateCalcWeight && (
-                                <div style={{fontSize: '13px', color: 'var(--text-secondary)'}}>
-                                    <strong style={{color: 'var(--gold)'}}>Per side:</strong> {calculatePlates(parseFloat(plateCalcWeight))}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {editMode && (
-                        <div className="card" style={{background: 'var(--bg-accent)', borderColor: 'var(--gold)'}}>
-                            <div style={{fontSize: '12px', color: 'var(--gold)', marginBottom: '12px', fontWeight: '700', textTransform: 'uppercase'}}>
-                                ⚙️ Edit Mode: Customize Your Quest
-                            </div>
-                            <button
-                                onClick={addQuickExercise}
-                                style={{
-                                    width: '100%',
-                                    background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)',
-                                    color: 'white',
-                                    border: '2px solid var(--gold)',
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    fontSize: '13px',
-                                    fontWeight: '700',
-                                    cursor: 'pointer',
-                                    textTransform: 'uppercase'
-                                }}
-                            >
-                                + Add Challenge
-                            </button>
-                        </div>
-                    )}
-
-                    {workoutExercises.map((exercise, exIdx) => {
-                        const exerciseSets = sets[exIdx]?.logs || [];
-                        const isExpanded = expandedEx[exIdx];
-                        const lastExData = lastWorkout?.exercises?.[exIdx];
-                        
-                        return (
-                            <div key={exIdx} className="card" style={{borderLeft: '6px solid var(--gold)'}}>
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px', flexWrap: 'wrap', gap: '8px'}}>
-                                    <div style={{flex: 1}}>
-                                        <h3 style={{marginBottom: '4px', fontSize: '14px'}}>{exercise.name}</h3>
-                                        <div style={{fontSize: '11px', color: 'var(--text-secondary)'}}>
-                                            {exercise.sets} sets × {exercise.reps} reps
-                                        </div>
-                                    </div>
-                                    <div style={{display: 'flex', gap: '8px'}}>
-                                        <button 
-                                            onClick={() => toggleDescription(exIdx)}
-                                            style={{
-                                                background: isExpanded ? 'var(--primary)' : 'var(--bg-accent)',
-                                                border: '2px solid var(--primary)',
-                                                padding: '6px 12px',
-                                                borderRadius: '6px',
-                                                fontSize: '11px',
-                                                color: isExpanded ? 'white' : 'var(--gold)',
-                                                fontWeight: '700',
-                                                cursor: 'pointer',
-                                                textTransform: 'uppercase'
-                                            }}
-                                        >
-                                            {isExpanded ? '▼' : '▶'} Form
-                                        </button>
-                                        {editMode && (
-                                            <button
-                                                onClick={() => removeExercise(exIdx)}
-                                                style={{
-                                                    background: 'var(--danger-bg)',
-                                                    border: '2px solid var(--danger)',
-                                                    padding: '6px 12px',
-                                                    borderRadius: '6px',
-                                                    fontSize: '11px',
-                                                    color: 'var(--danger)',
-                                                    fontWeight: '700',
-                                                    cursor: 'pointer',
-                                                    textTransform: 'uppercase'
-                                                }}
-                                            >
-                                                ✕
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {isExpanded && exercise.description && (
-                                    <div className="exercise-description" style={{marginBottom: '12px'}}>
-                                        <div className="description-title">⚔️ Battle Instructions:</div>
-                                        {exercise.description}
-                                    </div>
-                                )}
-
-                                <div style={{marginTop: '12px'}}>
-                                    {exerciseSets.map((set, setIdx) => (
-                                        <div key={setIdx}>
-                                            <div className="set-row">
-                                                <div className="set-label">Set {setIdx + 1}</div>
-                                                <input
-                                                    type="number"
-                                                    placeholder="Reps"
-                                                    className="set-input"
-                                                    value={set.reps}
-                                                    onChange={(e) => {
-                                                        const newSets = [...sets];
-                                                        newSets[exIdx].logs[setIdx].reps = e.target.value;
-                                                        setSets(newSets);
-                                                    }}
-                                                    onBlur={(e) => {
-                                                        if (e.target.value && set.weight) {
-                                                            startRestTimer(exercise.rest || 90);
-                                                        }
-                                                    }}
-                                                />
-                                                <input
-                                                    type="number"
-                                                    placeholder="Weight"
-                                                    className="set-input"
-                                                    value={set.weight}
-                                                    onChange={(e) => {
-                                                        const newSets = [...sets];
-                                                        newSets[exIdx].logs[setIdx].weight = e.target.value;
-                                                        setSets(newSets);
-                                                    }}
-                                                />
-                                                <span style={{fontSize: '12px', color: 'var(--text-secondary)', width: '35px', flexShrink: 0, fontWeight: '700'}}>lbs</span>
-                                                <button
-                                                    className="set-note-btn"
-                                                    onClick={() => {
-                                                        const note = prompt('Add battle note:');
-                                                        if (note !== null) {
-                                                            const newSets = [...sets];
-                                                            newSets[exIdx].logs[setIdx].note = note;
-                                                            setSets(newSets);
-                                                        }
-                                                    }}
-                                                >
-                                                    📝
-                                                </button>
-                                                {editMode && (
-                                                    <button
-                                                        onClick={() => {
-                                                            if (exerciseSets.length > 1) {
-                                                                const newSets = [...sets];
-                                                                newSets[exIdx].logs = newSets[exIdx].logs.filter((_, i) => i !== setIdx);
-                                                                setSets(newSets);
-                                                            } else {
-                                                                alert('Need at least 1 set');
-                                                            }
-                                                        }}
-                                                        style={{
-                                                            background: 'var(--danger-bg)',
-                                                            border: '2px solid var(--danger)',
-                                                            padding: '6px 10px',
-                                                            borderRadius: '6px',
-                                                            fontSize: '12px',
-                                                            color: 'var(--danger)',
-                                                            cursor: 'pointer',
-                                                            marginLeft: '4px',
-                                                            fontWeight: '700'
-                                                        }}
-                                                    >
-                                                        ✕
-                                                    </button>
-                                                )}
-                                            </div>
-                                            {set.note && (
-                                                <div style={{fontSize: '10px', color: 'var(--text-tertiary)', marginLeft: '60px', marginTop: '4px', fontStyle: 'italic'}}>
-                                                    📝 {set.note}
-                                                </div>
-                                            )}
-                                            {lastExData?.logs?.[setIdx] && (
-                                                <div className="last-workout" style={{marginLeft: '60px'}}>
-                                                    Last: {lastExData.logs[setIdx].reps} reps @ {lastExData.logs[setIdx].weight} lbs
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                    
-                                    {editMode && (
-                                        <button
-                                            onClick={() => {
-                                                const newSets = [...sets];
-                                                newSets[exIdx].logs.push({ reps: '', weight: '', note: '' });
-                                                setSets(newSets);
-                                            }}
-                                            style={{
-                                                width: '100%',
-                                                marginTop: '8px',
-                                                background: 'var(--bg-accent)',
-                                                border: '2px dashed var(--gold)',
-                                                padding: '10px',
-                                                borderRadius: '8px',
-                                                fontSize: '12px',
-                                                color: 'var(--gold)',
-                                                fontWeight: '700',
-                                                cursor: 'pointer',
-                                                textTransform: 'uppercase'
-                                            }}
-                                        >
-                                            + Add Set
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
-
-                    <div className="card">
-                        <h3>📜 Battle Notes</h3>
-                        <textarea
-                            placeholder="How did the battle go? Energy, struggles, victories..."
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                        />
-                    </div>
-
-                    <button className="btn btn-success" onClick={saveWorkout}>
-                        ⚔️ Complete Quest ⚔️
-                    </button>
-
-                    {timer !== null && (
-                        <div className={`timer-display ${restTime === 0 ? 'finished' : ''}`} onClick={stopTimer}>
-                            {restTime > 0 ? `${Math.floor(restTime / 60)}:${(restTime % 60).toString().padStart(2, '0')}` : '✓'}
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        function Stats({ workoutLog, customWorkouts }) {
-            const totalVolume = Object.values(workoutLog).reduce((sum, workout) => {
-                if (!workout.exercises) return sum;
-                return sum + workout.exercises.reduce((exSum, ex) => {
-                    return exSum + ex.logs.reduce((setSum, log) => {
-                        return setSum + (parseFloat(log.weight) || 0) * (parseInt(log.reps) || 0);
-                    }, 0);
-                }, 0);
-            }, 0);
-
-            const allExercises = new Set();
-            Object.values(workoutLog).forEach(workout => {
-                workout.exercises?.forEach(ex => {
-                    allExercises.add(ex.name);
-                });
-            });
-
-            const prs = {};
-            Object.values(workoutLog).forEach(workout => {
-                workout.exercises?.forEach(ex => {
-                    ex.logs.forEach(log => {
-                        if (log.weight && log.reps) {
-                            const oneRM = parseFloat(log.weight) * (1 + parseInt(log.reps) / 30);
-                            if (!prs[ex.name] || oneRM > prs[ex.name].oneRM) {
-                                prs[ex.name] = {
-                                    oneRM,
-                                    weight: log.weight,
-                                    reps: log.reps,
-                                    date: workout.timestamp
-                                };
-                            }
-                        }
-                    });
-                });
-            });
-
-            return (
-                <div>
-                    <div className="stat-grid">
-                        <div className="stat-card">
-                            <div className="stat-value">{(totalVolume / 1000).toFixed(1)}k</div>
-                            <div className="stat-label">Total Volume (lbs)</div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-value">{Object.keys(prs).length}</div>
-                            <div className="stat-label">Skills Mastered</div>
-                        </div>
-                    </div>
-
-                    <div className="card">
-                        <h2 style={{marginBottom: '16px'}}>🏆 Records Hall 🏆</h2>
-                        {Object.entries(prs).length === 0 ? (
-                            <p style={{color: 'var(--text-tertiary)', textAlign: 'center', fontSize: '13px'}}>Complete your first quest to unlock records!</p>
-                        ) : (
-                            <div>
-                                {Object.entries(prs).sort((a, b) => b[1].oneRM - a[1].oneRM).map(([name, data]) => (
-                                    <div key={name} style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '12px'}}>
-                                        <div style={{fontWeight: '700', marginBottom: '4px', color: 'var(--gold)', fontSize: '13px'}}>{name}</div>
-                                        <div style={{fontSize: '12px', color: 'var(--text-secondary)'}}>
-                                            Best: <strong style={{color: 'var(--gold)'}}>{data.weight} lbs × {data.reps} reps</strong>
-                                        </div>
-                                        <div style={{fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px'}}>
-                                            Est. 1RM: <strong>{data.oneRM.toFixed(1)} lbs</strong>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="card">
-                        <h2 style={{marginBottom: '12px'}}>🎯 1RM Calculator</h2>
-                        <p style={{fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px'}}>
-                            Calculate your maximum power level
-                        </p>
-                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
-                            <input type="number" id="calc-weight" placeholder="Weight (lbs)" />
-                            <input type="number" id="calc-reps" placeholder="Reps" />
-                        </div>
-                        <button 
-                            className="btn btn-primary"
-                            onClick={() => {
-                                const weight = parseFloat(document.getElementById('calc-weight').value);
-                                const reps = parseInt(document.getElementById('calc-reps').value);
-                                if (weight && reps) {
-                                    const oneRM = weight * (1 + reps / 30);
-                                    alert(`⚔️ POWER LEVEL ⚔️\n\nEstimated 1RM: ${oneRM.toFixed(1)} lbs`);
-                                }
-                            }}
-                        >
-                            Calculate Power
-                        </button>
-                    </div>
-                </div>
-            );
-        }
-
-        function Measurements({ measurements, setMeasurements }) {
-            const [newMeasurement, setNewMeasurement] = useState({
-                weight: '',
-                waist: '',
-                chest: '',
-                arms: '',
-                legs: ''
-            });
-
-            const addMeasurement = () => {
-                if (!newMeasurement.weight) {
-                    alert('⚠️ Weight is required!');
-                    return;
-                }
-                
-                const entry = {
-                    ...newMeasurement,
-                    date: new Date().toISOString()
-                };
-                
-                setMeasurements([...measurements, entry]);
-                setNewMeasurement({ weight: '', waist: '', chest: '', arms: '', legs: '' });
-                alert('⚔️ Hero status updated! ⚔️');
-            };
-
-            const latest = measurements[measurements.length - 1];
-            const start = measurements[0];
-            const weightChange = latest && start ? (latest.weight - start.weight).toFixed(1) : 0;
-
-            return (
-                <div>
-                    <div className="stat-grid">
-                        <div className="stat-card">
-                            <div className="stat-value">{latest?.weight || '—'}</div>
-                            <div className="stat-label">Current Weight (lbs)</div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-value" style={{WebkitTextFillColor: weightChange < 0 ? '#00ff88' : '#ff4757'}}>
-                                {weightChange > 0 ? '+' : ''}{weightChange}
-                            </div>
-                            <div className="stat-label">Change (lbs)</div>
-                        </div>
-                    </div>
-
-                    <div className="card">
-                        <h3>📊 Update Hero Stats</h3>
-                        <div style={{display: 'grid', gap: '12px'}}>
-                            <input
-                                type="number"
-                                step="0.1"
-                                placeholder="Weight (lbs) *"
-                                value={newMeasurement.weight}
-                                onChange={(e) => setNewMeasurement({...newMeasurement, weight: e.target.value})}
-                            />
-                            <input
-                                type="number"
-                                step="0.1"
-                                placeholder="Waist (inches)"
-                                value={newMeasurement.waist}
-                                onChange={(e) => setNewMeasurement({...newMeasurement, waist: e.target.value})}
-                            />
-                            <input
-                                type="number"
-                                step="0.1"
-                                placeholder="Chest (inches)"
-                                value={newMeasurement.chest}
-                                onChange={(e) => setNewMeasurement({...newMeasurement, chest: e.target.value})}
-                            />
-                            <input
-                                type="number"
-                                step="0.1"
-                                placeholder="Arms (inches)"
-                                value={newMeasurement.arms}
-                                onChange={(e) => setNewMeasurement({...newMeasurement, arms: e.target.value})}
-                            />
-                            <input
-                                type="number"
-                                step="0.1"
-                                placeholder="Legs (inches)"
-                                value={newMeasurement.legs}
-                                onChange={(e) => setNewMeasurement({...newMeasurement, legs: e.target.value})}
-                            />
-                        </div>
-                        <button className="btn btn-primary" onClick={addMeasurement}>
-                            Update Stats
-                        </button>
-                    </div>
-
-                    <div className="card">
-                        <h3>📜 Stats History</h3>
-                        {measurements.length === 0 ? (
-                            <p style={{color: 'var(--text-tertiary)', textAlign: 'center', fontSize: '13px'}}>No measurements recorded yet</p>
-                        ) : (
-                            <div>
-                                {measurements.slice().reverse().slice(0, 10).map((m, idx) => (
-                                    <div key={idx} style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '12px'}}>
-                                        <div style={{fontWeight: '700', color: 'var(--gold)', fontSize: '12px'}}>{new Date(m.date).toLocaleDateString()}</div>
-                                        <div style={{fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px'}}>
-                                            Weight: <strong>{m.weight} lbs</strong>
-                                            {m.waist && ` • Waist: ${m.waist}"`}
-                                            {m.chest && ` • Chest: ${m.chest}"`}
-                                            {m.arms && ` • Arms: ${m.arms}"`}
-                                            {m.legs && ` • Legs: ${m.legs}"`}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
-        }
-
-        function EditWorkouts({ customWorkouts, setCustomWorkouts, setView }) {
-            const [selectedDay, setSelectedDay] = useState(null);
-            const [editedWorkout, setEditedWorkout] = useState(null);
-
-            const selectDay = (day) => {
-                setSelectedDay(day);
-                setEditedWorkout(JSON.parse(JSON.stringify(customWorkouts[day])));
-            };
-
-            const saveChanges = () => {
-                setCustomWorkouts({
-                    ...customWorkouts,
-                    [selectedDay]: editedWorkout
-                });
-                setSelectedDay(null);
-                alert('⚔️ Quest updated! ⚔️');
-            };
-
-            const resetToDefault = () => {
-                if (confirm('Reset this quest to default?')) {
-                    setCustomWorkouts({
-                        ...customWorkouts,
-                        [selectedDay]: JSON.parse(JSON.stringify(WORKOUTS[selectedDay]))
-                    });
-                    setSelectedDay(null);
-                    alert('⚔️ Quest reset! ⚔️');
-                }
-            };
-
-            const updateExercise = (idx, field, value) => {
-                const updated = {...editedWorkout};
-                updated.exercises[idx][field] = value;
-                setEditedWorkout(updated);
-            };
-
-            const removeExercise = (idx) => {
-                if (confirm('Remove this challenge?')) {
-                    const updated = {...editedWorkout};
-                    updated.exercises = updated.exercises.filter((_, i) => i !== idx);
-                    setEditedWorkout(updated);
-                }
-            };
-
-            if (!selectedDay) {
-                return (
-                    <div>
-                        <h2 style={{marginBottom: '16px', fontSize: '16px', textAlign: 'center', color: 'var(--gold)', textTransform: 'uppercase'}}>⚙️ Select Quest to Edit ⚙️</h2>
-                        {Object.entries(customWorkouts).map(([key, workout]) => (
-                            <div key={key} className="day-card" onClick={() => selectDay(key)}>
-                                <div className="day-name">{key}</div>
-                                <div className="day-focus">{workout.name} • {workout.exercises.length} challenges</div>
-                            </div>
-                        ))}
-                    </div>
-                );
-            }
-
-            return (
-                <div>
-                    <div className="card">
-                        <h2>{selectedDay} - Edit Quest</h2>
-                        <div style={{marginTop: '12px'}}>
-                            <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Quest Name:</label>
-                            <input
-                                type="text"
-                                value={editedWorkout.name}
-                                onChange={(e) => setEditedWorkout({...editedWorkout, name: e.target.value})}
-                            />
-                        </div>
-                    </div>
-
-                    {editedWorkout.exercises.map((ex, idx) => (
-                        <div key={idx} className="card" style={{borderLeft: '6px solid var(--gold)'}}>
-                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px'}}>
-                                <h3 style={{flex: 1, marginBottom: '8px', fontSize: '13px'}}>{ex.name}</h3>
-                                <button
-                                    onClick={() => removeExercise(idx)}
-                                    style={{
-                                        background: 'var(--danger-bg)', 
-                                        border: '2px solid var(--danger)', 
-                                        padding: '6px 12px', 
-                                        borderRadius: '6px',
-                                        color: 'var(--danger)',
-                                        fontSize: '11px',
-                                        fontWeight: '700',
-                                        cursor: 'pointer',
-                                        textTransform: 'uppercase'
-                                    }}
-                                >
-                                    Remove
-                                </button>
-                            </div>
-
-                            <div style={{marginBottom: '12px'}}>
-                                <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Challenge Name:</label>
-                                <input
-                                    type="text"
-                                    value={ex.name}
-                                    onChange={(e) => updateExercise(idx, 'name', e.target.value)}
-                                />
-                            </div>
-
-                            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px'}}>
-                                <div>
-                                    <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Sets:</label>
-                                    <input
-                                        type="number"
-                                        value={ex.sets}
-                                        onChange={(e) => updateExercise(idx, 'sets', parseInt(e.target.value))}
+                    {sets.map((ex, exIdx) => (
+                        <div key={exIdx} className="card">
+                            <h3 style={{fontSize: '14px', color: 'var(--gold)', marginBottom: '10px'}}>{ex.name}</h3>
+                            {ex.logs.map((set, setIdx) => (
+                                <div key={setIdx} className="set-row">
+                                    <span className="set-label">SET {setIdx+1}</span>
+                                    <input 
+                                        type="number" 
+                                        placeholder="Reps" 
+                                        className="set-input" 
+                                        value={set.reps} 
+                                        onDoubleClick={() => {
+                                            const n = [...sets]; n[exIdx].logs[setIdx].reps = ''; setSets(n);
+                                        }}
+                                        onChange={(e) => {
+                                            const n = [...sets]; n[exIdx].logs[setIdx].reps = e.target.value; setSets(n);
+                                            triggerHaptic();
+                                        }} 
+                                    />
+                                    <input 
+                                        type="number" 
+                                        placeholder="Lbs" 
+                                        className="set-input" 
+                                        value={set.weight} 
+                                        onDoubleClick={() => {
+                                            const n = [...sets]; n[exIdx].logs[setIdx].weight = ''; setSets(n);
+                                        }}
+                                        onChange={(e) => {
+                                            const n = [...sets]; n[exIdx].logs[setIdx].weight = e.target.value; setSets(n);
+                                            triggerHaptic();
+                                        }} 
                                     />
                                 </div>
-                                <div>
-                                    <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Reps:</label>
-                                    <input
-                                        type="text"
-                                        value={ex.reps}
-                                        onChange={(e) => updateExercise(idx, 'reps', e.target.value)}
-                                    />
-                                </div>
-                                <div>
-                                    <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Rest (sec):</label>
-                                    <input
-                                        type="number"
-                                        value={ex.rest || 90}
-                                        onChange={(e) => updateExercise(idx, 'rest', parseInt(e.target.value))}
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Instructions:</label>
-                                <textarea
-                                    value={ex.description || ''}
-                                    onChange={(e) => updateExercise(idx, 'description', e.target.value)}
-                                    placeholder="How to perform this challenge..."
-                                    style={{minHeight: '60px'}}
-                                />
-                            </div>
+                            ))}
                         </div>
                     ))}
 
-                    <button className="btn btn-success" onClick={saveChanges}>
-                        ⚔️ Save Quest ⚔️
-                    </button>
-                    
-                    <button 
-                        className="btn btn-secondary" 
-                        onClick={resetToDefault}
-                        style={{marginTop: '8px'}}
-                    >
-                        Reset to Default
-                    </button>
+                    <button className="btn btn-success" onClick={() => {
+                        alert("⚔️ VICTORY! +1000 XP Gained ⚔️");
+                        setSelectedDay(null);
+                        setView('home');
+                    }}>Claim Victory</button>
+                    <button className="btn" style={{background: 'var(--bg-accent)', color: 'white'}} onClick={() => setSelectedDay(null)}>Retreat</button>
                 </div>
             );
         }
 
-        function History({ workoutLog, customWorkouts }) {
-            const dates = Object.keys(workoutLog).sort().reverse();
-
-            return (
-                <div>
-                    <h2 style={{marginBottom: '16px', fontSize: '16px', textAlign: 'center', color: 'var(--gold)', textTransform: 'uppercase'}}>📜 Quest Log 📜</h2>
-                    {dates.length === 0 ? (
-                        <div className="card">
-                            <p style={{textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '13px'}}>No quests completed yet. Begin your journey!</p>
-                        </div>
-                    ) : (
-                        dates.map(date => {
-                            const workout = workoutLog[date];
-                            const dateObj = new Date(date);
-                            
-                            return (
-                                <div key={date} className="card">
-                                    <div style={{fontWeight: '700', fontSize: '14px', marginBottom: '8px', color: 'var(--gold)'}}>
-                                        {dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
-                                    </div>
-                                    <div style={{fontSize: '12px', color: 'var(--text-secondary)'}}>
-                                        ✓ {customWorkouts[workout.day]?.name}
-                                    </div>
-                                    {workout.notes && (
-                                        <div style={{fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '8px', fontStyle: 'italic'}}>
-                                            📝 "{workout.notes}"
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })
-                    )}
-                </div>
-            );
-        }
-
-        ReactDOM.render(<App />, document.getElementById('root'));
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>

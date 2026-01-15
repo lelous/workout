@@ -5,192 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Workout Pro">
     <title>Workout Journal Pro</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         :root {
-            --bg-primary: #f2f2f7;
-            --bg-secondary: #ffffff;
-            --bg-accent: #f0f4ff;
-            --text-primary: #1c1c1e;
-            --text-secondary: #8e8e93;
-            --text-tertiary: #aeaeb2;
-            --border-color: #d1d1d6;
-            --primary: #667eea;
+            --bg-primary: #f2f2f7; --bg-secondary: #ffffff; --bg-accent: #f0f4ff;
+            --text-primary: #1c1c1e; --text-secondary: #8e8e93;
             --primary-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --success-grad: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --danger: #ff3b30;
-            --shadow: rgba(0, 0, 0, 0.08);
+            --border-color: #d1d1d6;
         }
-        
         [data-theme="dark"] {
-            --bg-primary: #000000;
-            --bg-secondary: #1c1c1e;
-            --bg-accent: #2c2c2e;
-            --text-primary: #ffffff;
-            --text-secondary: #8e8e93;
+            --bg-primary: #000000; --bg-secondary: #1c1c1e; --text-primary: #ffffff;
             --border-color: #38383a;
-            --shadow: rgba(0, 0, 0, 0.4);
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            padding-bottom: calc(100px + env(safe-area-inset-bottom));
-            color: var(--text-primary);
-        }
-        
-        .header {
-            background: var(--primary-grad);
-            color: white;
-            padding: calc(40px + env(safe-area-inset-top)) 20px 20px;
-            text-align: center;
-            box-shadow: 0 4px 12px var(--shadow);
-            position: sticky; top: 0; z-index: 100;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-        }
-        
-        .header-actions { position: absolute; right: 20px; bottom: 20px; display: flex; gap: 8px; }
-        .back-btn { position: absolute; left: 20px; bottom: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 10px; font-weight: 600; }
-
-        .container { padding: 16px; max-width: 600px; margin: 0 auto; }
-        .card { background: var(--bg-secondary); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 20px var(--shadow); }
-        .card h3 { color: var(--primary); font-size: 19px; margin-bottom: 10px; }
-
-        /* THE IOS ZOOM FIX */
-        textarea, input[type="text"], input[type="number"] {
-            width: 100%; padding: 14px; border: 1.5px solid var(--border-color);
-            border-radius: 12px; font-size: 16px !important; /* Forces Safari to stay still */
             background: var(--bg-primary); color: var(--text-primary);
-            -webkit-appearance: none;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom));
         }
-
-        .btn { width: 100%; padding: 18px; border: none; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.1s; }
-        .btn:active { transform: scale(0.97); }
-        .btn-primary { background: var(--primary-grad); color: white; }
-        .btn-success { background: var(--success-grad); color: white; }
-
-        .set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+        .header {
+            background: var(--primary-grad); color: white;
+            padding: calc(40px + env(safe-area-inset-top)) 20px 20px;
+            text-align: center; position: sticky; top: 0; z-index: 100;
+            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+        }
+        .container { padding: 16px; max-width: 600px; margin: 0 auto; }
+        .card { background: var(--bg-secondary); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        input, textarea {
+            font-size: 16px !important; padding: 12px; border-radius: 12px;
+            border: 1.5px solid var(--border-color); background: var(--bg-primary);
+            color: var(--text-primary); -webkit-appearance: none;
+        }
         .set-input { width: 85px; text-align: center; font-weight: 700; }
-
         .nav {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(var(--bg-secondary), 0.85);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);
             display: flex; justify-content: space-around;
             padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
-            border-top: 0.5px solid var(--border-color);
-            z-index: 1000;
+            border-top: 0.5px solid var(--border-color); z-index: 1000;
         }
-
-        .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
-        .nav-icon { font-size: 24px; }
-        .nav-label { font-size: 10px; font-weight: 700; color: var(--text-secondary); }
-        .nav-btn.active .nav-label { color: var(--primary); }
-
-        .timer-display { position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px; background: var(--primary-grad); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 16px; font-weight: 700; cursor: pointer; color: white; }
+        .btn-primary { background: var(--primary-grad); }
+        .btn-success { background: var(--success-grad); }
+        .timer-display { position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px; background: var(--primary-grad); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
         const WORKOUTS = {
             monday: {
-                name: "Upper Push + Core",
-                focus: "Chest, Shoulders, Triceps",
+                name: "Upper Push + Core", focus: "Chest, Shoulders, Triceps",
                 exercises: [
-                    { name: "Flat Barbell Bench Press", sets: 4, reps: "6-8", rest: 240, description: "Lie on flat bench, feet flat on floor. Lower bar to mid-chest, press up. Keep shoulder blades retracted." },
+                    { name: "Flat Barbell Bench Press", sets: 4, reps: "6-8", rest: 240, description: "Lie on flat bench, feet flat on floor. Lower bar to mid-chest, press up. Keep shoulder blades retracted. Control the descent, explosive press." },
                     { name: "Incline Dumbbell Press", sets: 3, reps: "8-10", rest: 180, description: "Set bench to 30-45°. Press dumbbells up from chest level. Elbows at 45° angle. Squeeze chest at top." },
-                    { name: "Standing Overhead Press", sets: 4, reps: "6-8", rest: 180, description: "Stand with barbell at shoulders. Press overhead, lock out arms. Keep core tight." },
-                    { name: "Cable Flyes", sets: 3, reps: "12-15", rest: 90, description: "Set cables at chest height. Bring handles together in front of chest. Squeeze chest hard." },
-                    { name: "Lateral Raises", sets: 3, reps: "12-15", rest: 60, description: "Raise dumbbells out to sides until parallel to floor. Lead with elbows. Don't swing." },
-                    { name: "Dips", sets: 3, reps: "8-12", rest: 120, description: "Lean forward slightly for chest emphasis. Lower until upper arms parallel to floor." },
-                    { name: "Tricep Pushdowns", sets: 3, reps: "12-15", rest: 60, description: "Keep elbows pinned to sides. Push down until arms fully extended. Squeeze triceps." },
-                    { name: "Cable Woodchops", sets: 3, reps: "12/side", rest: 45, description: "Stand sideways to cable. Pull from high to low across body. Rotate through core." },
-                    { name: "Hanging Leg Raises", sets: 3, reps: "10-15", rest: 60, description: "Hang from bar. Raise legs to 90°. Lower abs pull legs up." }
+                    { name: "Standing Overhead Press", sets: 4, reps: "6-8", rest: 180, description: "Stand with barbell at shoulders. Press overhead, lock out arms. Keep core tight. Bar path straight up and down." },
+                    { name: "Cable Flyes", sets: 3, reps: "12-15", rest: 90, description: "Set cables at chest height. Bring handles together in front of chest. Slight bend in elbows. Squeeze chest hard." },
+                    { name: "Lateral Raises", sets: 3, reps: "12-15", rest: 60, description: "Raise dumbbells out to sides until parallel to floor. Lead with elbows. Control on the way down. Don't swing." },
+                    { name: "Dips", sets: 3, reps: "8-12", rest: 120, description: "Lean forward slightly for chest emphasis. Lower until upper arms parallel to floor. Don't bounce at bottom." },
+                    { name: "Tricep Pushdowns", sets: 3, reps: "12-15", rest: 60, description: "Keep elbows pinned to sides. Push down until arms fully extended. Squeeze triceps at bottom. Control the return." },
+                    { name: "Cable Woodchops", sets: 3, reps: "12/side", rest: 45, description: "Stand sideways to cable. Pull from high to low across body. Rotate through core, not just arms. Control the movement." },
+                    { name: "Hanging Leg Raises", sets: 3, reps: "10-15", rest: 60, description: "Hang from bar. Raise legs to 90°. Keep legs straight if possible. Control the swing. Lower abs pull legs up." }
                 ]
             },
             tuesday: {
-                name: "Lower + Core",
-                focus: "Quads, Hamstrings, Glutes",
+                name: "Lower + Core", focus: "Quads, Hamstrings, Glutes",
                 exercises: [
-                    { name: "Squats", sets: 4, reps: "6-8", rest: 240, description: "Feet shoulder-width. Sit back and down. Knees track over toes. ACL: Control depth." },
-                    { name: "Romanian Deadlifts", sets: 4, reps: "8-10", rest: 180, description: "Slight knee bend. Hinge at hips. Feel stretch in hamstrings. Keep bar close." },
-                    { name: "Bulgarian Split Squats", sets: 3, reps: "10-12/leg", rest: 120, description: "Rear foot elevated. Lower front knee to 90°. ACL: Control descent." },
-                    { name: "Leg Press", sets: 3, reps: "12-15", rest: 120, description: "Lower until knees at 90°. Push through heels. Don't lock out knees." },
-                    { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Curl heels toward glutes. Squeeze hamstrings. Keep hips down on pad." },
-                    { name: "Walking Lunges", sets: 3, reps: "12/leg", rest: 90, description: "Step forward, lower back knee. ACL: Bodyweight or light dumbbells only." },
-                    { name: "Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Rise up on balls of feet. Hold squeeze at top. Control descent." },
-                    { name: "Med Ball Slams", sets: 3, reps: "10/side", rest: 45, description: "Rotate and slam ball to outside of foot. Engage obliques." },
-                    { name: "Pallof Press", sets: 3, reps: "12/side", rest: 60, description: "Stand sideways to cable. Press straight out. Resist rotation." }
+                    { name: "Squats", sets: 4, reps: "6-8", rest: 240, description: "Feet shoulder-width. Sit back and down. Knees track over toes. Chest up. Drive through heels. ACL: Control depth, stop before pain." },
+                    { name: "Romanian Deadlifts", sets: 4, reps: "8-10", rest: 180, description: "Slight knee bend. Hinge at hips. Push hips back. Feel stretch in hamstrings. Keep bar close to legs. Neutral spine." },
+                    { name: "Bulgarian Split Squats", sets: 3, reps: "10-12/leg", rest: 120, description: "Rear foot elevated on bench. Lower front knee to 90°. Torso upright. Drive through front heel. ACL: Control descent, reduce weight if needed." },
+                    { name: "Leg Press", sets: 3, reps: "12-15", rest: 120, description: "Feet shoulder-width on platform. Lower until knees at 90°. Push through heels. Don't lock out knees at top." },
+                    { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Curl heels toward glutes. Squeeze hamstrings at top. Control the lowering phase. Keep hips down on pad." },
+                    { name: "Walking Lunges", sets: 3, reps: "12/leg", rest: 90, description: "Step forward, lower back knee toward ground. Front knee stays over ankle. Push through front heel. ACL: Bodyweight or light dumbbells only." },
+                    { name: "Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Rise up on balls of feet. Full range of motion. Hold squeeze at top. Control the descent. Stretch at bottom." },
+                    { name: "Med Ball Slams", sets: 3, reps: "10/side", rest: 45, description: "Rotate and slam ball to outside of foot. Pick up, rotate other way. Explosive movement. Engage obliques." },
+                    { name: "Pallof Press", sets: 3, reps: "12/side", rest: 60, description: "Stand sideways to cable at chest height. Press straight out. Resist rotation. Hold briefly. Return to chest." }
                 ]
             },
             thursday: {
-                name: "Upper Pull + Core",
-                focus: "Back, Rear Delts",
+                name: "Upper Pull + Core", focus: "Back, Rear Delts",
                 exercises: [
-                    { name: "Pull-Ups", sets: 4, reps: "6-10", rest: 180, description: "Pull chest to bar. Full extension at bottom. Vary grips." },
-                    { name: "T-Bar Rows", sets: 4, reps: "8-10", rest: 180, description: "Hinge at hips. Pull to lower chest. Squeeze shoulder blades." },
-                    { name: "Barbell/DB Rows", sets: 4, reps: "8-12", rest: 180, description: "Pull to hip/lower chest. Retract shoulder blades." },
-                    { name: "Cable Rows", sets: 3, reps: "10-12", rest: 120, description: "Sit upright. Pull handle to lower chest. Squeeze shoulder blades." },
-                    { name: "Face Pulls", sets: 3, reps: "15-20", rest: 90, description: "Pull to face level. External rotation at end. Critical for shoulders." },
-                    { name: "Chest-Supported Rows", sets: 3, reps: "12-15", rest: 90, description: "Set bench to 30-45°. Lie chest-down. Pull handles to lower chest." },
-                    { name: "Cable Oblique Twists", sets: 3, reps: "12/side", rest: 45, description: "Stand sideways. Pull across body. Focus on oblique contraction." },
-                    { name: "RKC Plank", sets: 3, reps: "30-45 sec", rest: 60, description: "Maximum tension - squeeze glutes, quads. Pull elbows toward toes." }
+                    { name: "Pull-Ups", sets: 4, reps: "6-10", rest: 180, description: "Hands slightly wider than shoulders. Pull chest to bar. Lead with chest. Full extension at bottom. Vary grip: overhand (lats), neutral (biceps), chin-ups (max biceps)." },
+                    { name: "T-Bar Rows", sets: 4, reps: "8-10", rest: 180, description: "Stand on platform for better ROM. Hinge at hips. Pull to lower chest. Squeeze shoulder blades. Keep chest up." },
+                    { name: "Barbell/DB Rows", sets: 4, reps: "8-12", rest: 180, description: "Barbell: underhand for biceps, overhand for lats. Dumbbell: better ROM, unilateral. Pull to hip/lower chest. Retract shoulder blades." },
+                    { name: "Cable Rows", sets: 3, reps: "10-12", rest: 120, description: "Sit upright. Pull handle to lower chest. Squeeze shoulder blades. Full stretch forward. Constant tension." },
+                    { name: "Face Pulls", sets: 3, reps: "15-20", rest: 90, description: "Rope attachment. Pull to face level. External rotation at end. Elbows high. Critical for shoulder health." },
+                    { name: "Chest-Supported Rows", sets: 3, reps: "12-15", rest: 90, description: "Set bench to 30-45° incline. Lie chest-down. Pull dumbbells or handles to lower chest. Squeeze shoulder blades hard at top. Control the negative. Removes lower back fatigue." },
+                    { name: "Cable Oblique Twists", sets: 3, reps: "12/side", rest: 45, description: "Single handle at chest. Stand sideways. Pull across body. Focus on oblique contraction, not arm pull." },
+                    { name: "RKC Plank", sets: 3, reps: "30-45 sec", rest: 60, description: "Regular plank position. Maximum tension - squeeze glutes, quads. Pull elbows toward toes. Full-body tension. Harder than regular plank." }
                 ]
             },
             friday: {
-                name: "Lower + Core",
-                focus: "Quads, Hamstrings, Glutes",
+                name: "Lower + Core", focus: "Quads, Hamstrings, Glutes",
                 exercises: [
-                    { name: "Front/Goblet Squat", sets: 4, reps: "8-10", rest: 180, description: "Torso upright. Elbows up. ACL: Control tempo, stop before pain." },
-                    { name: "Leg Press", sets: 4, reps: "10-12", rest: 120, description: "Lower to 90°. Push through full foot. Don't lock knees." },
-                    { name: "Hack Squat", sets: 3, reps: "12-15", rest: 90, description: "Lower controlled. Drive through heels. Quad focus." },
-                    { name: "Stiff-Leg Deadlifts", sets: 3, reps: "10-12", rest: 120, description: "Slight knee bend. Hinge at hips. Feel stretch in hamstrings." },
-                    { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Lying or seated. Curl heels to glutes. Slow negative." },
-                    { name: "Reverse Lunges", sets: 3, reps: "10/leg", rest: 90, description: "Step back. Lower back knee. ACL: Slower tempo, more control." },
-                    { name: "Seated Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Knees bent targets soleus. Hold top squeeze." },
-                    { name: "Copenhagen Plank", sets: 3, reps: "20-30 sec/side", rest: 60, description: "Side plank. Top foot on bench. Intense adductor work." },
-                    { name: "Mountain Climbers", sets: 3, reps: "20 total", rest: 45, description: "Plank position. Drive knees to chest. Controlled movement." }
+                    { name: "Front/Goblet Squat", sets: 4, reps: "8-10", rest: 180, description: "Front: bar racked on front delts. Goblet: hold dumbbell at chest. Torso upright. Elbows up. ACL: Control tempo, stop before pain." },
+                    { name: "Leg Press", sets: 4, reps: "10-12", rest: 120, description: "Feet shoulder-width, mid-platform. Lower to 90°. Push through full foot. Don't lock knees. Control the weight." },
+                    { name: "Hack Squat", sets: 3, reps: "12-15", rest: 90, description: "Shoulders under pads. Feet forward on platform. Lower controlled. Drive through heels. Quad focus. ACL: Skip leg extensions if issue, add extra hack squats." },
+                    { name: "Stiff-Leg Deadlifts", sets: 3, reps: "10-12", rest: 120, description: "Slight knee bend throughout. Hinge at hips. Feel stretch in hamstrings. Keep back flat. Bar stays close to legs." },
+                    { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Lying or seated. Curl heels to glutes. Squeeze at top. Slow negative. Focus on hamstring contraction." },
+                    { name: "Reverse Lunges", sets: 3, reps: "10/leg", rest: 90, description: "Hold goblet dumbbell. Step back. Lower back knee down. Front knee stays over ankle. Push through front heel. ACL: Slower tempo, more control." },
+                    { name: "Seated Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Knees bent targets soleus. Full ROM. Hold top squeeze. Slow controlled negative. Deep stretch at bottom." },
+                    { name: "Copenhagen Plank", sets: 3, reps: "20-30 sec/side", rest: 60, description: "Side plank. Top foot on bench. Bottom leg hovering. Intense adductor and oblique work. Modification: bottom knee can touch ground." },
+                    { name: "Mountain Climbers", sets: 3, reps: "20 total", rest: 45, description: "Plank position. Drive knees to chest alternating. Keep hips level. Controlled movement. Dynamic core and hip flexor work." }
                 ]
             }
         };
-
         function App() {
             const [view, setView] = useState('home');
             const [selectedDay, setSelectedDay] = useState(null);
             const [workoutLog, setWorkoutLog] = useState(JSON.parse(localStorage.getItem('logs') || '{}'));
-            const [measurements, setMeasurements] = useState(JSON.parse(localStorage.getItem('measurements') || '[]'));
             const [prs, setPrs] = useState(JSON.parse(localStorage.getItem('prs') || '{}'));
+            const [weightHistory, setWeightHistory] = useState(JSON.parse(localStorage.getItem('weight') || '[]'));
 
             useEffect(() => {
                 localStorage.setItem('logs', JSON.stringify(workoutLog));
-                localStorage.setItem('measurements', JSON.stringify(measurements));
                 localStorage.setItem('prs', JSON.stringify(prs));
-            }, [workoutLog, measurements, prs]);
+                localStorage.setItem('weight', JSON.stringify(weightHistory));
+            }, [workoutLog, prs, weightHistory]);
 
             return (
                 <div>
-                    <Header view={view} setView={setView} setSelectedDay={setSelectedDay} />
+                    <div className="header">
+                        {view !== 'home' && <button className="back-btn" onClick={() => {setView('home'); setSelectedDay(null)}}>← Back</button>}
+                        <h1 style={{fontSize: '28px', fontWeight: '800'}}>Workout Pro</h1>
+                    </div>
                     <div className="container">
-                        {view === 'home' && <Home setView={setView} logs={workoutLog} />}
-                        {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} prs={prs} setPrs={setPrs} />}
+                        {view === 'home' && <Home setView={setView} logs={workoutLog} history={weightHistory} setWeight={setWeightHistory}/>}
+                        {view === 'workout' && <WorkoutSession selectedDay={selectedDay} setSelectedDay={setSelectedDay} onFinish={(log) => {
+                            const date = new Date().toISOString().split('T')[0];
+                            setWorkoutLog({...workoutLog, [date]: log});
+                            setView('home');
+                        }}/>}
                         {view === 'stats' && <Stats logs={workoutLog} prs={prs} />}
-                        {view === 'body' && <BodyTracker measurements={measurements} setMeasurements={setMeasurements} />}
                         {view === 'history' && <History logs={workoutLog} />}
                     </div>
                     <Nav view={view} setView={setView} />
@@ -198,40 +150,35 @@
             );
         }
 
-        function Header({ view, setView, setSelectedDay }) {
-            return (
-                <div className="header">
-                    {view !== 'home' && <button className="back-btn" onClick={() => {setView('home'); setSelectedDay(null)}}>← Back</button>}
-                    <h1 style={{fontSize: '28px', fontWeight: '800'}}>Workout Pro</h1>
-                </div>
-            );
-        }
-
-        function Home({ setView, logs }) {
+        function Home({ setView, logs, history, setWeight }) {
+            const lastWeight = history[history.length - 1]?.val || "—";
             return (
                 <div>
                     <div className="card" style={{background: 'var(--primary-grad)', color: 'white'}}>
-                        <h4 style={{opacity: 0.8}}>Weekly Progress</h4>
-                        <h2 style={{fontSize: '32px'}}>{Object.keys(logs).length} Sessions</h2>
+                        <h4 style={{opacity: 0.8}}>Weekly Tonnage</h4>
+                        <h2 style={{fontSize: '36px'}}>Total: {Object.keys(logs).length} Sessions</h2>
                     </div>
-                    <button className="btn btn-primary" onClick={() => setView('workout')}>💪 Start Session</button>
+                    <button className="btn btn-primary" onClick={() => setView('workout')} style={{marginBottom: '20px'}}>💪 START TRAINING</button>
                     <div className="card">
                         <h3>Daily Targets</h3>
                         <p style={{fontSize: '14px', lineHeight: '1.8', color: 'var(--text-secondary)'}}>
-                            Protein: <strong>220g</strong><br/>
-                            Calories: <strong>2,400-2,500</strong><br/>
-                            Carbs: <strong>200-220g</strong>
+                            Protein: <strong>220g</strong> | Cals: <strong>2,500</strong> | Carbs: <strong>220g</strong>
                         </p>
                     </div>
                     <div className="card">
-                        <h3>Schedule</h3>
-                        <p style={{fontSize: '14px', color: 'var(--text-secondary)'}}>Mon/Thu: Upper | Tue/Fri: Lower</p>
+                        <h3>Weight Log</h3>
+                        <div style={{display:'flex', gap:'10px'}}>
+                            <input type="number" inputMode="decimal" placeholder="Log lbs" onBlur={(e) => {
+                                if(e.target.value) setWeight([...history, {val: e.target.value, date: new Date().toLocaleDateString()}]);
+                            }}/>
+                        </div>
+                        <p style={{fontSize: '12px', color: 'var(--text-secondary)', marginTop:'5px'}}>Last: {lastWeight} lbs</p>
                     </div>
                 </div>
             );
         }
 
-        function Workout({ selectedDay, setSelectedDay, workoutLog, setWorkoutLog, prs, setPrs }) {
+        function WorkoutSession({ selectedDay, setSelectedDay, onFinish }) {
             const [sets, setSets] = useState([]);
             const [plateWeight, setPlateWeight] = useState('');
             const [rest, setRest] = useState(0);
@@ -249,6 +196,7 @@
             useEffect(() => {
                 let timer;
                 if (rest > 0) timer = setInterval(() => setRest(r => r - 1), 1000);
+                if (rest === 0 && navigator.vibrate) navigator.vibrate([200, 100, 200]);
                 return () => clearInterval(timer);
             }, [rest]);
 
@@ -279,10 +227,9 @@
                 <div>
                     <div className="card" style={{borderLeft: '5px solid var(--primary)'}}>
                         <h3 style={{marginBottom: '10px'}}>Plate Calculator</h3>
-                        <input type="number" inputMode="decimal" placeholder="Total Weight (lbs)" onChange={e => setPlateWeight(e.target.value)} />
+                        <input type="number" inputMode="decimal" placeholder="Total lbs" onChange={e => setPlateWeight(e.target.value)} />
                         {plateWeight && <p style={{marginTop: '10px', fontSize: '15px', fontWeight: '700'}}>Per Side: {getPlates(plateWeight)}</p>}
                     </div>
-
                     {sets.map((ex, exIdx) => (
                         <div key={exIdx} className="card">
                             <h3>{ex.name}</h3>
@@ -300,14 +247,7 @@
                             ))}
                         </div>
                     ))}
-
-                    <button className="btn btn-success" onClick={() => {
-                        const date = new Date().toISOString().split('T')[0];
-                        setWorkoutLog({...workoutLog, [date]: {day: selectedDay, exercises: sets}});
-                        setSelectedDay(null);
-                        alert("Session Saved!");
-                    }}>✓ Complete Session</button>
-
+                    <button className="btn btn-success" onClick={() => onFinish({day: selectedDay, exercises: sets})}>✓ COMPLETE SESSION</button>
                     {rest > 0 && <div className="timer-display" onClick={() => setRest(0)}>{rest}s</div>}
                 </div>
             );
@@ -315,37 +255,16 @@
 
         function Stats({ logs, prs }) {
             return (
-                <div>
-                    <div className="card">
-                        <h3>1RM Calculator</h3>
-                        <div style={{display: 'grid', gap: '10px'}}>
-                            <input type="number" inputMode="decimal" id="calcW" placeholder="Weight (lbs)" />
-                            <input type="number" inputMode="decimal" id="calcR" placeholder="Reps" />
-                            <button className="btn btn-primary" onClick={() => {
-                                const w = parseFloat(document.getElementById('calcW').value);
-                                const r = parseInt(document.getElementById('calcR').value);
-                                if(w && r) alert(`Estimated 1RM: ${(w * (1 + r/30)).toFixed(1)} lbs`);
-                            }}>Calculate</button>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        function BodyTracker({ measurements, setMeasurements }) {
-            const [w, setW] = useState('');
-            return (
                 <div className="card">
-                    <h3>Body Weight</h3>
-                    <input type="number" inputMode="decimal" value={w} placeholder="Current lbs" onChange={e => setW(e.target.value)} />
-                    <button className="btn btn-primary" style={{marginTop: '10px'}} onClick={() => {
-                        setMeasurements([...measurements, {val: w, date: new Date().toLocaleDateString()}]);
-                        setW('');
-                    }}>Save Entry</button>
-                    <div style={{marginTop: '20px'}}>
-                        {measurements.slice().reverse().map((m, i) => (
-                            <p key={i} style={{fontSize: '14px', borderBottom: '1px solid var(--border-color)', padding: '10px 0'}}>{m.date}: {m.val} lbs</p>
-                        ))}
+                    <h3>1RM Calculator</h3>
+                    <div style={{display: 'grid', gap: '10px', marginTop: '10px'}}>
+                        <input type="number" inputMode="decimal" id="calcW" placeholder="Weight (lbs)" />
+                        <input type="number" inputMode="decimal" id="calcR" placeholder="Reps" />
+                        <button className="btn btn-primary" onClick={() => {
+                            const w = parseFloat(document.getElementById('calcW').value);
+                            const r = parseInt(document.getElementById('calcR').value);
+                            if(w && r) alert(`Estimated 1RM: ${(w * (1 + r/30)).toFixed(1)} lbs`);
+                        }}>Calculate</button>
                     </div>
                 </div>
             );
@@ -357,7 +276,7 @@
                     {Object.entries(logs).reverse().map(([date, data]) => (
                         <div key={date} className="card">
                             <h4 style={{color: 'var(--primary)'}}>{date}</h4>
-                            <p style={{textTransform: 'capitalize'}}>{data.day} Session Completed</p>
+                            <p style={{textTransform: 'capitalize'}}>{data.day} Workout Finished</p>
                         </div>
                     ))}
                 </div>
@@ -367,11 +286,10 @@
         function Nav({ view, setView }) {
             return (
                 <div className="nav">
-                    <button className={`nav-btn ${view === 'home' ? 'active' : ''}`} onClick={() => setView('home')}><span className="nav-icon">🏠</span><span className="nav-label">Home</span></button>
-                    <button className={`nav-btn ${view === 'workout' ? 'active' : ''}`} onClick={() => setView('workout')}><span className="nav-icon">💪</span><span className="nav-label">Train</span></button>
-                    <button className={`nav-btn ${view === 'stats' ? 'active' : ''}`} onClick={() => setView('stats')}><span className="nav-icon">📊</span><span className="nav-label">Stats</span></button>
-                    <button className={`nav-btn ${view === 'body' ? 'active' : ''}`} onClick={() => setView('body')}><span className="nav-icon">📏</span><span className="nav-label">Body</span></button>
-                    <button className={`nav-btn ${view === 'history' ? 'active' : ''}`} onClick={() => setView('history')}><span className="nav-icon">📅</span><span className="nav-label">History</span></button>
+                    <button className="nav-btn" onClick={() => setView('home')}>🏠<div className="nav-label">Home</div></button>
+                    <button className="nav-btn" onClick={() => setView('workout')}>💪<div className="nav-label">Train</div></button>
+                    <button className="nav-btn" onClick={() => setView('stats')}>📊<div className="nav-label">Stats</div></button>
+                    <button className="nav-btn" onClick={() => setView('history')}>📅<div className="nav-label">History</div></button>
                 </div>
             );
         }

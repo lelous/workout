@@ -91,7 +91,6 @@
         .action-btn-minimal:active { color: var(--primary); transform: scale(0.95); }
         
         .set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-        /* Numerical Label Style */
         .set-label { width: 30px; font-weight: 800; font-size: 18px; color: var(--text-tertiary); text-align: center; font-feature-settings: "tnum"; }
         .set-input { width: 75px; text-align: center; font-weight: 700; flex-shrink: 0; }
         
@@ -102,7 +101,6 @@
         }
         .autofill-btn:active { opacity: 1; transform: scale(1.2); }
         
-        /* Add Set Button */
         .add-set-btn {
             width: 100%; border: 1px dashed var(--border-color); background: transparent;
             color: var(--text-secondary); padding: 10px; border-radius: 12px;
@@ -155,10 +153,11 @@
         .plate-5 { background: #333; height: 35px; } 
         .plate-2_5 { background: #333; height: 30px; }
 
-        .chart-svg { width: 100%; height: 180px; font-size: 10px; }
+        .chart-svg { width: 100%; height: 180px; font-size: 10px; overflow: visible; }
         .chart-grid { stroke: var(--border-color); stroke-width: 1; stroke-dasharray: 4; }
         .chart-line { fill: none; stroke: var(--primary); stroke-width: 3; }
-        .chart-label { fill: var(--text-secondary); text-anchor: middle; }
+        .chart-label { fill: var(--text-secondary); text-anchor: end; dominant-baseline: middle; }
+        .chart-axis { fill: var(--text-secondary); text-anchor: middle; font-size: 10px; }
     </style>
 </head>
 <body>
@@ -272,16 +271,31 @@
         }
 
         function Home({ setView, workoutLog, customWorkouts }) {
+            const today = new Date();
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
+            const endOfWeek = new Date(today);
+            endOfWeek.setDate(today.getDate() - today.getDay() + 7); // Sunday
+            
+            const weeklyCount = Object.keys(workoutLog).filter(date => {
+                const d = new Date(date);
+                return d >= startOfWeek && d <= endOfWeek;
+            }).length;
+
             return (
                 <div>
                     <div className="card" style={{background: 'var(--primary-grad)', color: 'white'}}>
-                        <h2 style={{margin:0, color:'white', opacity:0.9}}>Sessions</h2>
-                        <h1 style={{fontSize:'48px', margin:'5px 0'}}>{Object.keys(workoutLog).length}</h1>
+                        <h2 style={{margin:0, color:'white', opacity:0.9}}>Weekly Goal</h2>
+                        <h1 style={{fontSize:'48px', margin:'5px 0'}}>{weeklyCount}/5</h1>
+                        <p style={{opacity:0.8, fontSize:'14px'}}>Workouts this week</p>
                     </div>
                     <button className="btn btn-primary" onClick={() => setView('workout')}>Start New Session</button>
+                    <button className="btn btn-secondary" onClick={() => setView('stats')}>Stats & PRs</button>
+                    
                     <div className="card"><h3>Schedule</h3>
                         {Object.entries(customWorkouts).map(([k,v]) => <div key={k} style={{padding:'8px 0', borderBottom:'1px solid #eee', textTransform:'capitalize'}}><strong>{k}</strong>: {v.name}</div>)}
                     </div>
+                    <div className="card"><h3>Daily Targets</h3><p style={{fontSize:'14px', lineHeight:'1.6', color:'var(--text-secondary)'}}>Protein: 220g | Cals: 2500<br/>Carbs: 220g | Fats: 80g</p></div>
                 </div>
             );
         }
@@ -310,10 +324,14 @@
                 reader.readAsText(file);
             };
 
-            const points = measurements.slice(-10).map((m, i, arr) => {
-                const max = Math.max(...arr.map(d => parseFloat(d.weight))) + 5;
-                const min = Math.min(...arr.map(d => parseFloat(d.weight))) - 5;
-                const y = 100 - ((m.weight - min) / (max - min) * 100); 
+            const resetHistory = () => { if(confirm("Clear weight history?")) setMeasurements([]); };
+
+            const dataPoints = measurements.slice(-10);
+            const maxW = Math.max(...dataPoints.map(d => parseFloat(d.weight)), 0) + 5;
+            const minW = Math.min(...dataPoints.map(d => parseFloat(d.weight)), 200) - 5;
+            
+            const points = dataPoints.map((m, i, arr) => {
+                const y = 100 - ((m.weight - minW) / (maxW - minW) * 100); 
                 return `${i * (300 / (arr.length > 1 ? arr.length - 1 : 1))},${y}`;
             }).join(' ');
 
@@ -340,14 +358,22 @@
             return (
                 <div>
                     <div className="card">
-                        <h3>Weight Trend</h3>
-                        <div className="chart-wrapper" style={{width:'100%', height:'150px'}}>
-                            <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
-                                <line x1="0" y1="25" x2="300" y2="25" className="chart-grid" />
-                                <line x1="0" y1="50" x2="300" y2="50" className="chart-grid" />
-                                <line x1="0" y1="75" x2="300" y2="75" className="chart-grid" />
-                                {measurements.length > 1 && <polyline points={points} className="chart-line" style={{fill:'none', stroke:'var(--primary)', strokeWidth:3}} />}
-                            </svg>
+                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                            <h3>Weight Trend</h3>
+                            <button className="action-btn-minimal" style={{color:'var(--danger)', fontSize:'12px'}} onClick={resetHistory}><Icons.Trash/></button>
+                        </div>
+                        <div style={{display:'flex', alignItems:'center'}}>
+                            <div style={{width:'30px', height:'150px', display:'flex', flexDirection:'column', justifyContent:'space-between', fontSize:'10px', color:'var(--text-secondary)', textAlign:'right', paddingRight:'5px'}}>
+                                <span>{Math.round(maxW)}</span><span>{Math.round(minW)}</span>
+                            </div>
+                            <div className="chart-wrapper" style={{width:'100%', height:'150px'}}>
+                                <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
+                                    <line x1="0" y1="25" x2="300" y2="25" className="chart-grid" />
+                                    <line x1="0" y1="50" x2="300" y2="50" className="chart-grid" />
+                                    <line x1="0" y1="75" x2="300" y2="75" className="chart-grid" />
+                                    {measurements.length > 1 && <polyline points={points} className="chart-line" style={{fill:'none', stroke:'var(--primary)', strokeWidth:3}} />}
+                                </svg>
+                            </div>
                         </div>
                         <div style={{display:'flex', gap:'10px', marginTop:'10px'}}>
                             <input type="number" inputMode="decimal" placeholder="Lbs" value={weightForm} onChange={e => setWeightForm(e.target.value)} />

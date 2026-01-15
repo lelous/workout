@@ -6,9 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Workout Log">
-    
     <link rel="apple-touch-icon" href="icon.png">
-    
     <title>Workout Journal</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -16,194 +14,77 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #f5f5f5;
             padding-bottom: calc(100px + env(safe-area-inset-bottom));
             overflow-x: hidden;
         }
-        
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: calc(30px + env(safe-area-inset-top)) 20px 25px 20px;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
         }
-        
-        .header h1 { font-size: 24px; font-weight: 700; }
-        
         .back-btn {
             position: absolute;
             left: 20px;
             top: calc(30px + env(safe-area-inset-top));
             background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
+            border: none; color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600;
         }
-        
-        .container {
-            padding: 16px;
-            max-width: 600px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            width: 100%;
-        }
-        
+        .container { padding: 16px; max-width: 600px; margin: 0 auto; width: 100%; }
+        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); width: 100%; }
+        .card h2 { font-size: 20px; margin-bottom: 8px; color: #333; }
         .card h3 { font-size: 18px; margin-bottom: 12px; font-weight: 600; color: #667eea; }
-        
-        /* FIX: Flexbox row setup to prevent Weight box from bleeding off-screen */
-        .set-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-        
-        .set-label {
-            width: 45px;
-            font-weight: 600;
-            color: #666;
-            font-size: 13px;
-            flex-shrink: 0;
-        }
-        
-        .set-input {
-            flex: 1;
-            min-width: 0; /* Allows input to shrink to fit screen width */
-            padding: 12px 5px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 16px; /* Prevents auto-zoom on iOS */
-            -webkit-appearance: none;
-        }
-
-        .set-unit {
-            font-size: 13px;
-            color: #999;
-            width: 25px;
-            flex-shrink: 0;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 12px;
-        }
-        
+        .exercise-description { background: #f8f9ff; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px; color: #555; }
+        .set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; width: 100%; }
+        .set-label { width: 45px; font-weight: 600; color: #666; font-size: 13px; flex-shrink: 0; }
+        .set-input { flex: 1; min-width: 0; padding: 12px 5px; border: 2px solid #e5e7eb; border-radius: 8px; text-align: center; font-size: 16px; }
+        .set-unit { font-size: 13px; color: #999; width: 25px; flex-shrink: 0; }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; margin-bottom: 12px; }
         .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
-        
-        .day-card {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .day-name { font-size: 18px; font-weight: 700; color: #667eea; text-transform: capitalize; }
-
+        .btn-secondary { background: #e5e7eb; color: #374151; }
+        .day-card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #667eea; }
         .nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-around;
+            position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb;
+            display: flex; justify-content: space-around;
             padding: 12px 8px calc(12px + env(safe-area-inset-bottom)) 8px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000;
         }
-        
-        .nav-btn {
-            background: none;
-            border: none;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            flex: 1;
-        }
-        
+        .nav-btn { background: none; border: none; padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
         .nav-btn.active { background: #f0f4ff; border-radius: 12px; }
         .nav-label { font-size: 10px; font-weight: 600; color: #666; }
         .nav-btn.active .nav-label { color: #667eea; }
-        
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
-        }
+        textarea { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; min-height: 80px; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const WORKOUTS = {
-            monday: {
-                name: "Upper Push + Core",
-                exercises: [
-                    { name: "Flat Barbell Bench Press", sets: 4, reps: "6-8" },
-                    { name: "Incline Dumbbell Press", sets: 3, reps: "8-10" },
-                    { name: "Standing Overhead Press", sets: 4, reps: "6-8" },
-                    { name: "Lateral Raises", sets: 3, reps: "12-15" }
-                ]
-            },
-            tuesday: {
-                name: "Lower + Core",
-                exercises: [
-                    { name: "Squats", sets: 4, reps: "6-8" },
-                    { name: "Romanian Deadlifts", sets: 4, reps: "8-10" },
-                    { name: "Calf Raises", sets: 4, reps: "15-20" }
-                ]
-            }
-            // ... Add your other days back here as needed
+        const DEFAULT_WORKOUTS = {
+            monday: { name: "Upper Push + Core", focus: "Chest, Shoulders, Triceps", exercises: [{ name: "Flat Barbell Bench Press", sets: 4, reps: "6-8", description: "Lower bar to mid-chest, press up." }, { name: "Incline Dumbbell Press", sets: 3, reps: "8-10", description: "30-45 degree incline." }, { name: "Lateral Raises", sets: 3, reps: "12-15", description: "Lead with elbows." }] },
+            tuesday: { name: "Lower + Core", focus: "Quads, Hamstrings", exercises: [{ name: "Squats", sets: 4, reps: "6-8", description: "Chest up, drive through heels." }, { name: "Romanian Deadlifts", sets: 4, reps: "8-10", description: "Hinge at hips." }] },
+            thursday: { name: "Upper Pull + Core", focus: "Back, Rear Delts", exercises: [{ name: "Pull-Ups", sets: 4, reps: "6-10", description: "Full extension at bottom." }, { name: "T-Bar Rows", sets: 4, reps: "8-10", description: "Squeeze shoulder blades." }] },
+            friday: { name: "Lower + Core", focus: "Quads, Hamstrings", exercises: [{ name: "Front Squat", sets: 4, reps: "8-10", description: "Elbows up." }, { name: "Leg Press", sets: 4, reps: "10-12", description: "Don't lock knees." }] }
         };
 
         function App() {
             const [view, setView] = useState('home');
             const [selectedDay, setSelectedDay] = useState(null);
             const [workoutLog, setWorkoutLog] = useState({});
-            const [customWorkouts, setCustomWorkouts] = useState(WORKOUTS);
+            const [customWorkouts, setCustomWorkouts] = useState(DEFAULT_WORKOUTS);
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                const savedLog = localStorage.getItem('workouts');
-                const savedCustom = localStorage.getItem('custom-workouts');
+                const savedLog = localStorage.getItem('workouts_v2');
+                const savedCustom = localStorage.getItem('custom-workouts_v2');
                 if (savedLog) setWorkoutLog(JSON.parse(savedLog));
                 if (savedCustom) setCustomWorkouts(JSON.parse(savedCustom));
                 setLoading(false);
@@ -211,8 +92,8 @@
 
             useEffect(() => {
                 if (!loading) {
-                    localStorage.setItem('workouts', JSON.stringify(workoutLog));
-                    localStorage.setItem('custom-workouts', JSON.stringify(customWorkouts));
+                    localStorage.setItem('workouts_v2', JSON.stringify(workoutLog));
+                    localStorage.setItem('custom-workouts_v2', JSON.stringify(customWorkouts));
                 }
             }, [workoutLog, customWorkouts, loading]);
 
@@ -220,18 +101,16 @@
 
             return (
                 <div>
-                    <div className="header" style={{position: 'relative'}}>
-                        {view !== 'home' && (
-                            <button className="back-btn" onClick={() => { setView('home'); setSelectedDay(null); }}>←</button>
-                        )}
-                        <h1>{view === 'home' ? 'Workout Log' : 'Log Workout'}</h1>
+                    <div className="header">
+                        {view !== 'home' && <button className="back-btn" onClick={() => { setView('home'); setSelectedDay(null); }}>←</button>}
+                        <h1>{view === 'home' ? 'Workout Log' : view === 'history' ? 'History' : view === 'edit' ? 'Settings' : 'Log Workout'}</h1>
                     </div>
 
                     <div className="container">
                         {view === 'home' && (
                             <div>
                                 <button className="btn btn-primary" onClick={() => setView('workout')}>💪 Start Workout</button>
-                                <div className="card"><h3>Welcome Back!</h3><p>Ready to hit your targets today?</p></div>
+                                <div className="card"><h2>Weekly Schedule</h2><p>Mon: Push | Tue: Lower | Thu: Pull | Fri: Lower</p></div>
                             </div>
                         )}
 
@@ -239,41 +118,94 @@
                             <div>
                                 {Object.entries(customWorkouts).map(([key, workout]) => (
                                     <div key={key} className="day-card" onClick={() => setSelectedDay(key)}>
-                                        <div className="day-name">{key}</div>
-                                        <div className="day-focus">{workout.name}</div>
+                                        <div style={{fontWeight: 'bold', color: '#667eea', textTransform: 'capitalize'}}>{key}</div>
+                                        <div style={{fontSize: '14px', color: '#666'}}>{workout.name}</div>
                                     </div>
                                 ))}
                             </div>
                         )}
 
                         {view === 'workout' && selectedDay && (
-                            <div>
-                                {customWorkouts[selectedDay].exercises.map((ex, i) => (
-                                    <div key={i} className="card">
-                                        <h3>{ex.name}</h3>
-                                        {[...Array(ex.sets)].map((_, si) => (
-                                            <div key={si} className="set-row">
-                                                <div className="set-label">Set {si+1}</div>
-                                                <input className="set-input" type="number" pattern="[0-9]*" placeholder="Reps" />
-                                                <input className="set-input" type="number" pattern="[0-9]*" placeholder="Weight" />
-                                                <div className="set-unit">lbs</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ))}
-                                <button className="btn btn-success" onClick={() => {
-                                    alert('Workout Saved!');
-                                    setView('home');
-                                    setSelectedDay(null);
-                                }}>Complete Workout</button>
-                            </div>
+                            <WorkoutView selectedDay={selectedDay} workout={customWorkouts[selectedDay]} onSave={(log) => {
+                                const today = new Date().toISOString().split('T')[0];
+                                setWorkoutLog({...workoutLog, [today]: log});
+                                setView('home'); setSelectedDay(null);
+                            }} />
                         )}
+
+                        {view === 'history' && <HistoryView log={workoutLog} workouts={customWorkouts} />}
+                        {view === 'edit' && <EditView workouts={customWorkouts} setWorkouts={setCustomWorkouts} />}
                     </div>
 
                     <div className="nav">
                         <button className={`nav-btn ${view === 'home' ? 'active' : ''}`} onClick={() => setView('home')}>🏠<div className="nav-label">Home</div></button>
                         <button className={`nav-btn ${view === 'workout' ? 'active' : ''}`} onClick={() => setView('workout')}>💪<div className="nav-label">Workout</div></button>
+                        <button className={`nav-btn ${view === 'edit' ? 'active' : ''}`} onClick={() => setView('edit')}>⚙️<div className="nav-label">Edit</div></button>
+                        <button className={`nav-btn ${view === 'history' ? 'active' : ''}`} onClick={() => setView('history')}>📅<div className="nav-label">History</div></button>
                     </div>
+                </div>
+            );
+        }
+
+        function WorkoutView({ selectedDay, workout, onSave }) {
+            const [formData, setFormData] = useState(workout.exercises.map(ex => ({
+                name: ex.name,
+                sets: Array(ex.sets).fill({ reps: '', weight: '' })
+            })));
+
+            const updateSet = (exIdx, setIdx, field, val) => {
+                const newData = [...formData];
+                newData[exIdx].sets[setIdx] = { ...newData[exIdx].sets[setIdx], [field]: val };
+                setFormData(newData);
+            };
+
+            return (
+                <div>
+                    {workout.exercises.map((ex, i) => (
+                        <div key={i} className="card">
+                            <h3>{ex.name}</h3>
+                            <p style={{fontSize: '12px', color: '#888', marginBottom: '10px'}}>{ex.description}</p>
+                            {formData[i].sets.map((s, si) => (
+                                <div key={si} className="set-row">
+                                    <div className="set-label">Set {si+1}</div>
+                                    <input className="set-input" type="number" placeholder="Reps" value={s.reps} onChange={e => updateSet(i, si, 'reps', e.target.value)} />
+                                    <input className="set-input" type="number" placeholder="Weight" value={s.weight} onChange={e => updateSet(i, si, 'weight', e.target.value)} />
+                                    <div className="set-unit">lbs</div>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                    <button className="btn btn-success" onClick={() => onSave({day: selectedDay, data: formData})}>Save Workout</button>
+                </div>
+            );
+        }
+
+        function HistoryView({ log }) {
+            const dates = Object.keys(log).sort().reverse();
+            return (
+                <div>
+                    {dates.length ? dates.map(d => (
+                        <div key={d} className="card">
+                            <div style={{fontWeight: 'bold', color: '#667eea'}}>{d}</div>
+                            <div style={{fontSize: '14px'}}>{log[d].day.toUpperCase()} session completed.</div>
+                        </div>
+                    )) : <p>No history yet.</p>}
+                </div>
+            );
+        }
+
+        function EditView({ workouts, setWorkouts }) {
+            return (
+                <div>
+                    <p style={{marginBottom: '10px', fontSize: '14px', color: '#666'}}>Modify your plan here. Changes save automatically.</p>
+                    {Object.entries(workouts).map(([day, w]) => (
+                        <div key={day} className="card">
+                            <h3 style={{textTransform: 'capitalize'}}>{day}</h3>
+                            <input style={{width: '100%', padding: '8px', marginBottom: '5px'}} value={w.name} onChange={e => {
+                                const res = {...workouts}; res[day].name = e.target.value; setWorkouts(res);
+                            }} />
+                        </div>
+                    ))}
                 </div>
             );
         }

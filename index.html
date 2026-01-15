@@ -91,7 +91,8 @@
         .action-btn-minimal:active { color: var(--primary); transform: scale(0.95); }
         
         .set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-        .set-label { width: 45px; font-weight: 600; font-size: 13px; color: var(--text-secondary); }
+        /* Numerical Label Style */
+        .set-label { width: 30px; font-weight: 800; font-size: 18px; color: var(--text-tertiary); text-align: center; font-feature-settings: "tnum"; }
         .set-input { width: 75px; text-align: center; font-weight: 700; flex-shrink: 0; }
         
         .autofill-btn {
@@ -101,6 +102,14 @@
         }
         .autofill-btn:active { opacity: 1; transform: scale(1.2); }
         
+        /* Add Set Button */
+        .add-set-btn {
+            width: 100%; border: 1px dashed var(--border-color); background: transparent;
+            color: var(--text-secondary); padding: 10px; border-radius: 12px;
+            font-weight: 600; cursor: pointer; font-size: 14px;
+        }
+        .add-set-btn:active { background: var(--bg-accent); }
+
         .timer-display {
             position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px;
             background: var(--primary-grad); color: white; width: 70px; height: 70px;
@@ -131,6 +140,8 @@
         .stat-lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
         .history-exercise { border-bottom: 1px solid var(--border-color); padding: 8px 0; font-size: 14px; }
+        
+        .reorder-controls { display: flex; gap: 4px; }
         
         /* Visual Plates */
         .barbell-container { display: flex; align-items: center; justify-content: center; margin-top: 15px; overflow-x: auto; padding: 10px 0; }
@@ -172,7 +183,9 @@
             Up: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg>,
             Down: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>,
             Warmup: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.1.2-2.2.6-3.3.9 1.7 2.2 2.9 2.9 3.3z"></path></svg>,
-            Upload: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            Upload: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>,
+            Plus: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>,
+            Close: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         };
 
         const DEFAULT_WORKOUTS = {
@@ -196,7 +209,6 @@
                 const load = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; }};
                 const savedCustom = load('customWorkouts');
                 setWorkoutLog(load('workouts') || {});
-                // Fix: Ensure custom workouts has at least valid days, else use default
                 setCustomWorkouts((savedCustom && Object.keys(savedCustom).length > 0) ? savedCustom : DEFAULT_WORKOUTS);
                 setMeasurements(load('measurements') || []);
                 setPersonalRecords(load('personal-records') || {});
@@ -315,8 +327,8 @@
                         <div key={i} className="card" style={{display:'flex', justifyContent:'space-between'}}>
                             <span>{ex.name}</span>
                             <div style={{display:'flex', gap:'5px'}}>
-                                <button className="action-btn-minimal" onClick={() => moveExercise(viewDay, i, -1)}><Icons.Up/></button>
-                                <button className="action-btn-minimal" onClick={() => moveExercise(viewDay, i, 1)}><Icons.Down/></button>
+                                <button className="autofill-btn" onClick={() => moveExercise(viewDay, i, -1)}><Icons.Up/></button>
+                                <button className="autofill-btn" onClick={() => moveExercise(viewDay, i, 1)}><Icons.Down/></button>
                                 <button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteEx(viewDay, i)}><Icons.Trash/></button>
                             </div>
                         </div>
@@ -398,6 +410,18 @@
                 const name = prompt('Exercise Name:');
                 if(!name) return;
                 const newSets = [...sets, { name, logs: Array(3).fill().map(() => ({ reps: '', weight: '' })) }];
+                setSets(newSets);
+            };
+
+            const addSet = (exIdx) => {
+                const newSets = [...sets];
+                newSets[exIdx].logs.push({ reps: '', weight: '', note: '' });
+                setSets(newSets);
+            };
+
+            const removeSet = (exIdx, setIdx) => {
+                const newSets = [...sets];
+                newSets[exIdx].logs.splice(setIdx, 1);
                 setSets(newSets);
             };
 
@@ -526,7 +550,7 @@
                                     <div key={sIdx}>
                                         {hist && <div className="last-workout" style={{fontSize:'11px', color:'var(--text-tertiary)', marginLeft:'50px', marginBottom:'4px'}}>Last: {hist.weight}x{hist.reps}</div>}
                                         <div className="set-row">
-                                            <div className="set-label">Set {sIdx+1}</div>
+                                            <div className="set-label">{sIdx + 1}</div>
                                             <input type="number" inputMode="decimal" placeholder="Reps" className="set-input" value={set.reps} onChange={e => {
                                                 const n = [...sets]; n[exIdx].logs[sIdx].reps = e.target.value; setSets(n);
                                             }} onBlur={() => setRest(90)} />
@@ -534,10 +558,12 @@
                                                 const n = [...sets]; n[exIdx].logs[sIdx].weight = e.target.value; setSets(n);
                                             }} />
                                             <button className="autofill-btn" onClick={() => autoFill(exIdx, sIdx)}><Icons.Magic/></button>
+                                            <button className="action-btn-minimal" style={{color:'var(--danger)', marginLeft:'5px'}} onClick={() => removeSet(exIdx, sIdx)}><Icons.Close/></button>
                                         </div>
                                     </div>
                                 );
                             })}
+                            <button className="add-set-btn" onClick={() => addSet(exIdx)}>+ Add Set</button>
                         </div>
                     ))}
                     <button className="btn btn-success" onClick={finish}>Complete Workout</button>
@@ -575,7 +601,7 @@
                             {data.exercises && data.exercises.map((ex, i) => {
                                 const setsSummary = ex.logs.filter(l => l.weight && l.reps).map(l => `${l.weight}x${l.reps}`).join(', ');
                                 if (!setsSummary) return null;
-                                return <div key={i} className="history-exercise"><strong>{ex.name}</strong><div style={{fontSize:'13px', color:'var(--text-secondary)'}}>{setsSummary}</div></div>;
+                                return <div key={i} className="history-exercise"><strong>{ex.name}</strong><div className="history-sets">{setsSummary}</div></div>;
                             })}
                         </div>
                     ))}

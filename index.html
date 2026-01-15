@@ -5,12 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Workout Log">
-    <title>Workout Journal</title>
+    <meta name="apple-mobile-web-app-title" content="Workout Pro">
+    <title>Workout Journal Pro</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
+        :root {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-accent: #f0f4ff;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --text-tertiary: #999;
+            --border-color: #e5e7eb;
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --success: #11998e;
+            --success-light: #38ef7d;
+            --danger: #c00;
+            --danger-bg: #fee;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-accent: #3a3a5a;
+            --text-primary: #e5e5e5;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --border-color: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -19,21 +47,44 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f5f5;
+            background: var(--bg-primary);
             padding-bottom: 80px;
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.3s;
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .header h1 {
             font-size: 24px;
             font-weight: 700;
+        }
+        
+        .header-actions {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .icon-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
         }
         
         .back-btn {
@@ -55,39 +106,39 @@
         }
         
         .card {
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px var(--shadow);
         }
         
         .card h2 {
             font-size: 20px;
             margin-bottom: 8px;
-            color: #333;
+            color: var(--text-primary);
         }
         
         .card h3 {
             font-size: 18px;
             margin-bottom: 12px;
             font-weight: 600;
-            color: #667eea;
+            color: var(--primary);
         }
         
         .exercise-description {
-            background: #f8f9ff;
+            background: var(--bg-accent);
             padding: 12px;
             border-radius: 8px;
             margin: 12px 0;
             font-size: 14px;
             line-height: 1.6;
-            color: #555;
+            color: var(--text-secondary);
         }
         
         .description-title {
             font-weight: 600;
-            color: #667eea;
+            color: var(--primary);
             margin-bottom: 6px;
         }
         
@@ -108,29 +159,29 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
             color: white;
         }
         
         .btn-secondary {
-            background: #e5e7eb;
-            color: #374151;
+            background: var(--border-color);
+            color: var(--text-primary);
         }
         
         .day-card {
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px var(--shadow);
             cursor: pointer;
             transition: all 0.2s;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid var(--primary);
         }
         
         .day-card:active {
@@ -140,13 +191,13 @@
         .day-name {
             font-size: 18px;
             font-weight: 700;
-            color: #667eea;
+            color: var(--primary);
             text-transform: capitalize;
         }
         
         .day-focus {
             font-size: 14px;
-            color: #666;
+            color: var(--text-secondary);
             margin-top: 4px;
         }
         
@@ -155,12 +206,13 @@
             gap: 8px;
             align-items: center;
             margin-bottom: 10px;
+            position: relative;
         }
         
         .set-label {
             width: 50px;
             font-weight: 600;
-            color: #666;
+            color: var(--text-secondary);
             font-size: 14px;
             flex-shrink: 0;
         }
@@ -168,22 +220,81 @@
         .set-input {
             width: 70px;
             padding: 10px 8px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             text-align: center;
             font-size: 16px;
             flex-shrink: 0;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
         }
         
         .set-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary);
+        }
+        
+        .set-note-btn {
+            background: var(--bg-accent);
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--primary);
+            cursor: pointer;
+            margin-left: 4px;
+        }
+        
+        .last-workout {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+            font-style: italic;
+        }
+        
+        .pr-badge {
+            background: gold;
+            color: #333;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        
+        .timer-display {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px var(--shadow);
+            z-index: 90;
+            min-width: 70px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .timer-display.finished {
+            background: var(--success);
+            animation: pulse 0.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         .progress-bar {
             width: 100%;
             height: 8px;
-            background: #e5e7eb;
+            background: var(--border-color);
             border-radius: 4px;
             overflow: hidden;
             margin-top: 12px;
@@ -191,7 +302,7 @@
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             transition: width 0.3s;
         }
         
@@ -200,18 +311,18 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: white;
-            border-top: 1px solid #e5e7eb;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
             padding: 12px 8px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 -2px 10px var(--shadow);
         }
         
         .nav-btn {
             background: none;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 12px;
             cursor: pointer;
             display: flex;
@@ -219,24 +330,25 @@
             align-items: center;
             gap: 4px;
             transition: all 0.2s;
+            min-width: 60px;
         }
         
         .nav-btn.active {
-            background: #f0f4ff;
+            background: var(--bg-accent);
         }
         
         .nav-icon {
-            font-size: 24px;
+            font-size: 22px;
         }
         
         .nav-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            color: #666;
+            color: var(--text-secondary);
         }
         
         .nav-btn.active .nav-label {
-            color: #667eea;
+            color: var(--primary);
         }
         
         .stat-grid {
@@ -247,22 +359,22 @@
         }
         
         .stat-card {
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 16px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px var(--shadow);
         }
         
         .stat-value {
             font-size: 28px;
             font-weight: 700;
-            color: #667eea;
+            color: var(--primary);
         }
         
         .stat-label {
             font-size: 12px;
-            color: #666;
+            color: var(--text-secondary);
             margin-top: 4px;
         }
         
@@ -277,20 +389,65 @@
             margin-top: 8px;
         }
         
-        textarea {
+        [data-theme="dark"] .info-badge {
+            background: #4a4419;
+            color: #ffc107;
+        }
+        
+        textarea, input[type="text"], input[type="number"] {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-family: inherit;
             font-size: 14px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        textarea {
             min-height: 80px;
             resize: vertical;
         }
         
-        textarea:focus {
+        textarea:focus, input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal h3 {
+            margin-bottom: 16px;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            margin: 16px 0;
+            position: relative;
         }
     </style>
 </head>
@@ -298,7 +455,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         // Workout data with descriptions
         const WORKOUTS = {
@@ -306,234 +463,59 @@
                 name: "Upper Push + Core",
                 focus: "Chest, Shoulders, Triceps",
                 exercises: [
-                    { 
-                        name: "Flat Barbell Bench Press", 
-                        sets: 4, 
-                        reps: "6-8", 
-                        description: "Lie on flat bench, feet flat on floor. Lower bar to mid-chest, press up. Keep shoulder blades retracted. Control the descent, explosive press."
-                    },
-                    { 
-                        name: "Incline Dumbbell Press", 
-                        sets: 3, 
-                        reps: "8-10",
-                        description: "Set bench to 30-45°. Press dumbbells up from chest level. Elbows at 45° angle. Squeeze chest at top."
-                    },
-                    { 
-                        name: "Standing Overhead Press", 
-                        sets: 4, 
-                        reps: "6-8",
-                        description: "Stand with barbell at shoulders. Press overhead, lock out arms. Keep core tight. Bar path straight up and down."
-                    },
-                    { 
-                        name: "Cable Flyes", 
-                        sets: 3, 
-                        reps: "12-15",
-                        description: "Set cables at chest height. Bring handles together in front of chest. Slight bend in elbows. Squeeze chest hard."
-                    },
-                    { 
-                        name: "Lateral Raises", 
-                        sets: 3, 
-                        reps: "12-15",
-                        description: "Raise dumbbells out to sides until parallel to floor. Lead with elbows. Control on the way down. Don't swing."
-                    },
-                    { 
-                        name: "Dips", 
-                        sets: 3, 
-                        reps: "8-12",
-                        description: "Lean forward slightly for chest emphasis. Lower until upper arms parallel to floor. Don't bounce at bottom."
-                    },
-                    { 
-                        name: "Tricep Pushdowns", 
-                        sets: 3, 
-                        reps: "12-15",
-                        description: "Keep elbows pinned to sides. Push down until arms fully extended. Squeeze triceps at bottom. Control the return."
-                    },
-                    { 
-                        name: "Cable Woodchops", 
-                        sets: 3, 
-                        reps: "12/side",
-                        description: "Stand sideways to cable. Pull from high to low across body. Rotate through core, not just arms. Control the movement."
-                    },
-                    { 
-                        name: "Hanging Leg Raises", 
-                        sets: 3, 
-                        reps: "10-15",
-                        description: "Hang from bar. Raise legs to 90°. Keep legs straight if possible. Control the swing. Lower abs pull legs up."
-                    }
+                    { name: "Flat Barbell Bench Press", sets: 4, reps: "6-8", rest: 240, description: "Lie on flat bench, feet flat on floor. Lower bar to mid-chest, press up. Keep shoulder blades retracted. Control the descent, explosive press." },
+                    { name: "Incline Dumbbell Press", sets: 3, reps: "8-10", rest: 180, description: "Set bench to 30-45°. Press dumbbells up from chest level. Elbows at 45° angle. Squeeze chest at top." },
+                    { name: "Standing Overhead Press", sets: 4, reps: "6-8", rest: 180, description: "Stand with barbell at shoulders. Press overhead, lock out arms. Keep core tight. Bar path straight up and down." },
+                    { name: "Cable Flyes", sets: 3, reps: "12-15", rest: 90, description: "Set cables at chest height. Bring handles together in front of chest. Slight bend in elbows. Squeeze chest hard." },
+                    { name: "Lateral Raises", sets: 3, reps: "12-15", rest: 60, description: "Raise dumbbells out to sides until parallel to floor. Lead with elbows. Control on the way down. Don't swing." },
+                    { name: "Dips", sets: 3, reps: "8-12", rest: 120, description: "Lean forward slightly for chest emphasis. Lower until upper arms parallel to floor. Don't bounce at bottom." },
+                    { name: "Tricep Pushdowns", sets: 3, reps: "12-15", rest: 60, description: "Keep elbows pinned to sides. Push down until arms fully extended. Squeeze triceps at bottom. Control the return." },
+                    { name: "Cable Woodchops", sets: 3, reps: "12/side", rest: 45, description: "Stand sideways to cable. Pull from high to low across body. Rotate through core, not just arms. Control the movement." },
+                    { name: "Hanging Leg Raises", sets: 3, reps: "10-15", rest: 60, description: "Hang from bar. Raise legs to 90°. Keep legs straight if possible. Control the swing. Lower abs pull legs up." }
                 ]
             },
             tuesday: {
                 name: "Lower + Core",
                 focus: "Quads, Hamstrings, Glutes",
                 exercises: [
-                    { 
-                        name: "Squats", 
-                        sets: 4, 
-                        reps: "6-8",
-                        description: "Feet shoulder-width. Sit back and down. Knees track over toes. Chest up. Drive through heels. ACL: Control depth, stop before pain."
-                    },
-                    { 
-                        name: "Romanian Deadlifts", 
-                        sets: 4, 
-                        reps: "8-10",
-                        description: "Slight knee bend. Hinge at hips. Push hips back. Feel stretch in hamstrings. Keep bar close to legs. Neutral spine."
-                    },
-                    { 
-                        name: "Bulgarian Split Squats", 
-                        sets: 3, 
-                        reps: "10-12/leg",
-                        description: "Rear foot elevated on bench. Lower front knee to 90°. Torso upright. Drive through front heel. ACL: Control descent, reduce weight if needed."
-                    },
-                    { 
-                        name: "Leg Press", 
-                        sets: 3, 
-                        reps: "12-15",
-                        description: "Feet shoulder-width on platform. Lower until knees at 90°. Push through heels. Don't lock out knees at top."
-                    },
-                    { 
-                        name: "Leg Curls", 
-                        sets: 3, 
-                        reps: "12-15",
-                        description: "Curl heels toward glutes. Squeeze hamstrings at top. Control the lowering phase. Keep hips down on pad."
-                    },
-                    { 
-                        name: "Walking Lunges", 
-                        sets: 3, 
-                        reps: "12/leg",
-                        description: "Step forward, lower back knee toward ground. Front knee stays over ankle. Push through front heel. ACL: Bodyweight or light dumbbells only."
-                    },
-                    { 
-                        name: "Calf Raises", 
-                        sets: 4, 
-                        reps: "15-20",
-                        description: "Rise up on balls of feet. Full range of motion. Hold squeeze at top. Control the descent. Stretch at bottom."
-                    },
-                    { 
-                        name: "Med Ball Slams", 
-                        sets: 3, 
-                        reps: "10/side",
-                        description: "Rotate and slam ball to outside of foot. Pick up, rotate other way. Explosive movement. Engage obliques."
-                    },
-                    { 
-                        name: "Pallof Press", 
-                        sets: 3, 
-                        reps: "12/side",
-                        description: "Stand sideways to cable at chest height. Press straight out. Resist rotation. Hold briefly. Return to chest."
-                    }
+                    { name: "Squats", sets: 4, reps: "6-8", rest: 240, description: "Feet shoulder-width. Sit back and down. Knees track over toes. Chest up. Drive through heels. ACL: Control depth, stop before pain." },
+                    { name: "Romanian Deadlifts", sets: 4, reps: "8-10", rest: 180, description: "Slight knee bend. Hinge at hips. Push hips back. Feel stretch in hamstrings. Keep bar close to legs. Neutral spine." },
+                    { name: "Bulgarian Split Squats", sets: 3, reps: "10-12/leg", rest: 120, description: "Rear foot elevated on bench. Lower front knee to 90°. Torso upright. Drive through front heel. ACL: Control descent, reduce weight if needed." },
+                    { name: "Leg Press", sets: 3, reps: "12-15", rest: 120, description: "Feet shoulder-width on platform. Lower until knees at 90°. Push through heels. Don't lock out knees at top." },
+                    { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Curl heels toward glutes. Squeeze hamstrings at top. Control the lowering phase. Keep hips down on pad." },
+                    { name: "Walking Lunges", sets: 3, reps: "12/leg", rest: 90, description: "Step forward, lower back knee toward ground. Front knee stays over ankle. Push through front heel. ACL: Bodyweight or light dumbbells only." },
+                    { name: "Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Rise up on balls of feet. Full range of motion. Hold squeeze at top. Control the descent. Stretch at bottom." },
+                    { name: "Med Ball Slams", sets: 3, reps: "10/side", rest: 45, description: "Rotate and slam ball to outside of foot. Pick up, rotate other way. Explosive movement. Engage obliques." },
+                    { name: "Pallof Press", sets: 3, reps: "12/side", rest: 60, description: "Stand sideways to cable at chest height. Press straight out. Resist rotation. Hold briefly. Return to chest." }
                 ]
             },
             thursday: {
                 name: "Upper Pull + Core",
                 focus: "Back, Rear Delts",
                 exercises: [
-                    { 
-                        name: "Pull-Ups", 
-                        sets: 4, 
-                        reps: "6-10",
-                        description: "Hands slightly wider than shoulders. Pull chest to bar. Lead with chest. Full extension at bottom. Vary grip: overhand (lats), neutral (biceps), chin-ups (max biceps)."
-                    },
-                    { 
-                        name: "T-Bar Rows", 
-                        sets: 4, 
-                        reps: "8-10",
-                        description: "Stand on platform for better ROM. Hinge at hips. Pull to lower chest. Squeeze shoulder blades. Keep chest up."
-                    },
-                    { 
-                        name: "Barbell/DB Rows", 
-                        sets: 4, 
-                        reps: "8-12",
-                        description: "Barbell: underhand for biceps, overhand for lats. Dumbbell: better ROM, unilateral. Pull to hip/lower chest. Retract shoulder blades."
-                    },
-                    { 
-                        name: "Cable Rows", 
-                        sets: 3, 
-                        reps: "10-12",
-                        description: "Sit upright. Pull handle to lower chest. Squeeze shoulder blades. Full stretch forward. Constant tension."
-                    },
-                    { 
-                        name: "Face Pulls", 
-                        sets: 3, 
-                        reps: "15-20",
-                        description: "Rope attachment. Pull to face level. External rotation at end. Elbows high. Critical for shoulder health."
-                    },
-                    { 
-                        name: "Chest-Supported Rows", 
-                        sets: 3, 
-                        reps: "12-15",
-                        description: "Set bench to 30-45° incline. Lie chest-down. Pull dumbbells or handles to lower chest. Squeeze shoulder blades hard at top. Control the negative. Removes lower back fatigue."
-                    },
-                    { 
-                        name: "Cable Oblique Twists", 
-                        sets: 3, 
-                        reps: "12/side",
-                        description: "Single handle at chest. Stand sideways. Pull across body. Focus on oblique contraction, not arm pull."
-                    },
-                    { 
-                        name: "RKC Plank", 
-                        sets: 3, 
-                        reps: "30-45 sec",
-                        description: "Regular plank position. Maximum tension - squeeze glutes, quads. Pull elbows toward toes. Full-body tension. Harder than regular plank."
-                    }
+                    { name: "Pull-Ups", sets: 4, reps: "6-10", rest: 180, description: "Hands slightly wider than shoulders. Pull chest to bar. Lead with chest. Full extension at bottom. Vary grip: overhand (lats), neutral (biceps), chin-ups (max biceps)." },
+                    { name: "T-Bar Rows", sets: 4, reps: "8-10", rest: 180, description: "Stand on platform for better ROM. Hinge at hips. Pull to lower chest. Squeeze shoulder blades. Keep chest up." },
+                    { name: "Barbell/DB Rows", sets: 4, reps: "8-12", rest: 180, description: "Barbell: underhand for biceps, overhand for lats. Dumbbell: better ROM, unilateral. Pull to hip/lower chest. Retract shoulder blades." },
+                    { name: "Cable Rows", sets: 3, reps: "10-12", rest: 120, description: "Sit upright. Pull handle to lower chest. Squeeze shoulder blades. Full stretch forward. Constant tension." },
+                    { name: "Face Pulls", sets: 3, reps: "15-20", rest: 90, description: "Rope attachment. Pull to face level. External rotation at end. Elbows high. Critical for shoulder health." },
+                    { name: "Chest-Supported Rows", sets: 3, reps: "12-15", rest: 90, description: "Set bench to 30-45° incline. Lie chest-down. Pull dumbbells or handles to lower chest. Squeeze shoulder blades hard at top. Control the negative. Removes lower back fatigue." },
+                    { name: "Cable Oblique Twists", sets: 3, reps: "12/side", rest: 45, description: "Single handle at chest. Stand sideways. Pull across body. Focus on oblique contraction, not arm pull." },
+                    { name: "RKC Plank", sets: 3, reps: "30-45 sec", rest: 60, description: "Regular plank position. Maximum tension - squeeze glutes, quads. Pull elbows toward toes. Full-body tension. Harder than regular plank." }
                 ]
             },
             friday: {
                 name: "Lower + Core",
                 focus: "Quads, Hamstrings, Glutes",
                 exercises: [
-                    { 
-                        name: "Front/Goblet Squat", 
-                        sets: 4, 
-                        reps: "8-10",
-                        description: "Front: bar racked on front delts. Goblet: hold dumbbell at chest. Torso upright. Elbows up. ACL: Control tempo, stop before pain."
-                    },
-                    { 
-                        name: "Leg Press", 
-                        sets: 4, 
-                        reps: "10-12",
-                        description: "Feet shoulder-width, mid-platform. Lower to 90°. Push through full foot. Don't lock knees. Control the weight."
-                    },
-                    { 
-                        name: "Hack Squat", 
-                        sets: 3, 
-                        reps: "12-15",
-                        description: "Shoulders under pads. Feet forward on platform. Lower controlled. Drive through heels. Quad focus. ACL: Skip leg extensions if issue, add extra hack squats."
-                    },
-                    { 
-                        name: "Stiff-Leg Deadlifts", 
-                        sets: 3, 
-                        reps: "10-12",
-                        description: "Slight knee bend throughout. Hinge at hips. Feel stretch in hamstrings. Keep back flat. Bar stays close to legs."
-                    },
-                    { 
-                        name: "Leg Curls", 
-                        sets: 3, 
-                        reps: "12-15",
-                        description: "Lying or seated. Curl heels to glutes. Squeeze at top. Slow negative. Focus on hamstring contraction."
-                    },
-                    { 
-                        name: "Reverse Lunges", 
-                        sets: 3, 
-                        reps: "10/leg",
-                        description: "Hold goblet dumbbell. Step back. Lower back knee down. Front knee stays over ankle. Push through front heel. ACL: Slower tempo, more control."
-                    },
-                    { 
-                        name: "Seated Calf Raises", 
-                        sets: 4, 
-                        reps: "15-20",
-                        description: "Knees bent targets soleus. Full ROM. Hold top squeeze. Slow controlled negative. Deep stretch at bottom."
-                    },
-                    { 
-                        name: "Copenhagen Plank", 
-                        sets: 3, 
-                        reps: "20-30 sec/side",
-                        description: "Side plank. Top foot on bench. Bottom leg hovering. Intense adductor and oblique work. Modification: bottom knee can touch ground."
-                    },
-                    { 
-                        name: "Mountain Climbers", 
-                        sets: 3, 
-                        reps: "20 total",
-                        description: "Plank position. Drive knees to chest alternating. Keep hips level. Controlled movement. Dynamic core and hip flexor work."
-                    }
+                    { name: "Front/Goblet Squat", sets: 4, reps: "8-10", rest: 180, description: "Front: bar racked on front delts. Goblet: hold dumbbell at chest. Torso upright. Elbows up. ACL: Control tempo, stop before pain." },
+                    { name: "Leg Press", sets: 4, reps: "10-12", rest: 120, description: "Feet shoulder-width, mid-platform. Lower to 90°. Push through full foot. Don't lock knees. Control the weight." },
+                    { name: "Hack Squat", sets: 3, reps: "12-15", rest: 90, description: "Shoulders under pads. Feet forward on platform. Lower controlled. Drive through heels. Quad focus. ACL: Skip leg extensions if issue, add extra hack squats." },
+                    { name: "Stiff-Leg Deadlifts", sets: 3, reps: "10-12", rest: 120, description: "Slight knee bend throughout. Hinge at hips. Feel stretch in hamstrings. Keep back flat. Bar stays close to legs." },
+                    { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Lying or seated. Curl heels to glutes. Squeeze at top. Slow negative. Focus on hamstring contraction." },
+                    { name: "Reverse Lunges", sets: 3, reps: "10/leg", rest: 90, description: "Hold goblet dumbbell. Step back. Lower back knee down. Front knee stays over ankle. Push through front heel. ACL: Slower tempo, more control." },
+                    { name: "Seated Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Knees bent targets soleus. Full ROM. Hold top squeeze. Slow controlled negative. Deep stretch at bottom." },
+                    { name: "Copenhagen Plank", sets: 3, reps: "20-30 sec/side", rest: 60, description: "Side plank. Top foot on bench. Bottom leg hovering. Intense adductor and oblique work. Modification: bottom knee can touch ground." },
+                    { name: "Mountain Climbers", sets: 3, reps: "20 total", rest: 45, description: "Plank position. Drive knees to chest alternating. Keep hips level. Controlled movement. Dynamic core and hip flexor work." }
                 ]
             }
         };
@@ -543,26 +525,33 @@
             const [selectedDay, setSelectedDay] = useState(null);
             const [workoutLog, setWorkoutLog] = useState({});
             const [customWorkouts, setCustomWorkouts] = useState(WORKOUTS);
+            const [measurements, setMeasurements] = useState([]);
+            const [personalRecords, setPersonalRecords] = useState({});
+            const [darkMode, setDarkMode] = useState(false);
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
                 const savedLog = localStorage.getItem('workouts');
                 const savedCustom = localStorage.getItem('custom-workouts');
+                const savedMeasurements = localStorage.getItem('measurements');
+                const savedPRs = localStorage.getItem('personal-records');
+                const savedDarkMode = localStorage.getItem('dark-mode');
                 
                 if (savedLog) {
-                    try {
-                        setWorkoutLog(JSON.parse(savedLog));
-                    } catch (e) {
-                        console.log('Error loading data');
-                    }
+                    try { setWorkoutLog(JSON.parse(savedLog)); } catch (e) {}
                 }
-                
                 if (savedCustom) {
-                    try {
-                        setCustomWorkouts(JSON.parse(savedCustom));
-                    } catch (e) {
-                        console.log('Error loading custom workouts');
-                    }
+                    try { setCustomWorkouts(JSON.parse(savedCustom)); } catch (e) {}
+                }
+                if (savedMeasurements) {
+                    try { setMeasurements(JSON.parse(savedMeasurements)); } catch (e) {}
+                }
+                if (savedPRs) {
+                    try { setPersonalRecords(JSON.parse(savedPRs)); } catch (e) {}
+                }
+                if (savedDarkMode === 'true') {
+                    setDarkMode(true);
+                    document.documentElement.setAttribute('data-theme', 'dark');
                 }
                 
                 setLoading(false);
@@ -572,8 +561,16 @@
                 if (!loading) {
                     localStorage.setItem('workouts', JSON.stringify(workoutLog));
                     localStorage.setItem('custom-workouts', JSON.stringify(customWorkouts));
+                    localStorage.setItem('measurements', JSON.stringify(measurements));
+                    localStorage.setItem('personal-records', JSON.stringify(personalRecords));
+                    localStorage.setItem('dark-mode', darkMode);
                 }
-            }, [workoutLog, customWorkouts, loading]);
+            }, [workoutLog, customWorkouts, measurements, personalRecords, darkMode, loading]);
+
+            const toggleDarkMode = () => {
+                setDarkMode(!darkMode);
+                document.documentElement.setAttribute('data-theme', !darkMode ? 'dark' : 'light');
+            };
 
             if (loading) {
                 return <div className="container"><h2>Loading...</h2></div>;
@@ -581,11 +578,19 @@
 
             return (
                 <div>
-                    <Header view={view} setView={setView} setSelectedDay={setSelectedDay} />
+                    <Header 
+                        view={view} 
+                        setView={setView} 
+                        setSelectedDay={setSelectedDay}
+                        darkMode={darkMode}
+                        toggleDarkMode={toggleDarkMode}
+                    />
                     
                     <div className="container">
                         {view === 'home' && <Home setView={setView} workoutLog={workoutLog} />}
-                        {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} customWorkouts={customWorkouts} />}
+                        {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} customWorkouts={customWorkouts} personalRecords={personalRecords} setPersonalRecords={setPersonalRecords} />}
+                        {view === 'stats' && <Stats workoutLog={workoutLog} customWorkouts={customWorkouts} />}
+                        {view === 'measurements' && <Measurements measurements={measurements} setMeasurements={setMeasurements} />}
                         {view === 'edit' && <EditWorkouts customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} setView={setView} />}
                         {view === 'history' && <History workoutLog={workoutLog} customWorkouts={customWorkouts} />}
                     </div>
@@ -595,12 +600,31 @@
             );
         }
 
-        function Header({ view, setView, setSelectedDay }) {
+        function Header({ view, setView, setSelectedDay, darkMode, toggleDarkMode }) {
             const titles = {
-                home: 'Workout Log',
+                home: 'Workout Pro',
                 workout: 'Log Workout',
+                stats: 'Stats & PRs',
+                measurements: 'Measurements',
                 edit: 'Edit Workouts',
                 history: 'History'
+            };
+
+            const exportData = () => {
+                const data = {
+                    workouts: JSON.parse(localStorage.getItem('workouts') || '{}'),
+                    measurements: JSON.parse(localStorage.getItem('measurements') || '[]'),
+                    personalRecords: JSON.parse(localStorage.getItem('personal-records') || '{}')
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `workout-data-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                
+                alert('Data exported! ✓');
             };
 
             return (
@@ -611,6 +635,16 @@
                         </button>
                     )}
                     <h1>{titles[view]}</h1>
+                    <div className="header-actions">
+                        <button className="icon-btn" onClick={toggleDarkMode}>
+                            {darkMode ? '☀️' : '🌙'}
+                        </button>
+                        {view === 'home' && (
+                            <button className="icon-btn" onClick={exportData}>
+                                📤
+                            </button>
+                        )}
+                    </div>
                 </div>
             );
         }
@@ -626,9 +660,13 @@
                         <div className="nav-icon">💪</div>
                         <div className="nav-label">Workout</div>
                     </button>
-                    <button className={`nav-btn ${view === 'edit' ? 'active' : ''}`} onClick={() => setView('edit')}>
-                        <div className="nav-icon">⚙️</div>
-                        <div className="nav-label">Edit</div>
+                    <button className={`nav-btn ${view === 'stats' ? 'active' : ''}`} onClick={() => setView('stats')}>
+                        <div className="nav-icon">📊</div>
+                        <div className="nav-label">Stats</div>
+                    </button>
+                    <button className={`nav-btn ${view === 'measurements' ? 'active' : ''}`} onClick={() => setView('measurements')}>
+                        <div className="nav-icon">📏</div>
+                        <div className="nav-label">Body</div>
                     </button>
                     <button className={`nav-btn ${view === 'history' ? 'active' : ''}`} onClick={() => setView('history')}>
                         <div className="nav-icon">📅</div>
@@ -649,6 +687,19 @@
                 return logWeek === currentWeek && workoutLog[key].completed;
             }).length;
 
+            // Calculate streak
+            let streak = 0;
+            const dates = Object.keys(workoutLog).sort().reverse();
+            for (let i = 0; i < dates.length; i++) {
+                const date = new Date(dates[i]);
+                const expected = new Date();
+                expected.setDate(expected.getDate() - i);
+                if (date.toISOString().split('T')[0] === expected.toISOString().split('T')[0]) {
+                    if (workoutLog[dates[i]].completed) streak++;
+                    else break;
+                } else break;
+            }
+
             return (
                 <div>
                     <div className="stat-grid">
@@ -662,15 +713,27 @@
                             </div>
                             <div className="stat-label">Today</div>
                         </div>
+                        <div className="stat-card">
+                            <div className="stat-value">{streak}</div>
+                            <div className="stat-label">Day Streak 🔥</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value">{Object.keys(workoutLog).length}</div>
+                            <div className="stat-label">Total Workouts</div>
+                        </div>
                     </div>
 
                     <button className="btn btn-primary" onClick={() => setView('workout')}>
                         💪 Start Workout
                     </button>
 
+                    <button className="btn btn-success" onClick={() => setView('stats')}>
+                        📊 View Stats & PRs
+                    </button>
+
                     <div className="card">
                         <h2 style={{marginBottom: '12px'}}>Weekly Schedule</h2>
-                        <div style={{fontSize: '14px', lineHeight: '1.8', color: '#666'}}>
+                        <div style={{fontSize: '14px', lineHeight: '1.8', color: 'var(--text-secondary)'}}>
                             <div><strong>Monday:</strong> Upper Push + Core</div>
                             <div><strong>Tuesday:</strong> Lower + Core</div>
                             <div><strong>Wednesday:</strong> Cardio + Mobility</div>
@@ -681,7 +744,7 @@
 
                     <div className="card">
                         <h2 style={{marginBottom: '8px'}}>Daily Targets</h2>
-                        <div style={{fontSize: '14px', lineHeight: '1.8', color: '#666'}}>
+                        <div style={{fontSize: '14px', lineHeight: '1.8', color: 'var(--text-secondary)'}}>
                             <div>Protein: <strong>220g</strong></div>
                             <div>Calories: <strong>2,400-2,500</strong></div>
                             <div>Carbs: <strong>200-220g</strong> (training)</div>
@@ -692,25 +755,112 @@
             );
         }
 
-        function Workout({ selectedDay, setSelectedDay, workoutLog, setWorkoutLog, customWorkouts }) {
+        // Continue in next part due to length...
+        
+        function Workout({ selectedDay, setSelectedDay, workoutLog, setWorkoutLog, customWorkouts, personalRecords, setPersonalRecords }) {
             const [sets, setSets] = useState([]);
             const [notes, setNotes] = useState('');
             const [expandedEx, setExpandedEx] = useState({});
             const [editMode, setEditMode] = useState(false);
             const [workoutExercises, setWorkoutExercises] = useState([]);
+            const [timer, setTimer] = useState(null);
+            const [restTime, setRestTime] = useState(0);
+            const [showPlateCalc, setShowPlateCalc] = useState(false);
+            const [plateCalcWeight, setPlateCalcWeight] = useState('');
+            const [setNotes, setSetNotes] = useState({});
+            const timerRef = useRef(null);
 
             useEffect(() => {
                 if (selectedDay) {
                     const workout = customWorkouts[selectedDay];
                     setWorkoutExercises([...workout.exercises]);
+                    
+                    // Load last workout data
+                    const lastWorkout = getLastWorkout(selectedDay);
+                    
                     setSets(workout.exercises.map(ex => ({
                         name: ex.name,
-                        logs: Array(ex.sets).fill().map(() => ({ reps: '', weight: '' }))
+                        logs: Array(ex.sets).fill().map(() => ({ reps: '', weight: '', note: '' }))
                     })));
                     setExpandedEx({});
                     setEditMode(false);
+                    setSetNotes({});
                 }
             }, [selectedDay, customWorkouts]);
+
+            useEffect(() => {
+                if (timer !== null) {
+                    if (restTime > 0) {
+                        timerRef.current = setTimeout(() => {
+                            setRestTime(restTime - 1);
+                        }, 1000);
+                    } else if (restTime === 0 && timer !== null) {
+                        // Timer finished - vibrate if supported
+                        if (navigator.vibrate) {
+                            navigator.vibrate([200, 100, 200]);
+                        }
+                    }
+                }
+                return () => clearTimeout(timerRef.current);
+            }, [restTime, timer]);
+
+            const getLastWorkout = (day) => {
+                const dates = Object.keys(workoutLog).sort().reverse();
+                for (let date of dates) {
+                    if (workoutLog[date].day === day) {
+                        return workoutLog[date];
+                    }
+                }
+                return null;
+            };
+
+            const startRestTimer = (seconds) => {
+                setRestTime(seconds);
+                setTimer(Date.now());
+            };
+
+            const stopTimer = () => {
+                setTimer(null);
+                setRestTime(0);
+            };
+
+            const checkPR = (exerciseName, weight, reps) => {
+                const key = exerciseName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                const oneRM = calculate1RM(parseFloat(weight), parseInt(reps));
+                const currentPR = personalRecords[key] || 0;
+                
+                if (oneRM > currentPR) {
+                    setPersonalRecords({
+                        ...personalRecords,
+                        [key]: oneRM
+                    });
+                    return true;
+                }
+                return false;
+            };
+
+            const calculate1RM = (weight, reps) => {
+                if (reps === 1) return weight;
+                return weight * (1 + reps / 30);
+            };
+
+            const calculatePlates = (weight) => {
+                const barWeight = 45;
+                const perSide = (weight - barWeight) / 2;
+                const plates = [45, 25, 10, 5, 2.5];
+                const result = [];
+                let remaining = perSide;
+                
+                for (let plate of plates) {
+                    const count = Math.floor(remaining / plate);
+                    if (count > 0) {
+                        result.push(`${plate}lb × ${count}`);
+                        remaining -= plate * count;
+                    }
+                }
+                
+                return result.length > 0 ? result.join(' + ') : 'No plates needed';
+            };
 
             if (!selectedDay) {
                 return (
@@ -727,9 +877,23 @@
             }
 
             const workout = customWorkouts[selectedDay];
+            const lastWorkout = getLastWorkout(selectedDay);
 
             const saveWorkout = () => {
                 const today = new Date().toISOString().split('T')[0];
+                
+                // Check for PRs
+                let newPRs = [];
+                sets.forEach((exercise, idx) => {
+                    exercise.logs.forEach(log => {
+                        if (log.reps && log.weight) {
+                            if (checkPR(exercise.name, log.weight, log.reps)) {
+                                newPRs.push(exercise.name);
+                            }
+                        }
+                    });
+                });
+                
                 setWorkoutLog({
                     ...workoutLog,
                     [today]: {
@@ -740,8 +904,15 @@
                         timestamp: new Date().toISOString()
                     }
                 });
+                
+                stopTimer();
                 setSelectedDay(null);
-                alert('Workout saved! 💪');
+                
+                if (newPRs.length > 0) {
+                    alert(`🎉 NEW PR! ${newPRs.join(', ')}`);
+                } else {
+                    alert('Workout saved! 💪');
+                }
             };
 
             const toggleDescription = (idx) => {
@@ -768,13 +939,14 @@
                     name: name,
                     sets: parseInt(setsCount),
                     reps: '10-12',
+                    rest: 90,
                     description: ''
                 };
 
                 setWorkoutExercises([...workoutExercises, newEx]);
                 setSets([...sets, {
                     name: name,
-                    logs: Array(parseInt(setsCount)).fill().map(() => ({ reps: '', weight: '' }))
+                    logs: Array(parseInt(setsCount)).fill().map(() => ({ reps: '', weight: '', note: '' }))
                 }]);
             };
 
@@ -784,38 +956,73 @@
                         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                             <div>
                                 <h2>{workout.name}</h2>
-                                <div style={{color: '#666', fontSize: '14px', marginTop: '4px'}}>
+                                <div style={{color: 'var(--text-secondary)', fontSize: '14px', marginTop: '4px'}}>
                                     {workout.focus} • {workoutExercises.length} exercises
                                 </div>
                             </div>
-                            <button
-                                onClick={() => setEditMode(!editMode)}
-                                style={{
-                                    background: editMode ? '#667eea' : '#f0f4ff',
-                                    border: 'none',
-                                    padding: '8px 16px',
-                                    borderRadius: '8px',
-                                    fontSize: '13px',
-                                    color: editMode ? 'white' : '#667eea',
-                                    fontWeight: '600',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                {editMode ? '✓ Done' : '✏️ Edit'}
-                            </button>
+                            <div style={{display: 'flex', gap: '8px'}}>
+                                <button
+                                    onClick={() => setShowPlateCalc(!showPlateCalc)}
+                                    style={{
+                                        background: 'var(--bg-accent)',
+                                        border: 'none',
+                                        padding: '8px 12px',
+                                        borderRadius: '8px',
+                                        fontSize: '13px',
+                                        color: 'var(--primary)',
+                                        fontWeight: '600',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    🔢
+                                </button>
+                                <button
+                                    onClick={() => setEditMode(!editMode)}
+                                    style={{
+                                        background: editMode ? 'var(--primary)' : 'var(--bg-accent)',
+                                        border: 'none',
+                                        padding: '8px 16px',
+                                        borderRadius: '8px',
+                                        fontSize: '13px',
+                                        color: editMode ? 'white' : 'var(--primary)',
+                                        fontWeight: '600',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {editMode ? '✓ Done' : '✏️ Edit'}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
+                    {showPlateCalc && (
+                        <div className="card" style={{background: 'var(--bg-accent)', borderLeft: '4px solid var(--primary)'}}>
+                            <h3>Plate Calculator</h3>
+                            <input
+                                type="number"
+                                value={plateCalcWeight}
+                                onChange={(e) => setPlateCalcWeight(e.target.value)}
+                                placeholder="Enter total weight (lbs)"
+                                style={{marginBottom: '12px'}}
+                            />
+                            {plateCalcWeight && (
+                                <div style={{fontSize: '14px', color: 'var(--text-secondary)'}}>
+                                    <strong>Per side:</strong> {calculatePlates(parseFloat(plateCalcWeight))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {editMode && (
-                        <div className="card" style={{background: '#f0f4ff', borderLeft: '4px solid #667eea'}}>
-                            <div style={{fontSize: '13px', color: '#667eea', marginBottom: '12px', fontWeight: '600'}}>
+                        <div className="card" style={{background: 'var(--bg-accent)', borderLeft: '4px solid var(--primary)'}}>
+                            <div style={{fontSize: '13px', color: 'var(--primary)', marginBottom: '12px', fontWeight: '600'}}>
                                 Edit Mode: Remove exercises or add new ones
                             </div>
                             <button
                                 onClick={addQuickExercise}
                                 style={{
                                     width: '100%',
-                                    background: '#667eea',
+                                    background: 'var(--primary)',
                                     color: 'white',
                                     border: 'none',
                                     padding: '12px',
@@ -834,12 +1041,15 @@
                         const exerciseSets = sets[exIdx]?.logs || [];
                         const isExpanded = expandedEx[exIdx];
                         
+                        // Get last workout data for this exercise
+                        const lastExData = lastWorkout?.exercises?.[exIdx];
+                        
                         return (
-                            <div key={exIdx} className="card" style={{borderLeft: '4px solid #667eea'}}>
+                            <div key={exIdx} className="card" style={{borderLeft: '4px solid var(--primary)'}}>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px'}}>
                                     <div style={{flex: 1}}>
                                         <h3 style={{marginBottom: '4px'}}>{exercise.name}</h3>
-                                        <div style={{fontSize: '13px', color: '#666'}}>
+                                        <div style={{fontSize: '13px', color: 'var(--text-secondary)'}}>
                                             {exercise.sets} sets × {exercise.reps} reps
                                         </div>
                                     </div>
@@ -847,12 +1057,12 @@
                                         <button 
                                             onClick={() => toggleDescription(exIdx)}
                                             style={{
-                                                background: isExpanded ? '#667eea' : '#f0f4ff',
+                                                background: isExpanded ? 'var(--primary)' : 'var(--bg-accent)',
                                                 border: 'none',
                                                 padding: '6px 12px',
                                                 borderRadius: '6px',
                                                 fontSize: '12px',
-                                                color: isExpanded ? 'white' : '#667eea',
+                                                color: isExpanded ? 'white' : 'var(--primary)',
                                                 fontWeight: '600',
                                                 cursor: 'pointer'
                                             }}
@@ -863,12 +1073,12 @@
                                             <button
                                                 onClick={() => removeExercise(exIdx)}
                                                 style={{
-                                                    background: '#fee',
+                                                    background: 'var(--danger-bg)',
                                                     border: 'none',
                                                     padding: '6px 12px',
                                                     borderRadius: '6px',
                                                     fontSize: '12px',
-                                                    color: '#c00',
+                                                    color: 'var(--danger)',
                                                     fontWeight: '600',
                                                     cursor: 'pointer'
                                                 }}
@@ -888,55 +1098,85 @@
 
                                 <div style={{marginTop: '12px'}}>
                                     {exerciseSets.map((set, setIdx) => (
-                                        <div key={setIdx} className="set-row">
-                                            <div className="set-label">Set {setIdx + 1}</div>
-                                            <input
-                                                type="number"
-                                                placeholder="Reps"
-                                                className="set-input"
-                                                value={set.reps}
-                                                onChange={(e) => {
-                                                    const newSets = [...sets];
-                                                    newSets[exIdx].logs[setIdx].reps = e.target.value;
-                                                    setSets(newSets);
-                                                }}
-                                            />
-                                            <input
-                                                type="number"
-                                                placeholder="Weight"
-                                                className="set-input"
-                                                value={set.weight}
-                                                onChange={(e) => {
-                                                    const newSets = [...sets];
-                                                    newSets[exIdx].logs[setIdx].weight = e.target.value;
-                                                    setSets(newSets);
-                                                }}
-                                            />
-                                            <span style={{fontSize: '14px', color: '#666', width: '35px', flexShrink: 0}}>lbs</span>
-                                            {editMode && (
-                                                <button
-                                                    onClick={() => {
-                                                        if (exerciseSets.length > 1) {
-                                                            const newSets = [...sets];
-                                                            newSets[exIdx].logs = newSets[exIdx].logs.filter((_, i) => i !== setIdx);
-                                                            setSets(newSets);
-                                                        } else {
-                                                            alert('Need at least 1 set');
+                                        <div key={setIdx}>
+                                            <div className="set-row">
+                                                <div className="set-label">Set {setIdx + 1}</div>
+                                                <input
+                                                    type="number"
+                                                    placeholder="Reps"
+                                                    className="set-input"
+                                                    value={set.reps}
+                                                    onChange={(e) => {
+                                                        const newSets = [...sets];
+                                                        newSets[exIdx].logs[setIdx].reps = e.target.value;
+                                                        setSets(newSets);
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        if (e.target.value && set.weight) {
+                                                            startRestTimer(exercise.rest || 90);
                                                         }
                                                     }}
-                                                    style={{
-                                                        background: '#fee',
-                                                        border: 'none',
-                                                        padding: '6px 10px',
-                                                        borderRadius: '6px',
-                                                        fontSize: '12px',
-                                                        color: '#c00',
-                                                        cursor: 'pointer',
-                                                        marginLeft: '4px'
+                                                />
+                                                <input
+                                                    type="number"
+                                                    placeholder="Weight"
+                                                    className="set-input"
+                                                    value={set.weight}
+                                                    onChange={(e) => {
+                                                        const newSets = [...sets];
+                                                        newSets[exIdx].logs[setIdx].weight = e.target.value;
+                                                        setSets(newSets);
+                                                    }}
+                                                />
+                                                <span style={{fontSize: '14px', color: 'var(--text-secondary)', width: '35px', flexShrink: 0}}>lbs</span>
+                                                <button
+                                                    className="set-note-btn"
+                                                    onClick={() => {
+                                                        const note = prompt('Add note for this set:');
+                                                        if (note !== null) {
+                                                            const newSets = [...sets];
+                                                            newSets[exIdx].logs[setIdx].note = note;
+                                                            setSets(newSets);
+                                                        }
                                                     }}
                                                 >
-                                                    ✕
+                                                    📝
                                                 </button>
+                                                {editMode && (
+                                                    <button
+                                                        onClick={() => {
+                                                            if (exerciseSets.length > 1) {
+                                                                const newSets = [...sets];
+                                                                newSets[exIdx].logs = newSets[exIdx].logs.filter((_, i) => i !== setIdx);
+                                                                setSets(newSets);
+                                                            } else {
+                                                                alert('Need at least 1 set');
+                                                            }
+                                                        }}
+                                                        style={{
+                                                            background: 'var(--danger-bg)',
+                                                            border: 'none',
+                                                            padding: '6px 10px',
+                                                            borderRadius: '6px',
+                                                            fontSize: '12px',
+                                                            color: 'var(--danger)',
+                                                            cursor: 'pointer',
+                                                            marginLeft: '4px'
+                                                        }}
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                )}
+                                            </div>
+                                            {set.note && (
+                                                <div style={{fontSize: '11px', color: 'var(--text-tertiary)', marginLeft: '60px', marginTop: '4px', fontStyle: 'italic'}}>
+                                                    Note: {set.note}
+                                                </div>
+                                            )}
+                                            {lastExData?.logs?.[setIdx] && (
+                                                <div className="last-workout" style={{marginLeft: '60px'}}>
+                                                    Last: {lastExData.logs[setIdx].reps} reps @ {lastExData.logs[setIdx].weight} lbs
+                                                </div>
                                             )}
                                         </div>
                                     ))}
@@ -945,18 +1185,18 @@
                                         <button
                                             onClick={() => {
                                                 const newSets = [...sets];
-                                                newSets[exIdx].logs.push({ reps: '', weight: '' });
+                                                newSets[exIdx].logs.push({ reps: '', weight: '', note: '' });
                                                 setSets(newSets);
                                             }}
                                             style={{
                                                 width: '100%',
                                                 marginTop: '8px',
-                                                background: '#f0f4ff',
-                                                border: '2px dashed #667eea',
+                                                background: 'var(--bg-accent)',
+                                                border: '2px dashed var(--primary)',
                                                 padding: '10px',
                                                 borderRadius: '8px',
                                                 fontSize: '13px',
-                                                color: '#667eea',
+                                                color: 'var(--primary)',
                                                 fontWeight: '600',
                                                 cursor: 'pointer'
                                             }}
@@ -981,42 +1221,226 @@
                     <button className="btn btn-success" onClick={saveWorkout}>
                         ✓ Complete Workout
                     </button>
+
+                    {timer !== null && (
+                        <div className={`timer-display ${restTime === 0 ? 'finished' : ''}`} onClick={stopTimer}>
+                            {restTime > 0 ? `${Math.floor(restTime / 60)}:${(restTime % 60).toString().padStart(2, '0')}` : '✓'}
+                        </div>
+                    )}
                 </div>
             );
         }
 
-        function History({ workoutLog, customWorkouts }) {
-            const dates = Object.keys(workoutLog).sort().reverse();
+        function Stats({ workoutLog, customWorkouts }) {
+            const [selectedExercise, setSelectedExercise] = useState(null);
+            
+            // Calculate total volume
+            const totalVolume = Object.values(workoutLog).reduce((sum, workout) => {
+                if (!workout.exercises) return sum;
+                return sum + workout.exercises.reduce((exSum, ex) => {
+                    return exSum + ex.logs.reduce((setSum, log) => {
+                        return setSum + (parseFloat(log.weight) || 0) * (parseInt(log.reps) || 0);
+                    }, 0);
+                }, 0);
+            }, 0);
+
+            // Get all unique exercises
+            const allExercises = new Set();
+            Object.values(workoutLog).forEach(workout => {
+                workout.exercises?.forEach(ex => {
+                    allExercises.add(ex.name);
+                });
+            });
+
+            // Calculate PRs
+            const prs = {};
+            Object.values(workoutLog).forEach(workout => {
+                workout.exercises?.forEach(ex => {
+                    ex.logs.forEach(log => {
+                        if (log.weight && log.reps) {
+                            const oneRM = parseFloat(log.weight) * (1 + parseInt(log.reps) / 30);
+                            if (!prs[ex.name] || oneRM > prs[ex.name].oneRM) {
+                                prs[ex.name] = {
+                                    oneRM,
+                                    weight: log.weight,
+                                    reps: log.reps,
+                                    date: workout.timestamp
+                                };
+                            }
+                        }
+                    });
+                });
+            });
 
             return (
                 <div>
-                    <h2 style={{marginBottom: '16px', fontSize: '20px'}}>Workout History</h2>
-                    {dates.length === 0 ? (
-                        <div className="card">
-                            <p style={{textAlign: 'center', color: '#999'}}>No workouts logged yet</p>
+                    <div className="stat-grid">
+                        <div className="stat-card">
+                            <div className="stat-value">{(totalVolume / 1000).toFixed(1)}k</div>
+                            <div className="stat-label">Total Volume (lbs)</div>
                         </div>
-                    ) : (
-                        dates.map(date => {
-                            const workout = workoutLog[date];
-                            const dateObj = new Date(date);
-                            
-                            return (
-                                <div key={date} className="card">
-                                    <div style={{fontWeight: '700', fontSize: '16px', marginBottom: '8px', color: '#667eea'}}>
-                                        {dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
-                                    </div>
-                                    <div style={{fontSize: '14px', color: '#666'}}>
-                                        ✓ {customWorkouts[workout.day]?.name}
-                                    </div>
-                                    {workout.notes && (
-                                        <div style={{fontSize: '13px', color: '#999', marginTop: '8px', fontStyle: 'italic'}}>
-                                            "{workout.notes}"
+                        <div className="stat-card">
+                            <div className="stat-value">{Object.keys(prs).length}</div>
+                            <div className="stat-label">Exercises Tracked</div>
+                        </div>
+                    </div>
+
+                    <div className="card">
+                        <h2 style={{marginBottom: '16px'}}>Personal Records 🏆</h2>
+                        {Object.entries(prs).length === 0 ? (
+                            <p style={{color: 'var(--text-tertiary)', textAlign: 'center'}}>Complete a workout to track PRs!</p>
+                        ) : (
+                            <div>
+                                {Object.entries(prs).sort((a, b) => b[1].oneRM - a[1].oneRM).map(([name, data]) => (
+                                    <div key={name} style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '12px'}}>
+                                        <div style={{fontWeight: '600', marginBottom: '4px'}}>{name}</div>
+                                        <div style={{fontSize: '14px', color: 'var(--text-secondary)'}}>
+                                            Best: {data.weight} lbs × {data.reps} reps
                                         </div>
-                                    )}
-                                </div>
-                            );
-                        })
-                    )}
+                                        <div style={{fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '2px'}}>
+                                            Estimated 1RM: {data.oneRM.toFixed(1)} lbs
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="card">
+                        <h2 style={{marginBottom: '12px'}}>1RM Calculator</h2>
+                        <p style={{fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '12px'}}>
+                            Enter weight and reps to estimate your one-rep max
+                        </p>
+                        <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
+                            <input type="number" id="calc-weight" placeholder="Weight (lbs)" />
+                            <input type="number" id="calc-reps" placeholder="Reps" />
+                        </div>
+                        <button 
+                            className="btn btn-primary"
+                            onClick={() => {
+                                const weight = parseFloat(document.getElementById('calc-weight').value);
+                                const reps = parseInt(document.getElementById('calc-reps').value);
+                                if (weight && reps) {
+                                    const oneRM = weight * (1 + reps / 30);
+                                    alert(`Estimated 1RM: ${oneRM.toFixed(1)} lbs`);
+                                }
+                            }}
+                        >
+                            Calculate 1RM
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function Measurements({ measurements, setMeasurements }) {
+            const [newMeasurement, setNewMeasurement] = useState({
+                weight: '',
+                waist: '',
+                chest: '',
+                arms: '',
+                legs: ''
+            });
+
+            const addMeasurement = () => {
+                if (!newMeasurement.weight) {
+                    alert('Weight is required');
+                    return;
+                }
+                
+                const entry = {
+                    ...newMeasurement,
+                    date: new Date().toISOString()
+                };
+                
+                setMeasurements([...measurements, entry]);
+                setNewMeasurement({ weight: '', waist: '', chest: '', arms: '', legs: '' });
+            };
+
+            const latest = measurements[measurements.length - 1];
+            const start = measurements[0];
+            const weightChange = latest && start ? (latest.weight - start.weight).toFixed(1) : 0;
+
+            return (
+                <div>
+                    <div className="stat-grid">
+                        <div className="stat-card">
+                            <div className="stat-value">{latest?.weight || '—'}</div>
+                            <div className="stat-label">Current Weight (lbs)</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value" style={{color: weightChange < 0 ? 'var(--success)' : 'var(--danger)'}}>
+                                {weightChange > 0 ? '+' : ''}{weightChange}
+                            </div>
+                            <div className="stat-label">Change (lbs)</div>
+                        </div>
+                    </div>
+
+                    <div className="card">
+                        <h3>Log New Measurement</h3>
+                        <div style={{display: 'grid', gap: '12px'}}>
+                            <input
+                                type="number"
+                                step="0.1"
+                                placeholder="Weight (lbs) *"
+                                value={newMeasurement.weight}
+                                onChange={(e) => setNewMeasurement({...newMeasurement, weight: e.target.value})}
+                            />
+                            <input
+                                type="number"
+                                step="0.1"
+                                placeholder="Waist (inches)"
+                                value={newMeasurement.waist}
+                                onChange={(e) => setNewMeasurement({...newMeasurement, waist: e.target.value})}
+                            />
+                            <input
+                                type="number"
+                                step="0.1"
+                                placeholder="Chest (inches)"
+                                value={newMeasurement.chest}
+                                onChange={(e) => setNewMeasurement({...newMeasurement, chest: e.target.value})}
+                            />
+                            <input
+                                type="number"
+                                step="0.1"
+                                placeholder="Arms (inches)"
+                                value={newMeasurement.arms}
+                                onChange={(e) => setNewMeasurement({...newMeasurement, arms: e.target.value})}
+                            />
+                            <input
+                                type="number"
+                                step="0.1"
+                                placeholder="Legs (inches)"
+                                value={newMeasurement.legs}
+                                onChange={(e) => setNewMeasurement({...newMeasurement, legs: e.target.value})}
+                            />
+                        </div>
+                        <button className="btn btn-primary" onClick={addMeasurement}>
+                            Add Measurement
+                        </button>
+                    </div>
+
+                    <div className="card">
+                        <h3>Measurement History</h3>
+                        {measurements.length === 0 ? (
+                            <p style={{color: 'var(--text-tertiary)', textAlign: 'center'}}>No measurements yet</p>
+                        ) : (
+                            <div>
+                                {measurements.slice().reverse().slice(0, 10).map((m, idx) => (
+                                    <div key={idx} style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '12px'}}>
+                                        <div style={{fontWeight: '600'}}>{new Date(m.date).toLocaleDateString()}</div>
+                                        <div style={{fontSize: '14px', color: 'var(--text-secondary)', marginTop: '4px'}}>
+                                            Weight: {m.weight} lbs
+                                            {m.waist && ` • Waist: ${m.waist}"`}
+                                            {m.chest && ` • Chest: ${m.chest}"`}
+                                            {m.arms && ` • Arms: ${m.arms}"`}
+                                            {m.legs && ` • Legs: ${m.legs}"`}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             );
         }
@@ -1088,23 +1512,22 @@
                                 type="text"
                                 value={editedWorkout.name}
                                 onChange={(e) => setEditedWorkout({...editedWorkout, name: e.target.value})}
-                                style={{width: '100%', padding: '10px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '14px'}}
                             />
                         </div>
                     </div>
 
                     {editedWorkout.exercises.map((ex, idx) => (
-                        <div key={idx} className="card" style={{borderLeft: '4px solid #667eea'}}>
+                        <div key={idx} className="card" style={{borderLeft: '4px solid var(--primary)'}}>
                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px'}}>
                                 <h3 style={{flex: 1, marginBottom: '8px'}}>{ex.name}</h3>
                                 <button
                                     onClick={() => removeExercise(idx)}
                                     style={{
-                                        background: '#fee', 
+                                        background: 'var(--danger-bg)', 
                                         border: 'none', 
                                         padding: '6px 12px', 
                                         borderRadius: '6px',
-                                        color: '#c00',
+                                        color: 'var(--danger)',
                                         fontSize: '12px',
                                         fontWeight: '600',
                                         cursor: 'pointer'
@@ -1120,18 +1543,16 @@
                                     type="text"
                                     value={ex.name}
                                     onChange={(e) => updateExercise(idx, 'name', e.target.value)}
-                                    style={{width: '100%', padding: '8px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '14px'}}
                                 />
                             </div>
 
-                            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px'}}>
+                            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px'}}>
                                 <div>
                                     <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Sets:</label>
                                     <input
                                         type="number"
                                         value={ex.sets}
                                         onChange={(e) => updateExercise(idx, 'sets', parseInt(e.target.value))}
-                                        style={{width: '100%', padding: '8px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '14px'}}
                                     />
                                 </div>
                                 <div>
@@ -1140,18 +1561,25 @@
                                         type="text"
                                         value={ex.reps}
                                         onChange={(e) => updateExercise(idx, 'reps', e.target.value)}
-                                        style={{width: '100%', padding: '8px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '14px'}}
+                                    />
+                                </div>
+                                <div>
+                                    <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Rest (sec):</label>
+                                    <input
+                                        type="number"
+                                        value={ex.rest || 90}
+                                        onChange={(e) => updateExercise(idx, 'rest', parseInt(e.target.value))}
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Description (optional):</label>
+                                <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Description:</label>
                                 <textarea
                                     value={ex.description || ''}
                                     onChange={(e) => updateExercise(idx, 'description', e.target.value)}
                                     placeholder="How to perform this exercise..."
-                                    style={{width: '100%', padding: '8px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', minHeight: '60px'}}
+                                    style={{minHeight: '60px'}}
                                 />
                             </div>
                         </div>
@@ -1168,6 +1596,42 @@
                     >
                         Reset to Default
                     </button>
+                </div>
+            );
+        }
+
+        function History({ workoutLog, customWorkouts }) {
+            const dates = Object.keys(workoutLog).sort().reverse();
+
+            return (
+                <div>
+                    <h2 style={{marginBottom: '16px', fontSize: '20px'}}>Workout History</h2>
+                    {dates.length === 0 ? (
+                        <div className="card">
+                            <p style={{textAlign: 'center', color: 'var(--text-tertiary)'}}>No workouts logged yet</p>
+                        </div>
+                    ) : (
+                        dates.map(date => {
+                            const workout = workoutLog[date];
+                            const dateObj = new Date(date);
+                            
+                            return (
+                                <div key={date} className="card">
+                                    <div style={{fontWeight: '700', fontSize: '16px', marginBottom: '8px', color: 'var(--primary)'}}>
+                                        {dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                                    </div>
+                                    <div style={{fontSize: '14px', color: 'var(--text-secondary)'}}>
+                                        ✓ {customWorkouts[workout.day]?.name}
+                                    </div>
+                                    {workout.notes && (
+                                        <div style={{fontSize: '13px', color: 'var(--text-tertiary)', marginTop: '8px', fontStyle: 'italic'}}>
+                                            "{workout.notes}"
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
+                    )}
                 </div>
             );
         }

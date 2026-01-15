@@ -6,19 +6,25 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Workout Journal Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
         :root {
-            --bg-primary: #f2f2f7; --bg-secondary: #ffffff; --bg-accent: #f0f4ff;
+            --bg-primary: #f2f2f7; --bg-secondary: #ffffff; --bg-accent: #f8f9fa;
             --text-primary: #1c1c1e; --text-secondary: #8e8e93; --text-tertiary: #c7c7cc;
             --border-color: #e5e5ea;
             --primary-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --success-grad: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             --primary: #667eea; --danger: #ff3b30;
             --shadow: 0 4px 12px rgba(0,0,0,0.06);
+            --font-main: 'Exo 2', -apple-system, sans-serif;
         }
         [data-theme="dark"] {
             --bg-primary: #000000; --bg-secondary: #1c1c1e; --bg-accent: #2c2c2e;
@@ -26,17 +32,22 @@
             --border-color: #38383a; --shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            font-family: var(--font-main);
             background: var(--bg-primary); color: var(--text-primary);
             padding-bottom: calc(90px + env(safe-area-inset-bottom));
             transition: background 0.3s ease;
         }
+        
+        /* IOS INPUT FIXES */
         textarea, input, select {
+            font-family: var(--font-main);
             font-size: 16px !important; padding: 12px; border-radius: 12px;
             border: 1px solid var(--border-color); background: var(--bg-secondary);
             color: var(--text-primary); width: 100%; -webkit-appearance: none;
         }
+        
         .header {
             background: var(--primary-grad); color: white;
             padding: calc(45px + env(safe-area-inset-top)) 20px 20px;
@@ -45,6 +56,7 @@
             box-shadow: var(--shadow);
         }
         .header-actions { position: absolute; right: 20px; bottom: 20px; display: flex; gap: 12px; }
+        
         .icon-btn {
             background: rgba(255,255,255,0.15); border: none; color: white; padding: 8px;
             border-radius: 50%; width: 36px; height: 36px; cursor: pointer; backdrop-filter: blur(10px);
@@ -53,15 +65,18 @@
         .back-btn {
             position: absolute; left: 20px; bottom: 20px; background: rgba(255,255,255,0.15);
             border: none; color: white; padding: 8px 12px 8px 8px;
-            border-radius: 12px; font-weight: 600;
+            border-radius: 12px; font-weight: 600; font-family: var(--font-main);
             display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 14px;
         }
+        
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
         .card { background: var(--bg-secondary); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
-        .card h3 { color: var(--primary); margin-bottom: 10px; font-size: 18px; display: flex; align-items: center; justify-content: space-between; }
+        .card h3 { color: var(--primary); margin-bottom: 10px; font-size: 18px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; }
+        
         .btn {
             width: 100%; padding: 16px; border: none; border-radius: 14px;
             font-size: 16px; font-weight: 700; color: white; margin-bottom: 10px;
+            font-family: var(--font-main);
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn:active { transform: scale(0.98); opacity: 0.8; }
@@ -70,46 +85,57 @@
         .btn-secondary { background: var(--bg-accent); color: var(--text-primary); border: 1px solid var(--border-color); }
         .btn-danger { background: rgba(255, 59, 48, 0.1); color: var(--danger); width: auto; padding: 8px 12px; font-size: 13px; }
         
+        /* Minimalist Action Buttons (No Boxes) */
+        .action-btn-minimal {
+            background: transparent; border: none; color: var(--text-secondary);
+            padding: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .action-btn-minimal:active { color: var(--primary); transform: scale(0.95); }
+        
         .set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
         .set-label { width: 45px; font-weight: 600; font-size: 13px; color: var(--text-secondary); }
         .set-input { width: 75px; text-align: center; font-weight: 700; flex-shrink: 0; }
-        .autofill-btn { background: var(--bg-accent); color: var(--primary); border: none; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
+        /* Timer Fab */
         .timer-display {
             position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px;
             background: var(--primary-grad); color: white; width: 65px; height: 65px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-weight: 800; font-size: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 99;
         }
+        
+        /* Nav Bar */
         .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(var(--bg-secondary), 0.9); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border-color); z-index: 1000; }
         .nav-btn { background: transparent; border: none; padding: 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; color: var(--text-secondary); }
         .nav-btn.active { color: var(--primary); }
-        .nav-label { font-size: 10px; font-weight: 600; }
+        .nav-label { font-size: 10px; font-weight: 600; font-family: var(--font-main); }
+        
         svg { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        
         .day-card { background: var(--bg-secondary); padding: 16px; border-radius: 16px; margin-bottom: 12px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-secondary); padding: 15px; border-radius: 16px; text-align: center; box-shadow: var(--shadow); }
         .stat-val { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .stat-lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+        
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
         .history-exercise { border-bottom: 1px solid var(--border-color); padding: 8px 0; font-size: 14px; }
-        .reorder-controls { display: flex; gap: 4px; }
-        .reorder-btn { background: var(--bg-accent); border: none; border-radius: 6px; width: 30px; height: 30px; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        /* VISUAL PLATE STYLES */
+        /* Visual Plates */
         .barbell-container { display: flex; align-items: center; justify-content: center; margin-top: 15px; overflow-x: auto; padding: 10px 0; }
         .bar-end { width: 15px; height: 10px; background: #999; border-radius: 2px; }
         .bar-shaft { width: 40px; height: 10px; background: #999; }
         .plate { height: 60px; width: 10px; margin: 0 1px; border-radius: 2px; border: 1px solid rgba(0,0,0,0.1); }
-        .plate-45 { background: #0047AB; height: 70px; } /* Blue */
-        .plate-35 { background: #FFD700; height: 60px; } /* Yellow */
-        .plate-25 { background: #008000; height: 50px; } /* Green */
-        .plate-10 { background: #E0E0E0; height: 40px; } /* White */
-        .plate-5 { background: #333; height: 35px; } /* Black */
-        .plate-2_5 { background: #333; height: 30px; } /* Black */
+        .plate-45 { background: #0047AB; height: 70px; } 
+        .plate-35 { background: #FFD700; height: 60px; } 
+        .plate-25 { background: #008000; height: 50px; } 
+        .plate-10 { background: #E0E0E0; height: 40px; } 
+        .plate-5 { background: #333; height: 35px; } 
+        .plate-2_5 { background: #333; height: 30px; }
 
-        /* CHART STYLES */
         .chart-wrapper { width: 100%; height: 150px; position: relative; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 0; }
-        .chart-svg { width: 100%; height: 100%; overflow: visible; }
+        .chart-bar { background: var(--primary); width: 100%; border-radius: 4px 4px 0 0; opacity: 0.7; transition: height 0.5s; }
     </style>
 </head>
 <body>
@@ -128,7 +154,7 @@
             Sun: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line></svg>,
             Export: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>,
             Trash: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>,
-            Edit: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>,
+            Edit: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>,
             ChevronRight: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"></polyline></svg>,
             Magic: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg>,
             Settings: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>,
@@ -330,8 +356,8 @@
             };
 
             const calculatePlates = (val) => {
-                const w = parseFloat(val); if(!w) return "";
-                const side = (w - 45) / 2; if(side <= 0) return "Bar only";
+                const w = parseFloat(val); if(!w) return [];
+                const side = (w - 45) / 2; if(side <= 0) return [];
                 const plates = [45, 25, 10, 5, 2.5]; let rem = side; const res = [];
                 plates.forEach(p => { const c = Math.floor(rem/p); if(c>0){ res.push({weight: p, count: c}); rem -= p*c; }});
                 return res;
@@ -355,7 +381,7 @@
                     <div className="card">
                         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                             <h2 style={{margin:0, textTransform:'capitalize'}}>{selectedDay}</h2>
-                            <button className="btn-secondary" style={{width:'auto', padding:'8px 12px', fontSize:'12px'}} onClick={() => setEditMode(!editMode)}>Edit</button>
+                            <button className="action-btn-minimal" onClick={() => setEditMode(!editMode)}><Icons.Edit/></button>
                         </div>
                     </div>
 
@@ -379,9 +405,9 @@
                             <div style={{display:'flex', justifyContent:'space-between', marginBottom:'10px'}}>
                                 <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
                                     <h3 style={{margin:0}}>{ex.name}</h3>
-                                    <button className="icon-btn" style={{width:'24px', height:'24px', background:'orange'}} onClick={() => calcWarmup(ex.logs[0].weight)}><Icons.Warmup/></button>
+                                    <button className="action-btn-minimal" style={{color: 'orange'}} onClick={() => calcWarmup(ex.logs[0].weight)}><Icons.Warmup/></button>
                                 </div>
-                                <button className="icon-btn" style={{background:'var(--primary)', width:'24px', height:'24px', fontSize:'12px'}} onClick={() => setExpandedEx({...expandedEx, [exIdx]: !expandedEx[exIdx]})} >?</button>
+                                <button className="action-btn-minimal" onClick={() => setExpandedEx({...expandedEx, [exIdx]: !expandedEx[exIdx]})} >?</button>
                             </div>
                             {expandedEx[exIdx] && customWorkouts[selectedDay].exercises[exIdx] && <p style={{fontSize:'13px', color:'var(--text-secondary)', marginBottom:'15px'}}>{customWorkouts[selectedDay].exercises[exIdx].description}</p>}
                             
@@ -436,7 +462,7 @@
                             <div style={{display:'flex', gap:'5px'}}>
                                 <button className="autofill-btn" onClick={() => moveExercise(viewDay, i, -1)}><Icons.Up/></button>
                                 <button className="autofill-btn" onClick={() => moveExercise(viewDay, i, 1)}><Icons.Down/></button>
-                                <button className="btn-danger" onClick={() => deleteEx(viewDay, i)}><Icons.Trash/></button>
+                                <button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteEx(viewDay, i)}><Icons.Trash/></button>
                             </div>
                         </div>
                     ))}
@@ -449,7 +475,7 @@
                     <div className="card"><h3>Manage Schedule</h3>{Object.keys(customWorkouts).map(d => (
                         <div key={d} style={{display:'flex', justifyContent:'space-between', padding:'10px 0', borderBottom:'1px solid #eee'}}>
                             <span style={{fontWeight:'bold', textTransform:'capitalize'}} onClick={() => setViewDay(d)}>{d}</span>
-                            <div style={{display:'flex', gap:'10px'}}><button className="icon-btn" style={{background:'var(--primary)'}} onClick={() => setViewDay(d)}><Icons.Edit/></button><button className="btn-danger" onClick={() => deleteDay(d)}><Icons.Trash/></button></div>
+                            <div style={{display:'flex', gap:'10px'}}><button className="action-btn-minimal" onClick={() => setViewDay(d)}><Icons.Edit/></button><button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteDay(d)}><Icons.Trash/></button></div>
                         </div>
                     ))}
                     <div style={{marginTop:'20px', display:'flex', gap:'10px'}}><input placeholder="New Day Name" value={newDay} onChange={e => setNewDay(e.target.value)} /><button className="btn btn-success" style={{width:'auto'}} onClick={addDay}>Add</button></div></div>
@@ -490,7 +516,7 @@
                 <div>
                     {Object.entries(workoutLog).reverse().map(([date, data]) => (
                         <div key={date} className="card">
-                            <div className="history-header"><div><h4 style={{margin:0}}>{new Date(date).toLocaleDateString()}</h4><p style={{fontWeight:'bold'}}>{data.day}</p></div><button className="btn-danger" onClick={() => deleteWorkout(date)}><Icons.Trash /></button></div>
+                            <div className="history-header"><div><h4 style={{margin:0}}>{new Date(date).toLocaleDateString()}</h4><p style={{fontWeight:'bold'}}>{data.day}</p></div><button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteWorkout(date)}><Icons.Trash /></button></div>
                             {data.exercises && data.exercises.map((ex, i) => {
                                 const setsSummary = ex.logs.filter(l => l.weight && l.reps).map(l => `${l.weight}x${l.reps}`).join(', ');
                                 if (!setsSummary) return null;

@@ -55,6 +55,7 @@
             box-shadow: var(--shadow);
         }
         .header-actions { position: absolute; right: 20px; bottom: 20px; display: flex; gap: 12px; }
+        .header-left { position: absolute; left: 20px; bottom: 20px; display: flex; gap: 12px; }
         
         .icon-btn {
             background: rgba(255,255,255,0.15); border: none; color: white; padding: 8px;
@@ -62,8 +63,7 @@
             display: flex; align-items: center; justify-content: center;
         }
         .back-btn {
-            position: absolute; left: 20px; bottom: 20px; background: rgba(255,255,255,0.15);
-            border: none; color: white; padding: 8px 12px 8px 8px;
+            background: rgba(255,255,255,0.15); border: none; color: white; padding: 8px 12px 8px 8px;
             border-radius: 12px; font-weight: 600; font-family: var(--font-main);
             display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 14px;
         }
@@ -94,7 +94,14 @@
         .set-label { width: 45px; font-weight: 600; font-size: 13px; color: var(--text-secondary); }
         .set-input { width: 75px; text-align: center; font-weight: 700; flex-shrink: 0; }
         
-        /* Timer Fab */
+        /* Updated Autofill Button - Minimal */
+        .autofill-btn {
+            background: transparent; color: var(--primary); border: none;
+            width: 36px; height: 36px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; opacity: 0.8;
+        }
+        .autofill-btn:active { opacity: 1; transform: scale(1.1); }
+        
         .timer-display {
             position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px;
             background: var(--primary-grad); color: white; width: 70px; height: 70px;
@@ -105,19 +112,17 @@
         .timer-mod { font-size: 10px; cursor: pointer; opacity: 0.8; }
 
         .session-timer {
-            background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 12px;
+            background: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 12px;
             font-size: 14px; font-weight: 700; font-feature-settings: "tnum";
-            color: var(--primary); cursor: pointer;
+            color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 6px;
         }
         
-        /* Nav Bar */
         .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(var(--bg-secondary), 0.9); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border-color); z-index: 1000; }
         .nav-btn { background: transparent; border: none; padding: 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; color: var(--text-secondary); }
         .nav-btn.active { color: var(--primary); }
         .nav-label { font-size: 10px; font-weight: 600; font-family: var(--font-main); }
         
         svg { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        
         .day-card { background: var(--bg-secondary); padding: 16px; border-radius: 16px; margin-bottom: 12px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-secondary); padding: 15px; border-radius: 16px; text-align: center; box-shadow: var(--shadow); }
@@ -125,6 +130,9 @@
         .stat-lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
         .history-exercise { border-bottom: 1px solid var(--border-color); padding: 8px 0; font-size: 14px; }
+        
+        .reorder-controls { display: flex; gap: 4px; }
+        .reorder-btn { background: var(--bg-accent); border: none; border-radius: 6px; width: 30px; height: 30px; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
         /* Visual Plates */
         .barbell-container { display: flex; align-items: center; justify-content: center; margin-top: 15px; overflow-x: auto; padding: 10px 0; }
@@ -138,7 +146,6 @@
         .plate-5 { background: #333; height: 35px; } 
         .plate-2_5 { background: #333; height: 30px; }
 
-        /* Chart SVG */
         .chart-svg { width: 100%; height: 180px; font-size: 10px; }
         .chart-grid { stroke: var(--border-color); stroke-width: 1; stroke-dasharray: 4; }
         .chart-line { fill: none; stroke: var(--primary); stroke-width: 3; }
@@ -154,7 +161,6 @@
             Home: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>,
             Dumbbell: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6.5 6.5h11"></path><path d="M6.5 17.5h11"></path><path d="M6 20v-2a6 6 0 1 1 12 0v2"></path><path d="M6 4v2a6 6 0 1 0 12 0V4"></path></svg>,
             Chart: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>,
-            Ruler: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12h20"></path><path d="M6 12v-3"></path><path d="M10 12v-5"></path><path d="M14 12v-3"></path><path d="M18 12v-5"></path></svg>,
             History: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>,
             Back: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>,
             Moon: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>,
@@ -163,8 +169,8 @@
             Trash: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>,
             Edit: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>,
             ChevronRight: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"></polyline></svg>,
-            Magic: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg>,
-            Settings: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>,
+            Magic: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg>,
+            User: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>,
             Up: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg>,
             Down: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>,
             Warmup: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.1.2-2.2.6-3.3.9 1.7 2.2 2.9 2.9 3.3z"></path></svg>,
@@ -227,9 +233,8 @@
                         {view === 'home' && <Home setView={setView} workoutLog={workoutLog} />}
                         {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} customWorkouts={customWorkouts} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} personalRecords={personalRecords} setPersonalRecords={setPersonalRecords} />}
                         {view === 'stats' && <Stats workoutLog={workoutLog} personalRecords={personalRecords} />}
-                        {view === 'measurements' && <Measurements measurements={measurements} setMeasurements={setMeasurements} />}
-                        {view === 'edit' && <EditWorkouts customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} />}
                         {view === 'history' && <History workoutLog={workoutLog} customWorkouts={customWorkouts} deleteWorkout={deleteWorkout} />}
+                        {view === 'manage' && <Manage customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} measurements={measurements} setMeasurements={setMeasurements} />}
                     </div>
                     <Nav view={view} setView={setView} />
                 </div>
@@ -243,18 +248,21 @@
             };
             return (
                 <div className="header">
-                    {view !== 'home' && <button className="back-btn" onClick={() => {setView('home'); setSelectedDay(null)}}><Icons.Back /> Back</button>}
+                    {view === 'home' ? (
+                        <div className="header-left"><button className="icon-btn" onClick={() => setView('manage')}><Icons.User /></button></div>
+                    ) : (
+                        <button className="back-btn" onClick={() => {setView('home'); setSelectedDay(null)}}><Icons.Back /> Back</button>
+                    )}
                     <h1>{view === 'home' ? 'Workout Pro' : view.toUpperCase()}</h1>
                     <div className="header-actions">
                         <button className="icon-btn" onClick={toggleDarkMode}>{darkMode ? <Icons.Sun /> : <Icons.Moon />}</button>
-                        {view === 'home' && <button className="icon-btn" onClick={exportData}><Icons.Export /></button>}
                     </div>
                 </div>
             );
         }
 
         function Nav({ view, setView }) {
-            const tabs = [ {id:'home',icon:<Icons.Home/>,label:'Home'}, {id:'workout',icon:<Icons.Dumbbell/>,label:'Workout'}, {id:'stats',icon:<Icons.Chart/>,label:'Stats'}, {id:'measurements',icon:<Icons.Ruler/>,label:'Body'}, {id:'edit',icon:<Icons.Settings/>,label:'Manage'}, {id:'history',icon:<Icons.History/>,label:'History'} ];
+            const tabs = [ {id:'home',icon:<Icons.Home/>,label:'Home'}, {id:'workout',icon:<Icons.Dumbbell/>,label:'Train'}, {id:'stats',icon:<Icons.Chart/>,label:'Stats'}, {id:'history',icon:<Icons.History/>,label:'History'} ];
             return (
                 <div className="nav">
                     {tabs.map(t => (
@@ -280,6 +288,78 @@
             );
         }
 
+        function Manage({ customWorkouts, setCustomWorkouts, measurements, setMeasurements }) {
+            const [weightForm, setWeightForm] = useState('');
+            const fileInput = useRef(null);
+            
+            // Weight Chart Logic
+            const points = measurements.slice(-10).map((m, i, arr) => {
+                const max = Math.max(...arr.map(d => parseFloat(d.weight))) + 5;
+                const min = Math.min(...arr.map(d => parseFloat(d.weight))) - 5;
+                const y = 100 - ((m.weight - min) / (max - min) * 100); 
+                return `${i * (300 / (arr.length > 1 ? arr.length - 1 : 1))},${y}`;
+            }).join(' ');
+
+            const handleImport = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        Object.keys(data).forEach(k => localStorage.setItem(k, JSON.stringify(data[k])));
+                        alert("Data restored! Please refresh.");
+                        window.location.reload();
+                    } catch(err) { alert("Invalid file"); }
+                };
+                reader.readAsText(file);
+            };
+
+            const resetData = () => {
+                if(confirm("Reset all custom workouts to default?")) {
+                    localStorage.removeItem('customWorkouts');
+                    window.location.reload();
+                }
+            };
+
+            return (
+                <div>
+                    <div className="card">
+                        <h3>Weight Trend</h3>
+                        <div className="chart-wrapper">
+                            <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
+                                <line x1="0" y1="25" x2="300" y2="25" className="chart-grid" />
+                                <line x1="0" y1="50" x2="300" y2="50" className="chart-grid" />
+                                <line x1="0" y1="75" x2="300" y2="75" className="chart-grid" />
+                                {measurements.length > 1 && <polyline points={points} className="chart-line" />}
+                            </svg>
+                        </div>
+                        <div style={{display:'flex', gap:'10px', marginTop:'10px'}}>
+                            <input type="number" inputMode="decimal" placeholder="Log Weight (lbs)" value={weightForm} onChange={e => setWeightForm(e.target.value)} />
+                            <button className="btn btn-primary" style={{width:'auto', margin:0}} onClick={() => { if(weightForm) setMeasurements([...measurements, {date:new Date().toISOString(), weight:weightForm}]); setWeightForm(''); }}>Log</button>
+                        </div>
+                    </div>
+
+                    <div className="card">
+                        <h3>Schedule</h3>
+                        {Object.keys(customWorkouts).map(d => (
+                            <div key={d} style={{padding:'10px 0', borderBottom:'1px solid var(--border-color)', textTransform:'capitalize'}}>{d}</div>
+                        ))}
+                        <p style={{fontSize:'12px', color:'var(--text-secondary)', marginTop:'10px'}}>Edit exercises inside the workout view.</p>
+                    </div>
+
+                    <div className="card">
+                        <h3>Data</h3>
+                        <div style={{display:'flex', gap:'10px'}}>
+                            <button className="btn btn-secondary" onClick={() => fileInput.current.click()}><Icons.Export/> Restore Backup</button>
+                            <input type="file" ref={fileInput} style={{display:'none'}} onChange={handleImport} />
+                            <button className="btn btn-danger" onClick={resetData}>Reset Defaults</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
         function Workout({ selectedDay, setSelectedDay, customWorkouts, workoutLog, setWorkoutLog, personalRecords, setPersonalRecords }) {
             const [sets, setSets] = useState([]);
             const [rest, setRest] = useState(0);
@@ -288,6 +368,7 @@
             const [editMode, setEditMode] = useState(false);
             const [sessionStart] = useState(Date.now());
             const [elapsed, setElapsed] = useState(0);
+            const [paused, setPaused] = useState(false);
 
             const getHistory = (exName, setIndex) => {
                 const dates = Object.keys(workoutLog).sort().reverse();
@@ -334,9 +415,9 @@
             }, [selectedDay]);
 
             useEffect(() => {
-                const timer = setInterval(() => setElapsed(Math.floor((Date.now() - sessionStart) / 1000)), 1000);
+                const timer = setInterval(() => { if(!paused) setElapsed(Math.floor((Date.now() - sessionStart) / 1000)); }, 1000);
                 return () => clearInterval(timer);
-            }, [sessionStart]);
+            }, [sessionStart, paused]);
 
             useEffect(() => {
                 let timer;
@@ -359,7 +440,7 @@
                     }
                 }));
                 setPersonalRecords(newPrs);
-                setWorkoutLog({...workoutLog, [date]: { day: selectedDay, exercises: sets, tonnage, completed: true }});
+                setWorkoutLog({...workoutLog, [date]: { day: selectedDay, exercises: sets, tonnage, duration: elapsed, completed: true }});
                 
                 if (hitPr) {
                     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
@@ -384,6 +465,11 @@
                 return `${m}:${sec < 10 ? '0' : ''}${sec}`;
             };
 
+            const editTime = () => {
+                const newMins = prompt("Set Minutes:", Math.floor(elapsed/60));
+                if (newMins !== null && !isNaN(newMins)) setElapsed(parseInt(newMins) * 60);
+            };
+
             if (!selectedDay) return (
                 <div>
                     {Object.entries(customWorkouts).map(([k, v]) => (
@@ -403,7 +489,9 @@
                         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                             <div>
                                 <h2 style={{margin:0, textTransform:'capitalize'}}>{selectedDay}</h2>
-                                <div className="session-timer" onClick={() => { const adj = prompt("Edit minutes:", Math.floor(elapsed/60)); if(adj) setElapsed(adj*60); }}>⏱️ {formatTime(elapsed)}</div>
+                                <div className="session-timer" onClick={() => setPaused(!paused)} onDoubleClick={editTime}>
+                                    {paused ? '⏸' : '⏱️'} {formatTime(elapsed)}
+                                </div>
                             </div>
                             <button className="action-btn-minimal" onClick={() => setEditMode(!editMode)}><Icons.Edit/></button>
                         </div>
@@ -469,160 +557,13 @@
             );
         }
 
-        function EditWorkouts({ customWorkouts, setCustomWorkouts }) {
-            const [viewDay, setViewDay] = useState(null);
-            const [newDay, setNewDay] = useState('');
-            const fileInput = useRef(null);
-
-            const deleteDay = (key) => { if(confirm(`Delete ${key}?`)) { const n = {...customWorkouts}; delete n[key]; setCustomWorkouts(n); } };
-            const addDay = () => { if(newDay) { setCustomWorkouts({...customWorkouts, [newDay.toLowerCase()]: { name: newDay, exercises: [] }}); setNewDay(''); } };
-            const moveExercise = (day, idx, dir) => {
-                const n = {...customWorkouts};
-                const exs = n[day].exercises;
-                if (dir === -1 && idx > 0) { [exs[idx], exs[idx-1]] = [exs[idx-1], exs[idx]]; }
-                if (dir === 1 && idx < exs.length - 1) { [exs[idx], exs[idx+1]] = [exs[idx+1], exs[idx]]; }
-                setCustomWorkouts(n);
-            };
-            const deleteEx = (day, idx) => { if(confirm('Remove?')) { const n = {...customWorkouts}; n[day].exercises.splice(idx, 1); setCustomWorkouts(n); } };
-            const addEx = (day) => { const name = prompt("Name:"); if(name) { const n = {...customWorkouts}; n[day].exercises.push({name, sets:3, reps:"10-12"}); setCustomWorkouts(n); } };
-
-            const handleImport = (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        Object.keys(data).forEach(k => localStorage.setItem(k, JSON.stringify(data[k])));
-                        alert("Data restored! Please refresh.");
-                        window.location.reload();
-                    } catch(err) { alert("Invalid file"); }
-                };
-                reader.readAsText(file);
-            };
-
-            if (viewDay) return (
-                <div>
-                    <div style={{display:'flex', gap:'10px', marginBottom:'20px'}}><button className="icon-btn" style={{background:'gray'}} onClick={() => setViewDay(null)}><Icons.Back/></button><h2>{viewDay}</h2></div>
-                    {customWorkouts[viewDay].exercises.map((ex, i) => (
-                        <div key={i} className="card" style={{display:'flex', justifyContent:'space-between'}}>
-                            <span>{ex.name}</span>
-                            <div style={{display:'flex', gap:'5px'}}>
-                                <button className="autofill-btn" onClick={() => moveExercise(viewDay, i, -1)}><Icons.Up/></button>
-                                <button className="autofill-btn" onClick={() => moveExercise(viewDay, i, 1)}><Icons.Down/></button>
-                                <button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteEx(viewDay, i)}><Icons.Trash/></button>
-                            </div>
-                        </div>
-                    ))}
-                    <button className="btn btn-primary" onClick={() => addEx(viewDay)}>+ Add Exercise</button>
-                </div>
-            );
-
-            return (
-                <div>
-                    <div className="card"><h3>Manage Schedule</h3>{Object.keys(customWorkouts).map(d => (
-                        <div key={d} style={{display:'flex', justifyContent:'space-between', padding:'10px 0', borderBottom:'1px solid #eee'}}>
-                            <span style={{fontWeight:'bold', textTransform:'capitalize'}} onClick={() => setViewDay(d)}>{d}</span>
-                            <div style={{display:'flex', gap:'10px'}}><button className="action-btn-minimal" onClick={() => setViewDay(d)}><Icons.Edit/></button><button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteDay(d)}><Icons.Trash/></button></div>
-                        </div>
-                    ))}
-                    <div style={{marginTop:'20px', display:'flex', gap:'10px'}}><input placeholder="New Day Name" value={newDay} onChange={e => setNewDay(e.target.value)} /><button className="btn btn-success" style={{width:'auto'}} onClick={addDay}>Add</button></div></div>
-                    
-                    <div className="card">
-                        <h3>Data Management</h3>
-                        <p style={{color:'var(--text-secondary)', fontSize:'14px'}}>Restore data from a backup file.</p>
-                        <input type="file" ref={fileInput} style={{display:'none'}} onChange={handleImport} />
-                        <button className="btn btn-secondary" onClick={() => fileInput.current.click()}><Icons.Upload/> Import Backup</button>
-                    </div>
-                </div>
-            );
-        }
-
-        function Stats({ workoutLog, personalRecords }) {
-            const [selectedLift, setSelectedLift] = useState(null);
-            
-            // Get history for selected lift
-            const getLiftHistory = () => {
-                if(!selectedLift) return [];
-                return Object.entries(workoutLog)
-                    .sort((a,b) => new Date(a[0]) - new Date(b[0]))
-                    .map(([date, data]) => {
-                        const ex = data.exercises?.find(e => e.name === selectedLift);
-                        if(!ex) return null;
-                        const maxWeight = Math.max(...ex.logs.map(l => parseFloat(l.weight) || 0));
-                        return maxWeight > 0 ? { date, weight: maxWeight } : null;
-                    })
-                    .filter(Boolean);
-            };
-
-            const liftData = getLiftHistory();
-            const points = liftData.map((d, i) => {
-                const max = Math.max(...liftData.map(l => l.weight)) * 1.1;
-                const min = Math.min(...liftData.map(l => l.weight)) * 0.9;
-                const y = 100 - ((d.weight - min) / (max - min) * 100);
-                const x = (i / (liftData.length - 1)) * 300;
-                return `${x},${y}`;
-            }).join(' ');
-
+        function Stats({ workoutLog, personalRecords }) { 
             return (
                 <div>
                     <div className="stat-grid"><div className="stat-card"><div className="stat-val">{Object.keys(personalRecords).length}</div><div className="stat-lbl">PRs</div></div></div>
-                    
-                    <div className="card">
-                        <h3>Lift Progress</h3>
-                        <select onChange={(e) => setSelectedLift(e.target.value)} value={selectedLift || ''} style={{marginBottom:'15px'}}>
-                            <option value="">Select Exercise</option>
-                            {Object.keys(personalRecords).map(k => <option key={k} value={k}>{k.replace(/-/g, ' ').toUpperCase()}</option>)}
-                        </select>
-                        
-                        {selectedLift && liftData.length > 1 && (
-                            <div className="chart-wrapper">
-                                <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
-                                    <polyline points={points} className="chart-line" />
-                                </svg>
-                                <div style={{display:'flex', justifyContent:'space-between', fontSize:'10px', color:'var(--text-secondary)'}}>
-                                    <span>{new Date(liftData[0].date).toLocaleDateString(undefined, {month:'short', day:'numeric'})}</span>
-                                    <span>{new Date(liftData[liftData.length-1].date).toLocaleDateString(undefined, {month:'short', day:'numeric'})}</span>
-                                </div>
-                            </div>
-                        )}
-                        {selectedLift && liftData.length <= 1 && <p style={{color:'var(--text-secondary)'}}>Need more data to show chart.</p>}
-                    </div>
-
                     <div className="card"><h3>Personal Records</h3>
                         {Object.entries(personalRecords).map(([k,v]) => <div key={k} style={{borderBottom:'1px solid #eee', padding:'8px 0', display:'flex', justifyContent:'space-between'}}><span>{k}</span><b>{Math.round(v)} lbs</b></div>)}
                     </div>
-                </div>
-            ); 
-        }
-        
-        function Measurements({ measurements, setMeasurements }) { 
-            const [form, setForm] = useState({weight:''});
-            const points = measurements.slice(-10).map((m, i, arr) => {
-                const max = Math.max(...arr.map(d => parseFloat(d.weight))) + 5;
-                const min = Math.min(...arr.map(d => parseFloat(d.weight))) - 5;
-                const y = 100 - ((m.weight - min) / (max - min) * 100); 
-                return `${i * (300 / (arr.length - 1))},${y}`;
-            }).join(' ');
-
-            return (
-                <div>
-                    <div className="card">
-                        <h3>Weight Trend</h3>
-                        <div className="chart-wrapper">
-                            <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
-                                <line x1="0" y1="25" x2="300" y2="25" className="chart-grid" />
-                                <line x1="0" y1="50" x2="300" y2="50" className="chart-grid" />
-                                <line x1="0" y1="75" x2="300" y2="75" className="chart-grid" />
-                                {measurements.length > 1 && <polyline points={points} className="chart-line" />}
-                            </svg>
-                            {/* X-Axis Labels */}
-                            <div style={{position:'absolute', bottom:0, width:'100%', display:'flex', justifyContent:'space-between', fontSize:'10px', color:'var(--text-secondary)'}}>
-                                {measurements.slice(-10).map((m,i) => <span key={i} style={{opacity: i%2===0?1:0}}>{new Date(m.date).getDate()}</span>)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="card"><h3>Log Weight</h3><div style={{display:'flex', gap:'10px'}}><input type="number" inputMode="decimal" placeholder="Lbs" value={form.weight} onChange={e => setForm({weight:e.target.value})} /><button className="btn btn-primary" onClick={() => { if(form.weight) setMeasurements([...measurements, {date:new Date().toISOString(), weight:form.weight}]); setForm({weight:''}); }}>Save</button></div></div>
                 </div>
             ); 
         }

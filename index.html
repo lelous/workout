@@ -5,38 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Workout Pro">
-    <title>Workout Journal Pro</title>
+    <meta name="apple-mobile-web-app-title" content="Workout Quest">
+    <title>⚔️ Workout Quest ⚔️</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #f5f5f5;
-            --bg-secondary: #ffffff;
-            --bg-accent: #f0f4ff;
-            --text-primary: #333;
-            --text-secondary: #666;
-            --text-tertiary: #999;
-            --border-color: #e5e7eb;
-            --primary: #667eea;
-            --primary-dark: #764ba2;
-            --success: #11998e;
-            --success-light: #38ef7d;
-            --danger: #c00;
-            --danger-bg: #fee;
-            --shadow: rgba(0, 0, 0, 0.08);
+            --bg-primary: #1a1d2e;
+            --bg-secondary: #16213e;
+            --bg-accent: #0f3460;
+            --text-primary: #e8e8e8;
+            --text-secondary: #94a9c9;
+            --text-tertiary: #5a7ba8;
+            --border-color: #e94560;
+            --primary: #e94560;
+            --primary-dark: #c7315a;
+            --gold: #ffd700;
+            --success: #00ff88;
+            --success-dark: #00cc6a;
+            --danger: #ff4757;
+            --danger-bg: #4a1520;
+            --shadow: rgba(233, 69, 96, 0.3);
+            --glow: 0 0 20px rgba(233, 69, 96, 0.6);
         }
         
-        [data-theme="dark"] {
-            --bg-primary: #1a1a1a;
-            --bg-secondary: #2d2d2d;
-            --bg-accent: #3a3a5a;
-            --text-primary: #e5e5e5;
-            --text-secondary: #b0b0b0;
-            --text-tertiary: #808080;
-            --border-color: #404040;
-            --shadow: rgba(0, 0, 0, 0.3);
+        [data-theme="light"] {
+            --bg-primary: #f0e6ff;
+            --bg-secondary: #ffffff;
+            --bg-accent: #e8d5ff;
+            --text-primary: #2d1b4e;
+            --text-secondary: #5a4078;
+            --text-tertiary: #8a7099;
+            --border-color: #e94560;
+            --shadow: rgba(233, 69, 96, 0.2);
         }
         
         * {
@@ -46,84 +49,170 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
-            padding-bottom: 80px;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background-attachment: fixed;
+            padding-bottom: 100px;
             color: var(--text-primary);
-            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(233, 69, 96, 0.03) 2px, rgba(233, 69, 96, 0.03) 4px);
+            pointer-events: none;
+            z-index: 1;
         }
         
         .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #e94560 0%, #c7315a 100%);
             color: white;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 10px var(--shadow);
+            box-shadow: 0 4px 20px var(--shadow), inset 0 -3px 0 rgba(0,0,0,0.3);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 4px solid var(--gold);
+            position: relative;
+        }
+        
+        .header::before {
+            content: '⚔️';
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .header::after {
+            content: '⚔️';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%) scaleX(-1);
+            font-size: 24px;
+            animation: float 2s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(-50%) translateY(0px); }
+            50% { transform: translateY(-50%) translateY(-10px); }
         }
         
         .header h1 {
-            font-size: 24px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
             font-weight: 700;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.5), 0 0 20px rgba(255,215,0,0.5);
+            letter-spacing: 2px;
         }
         
         .header-actions {
             position: absolute;
-            right: 20px;
-            top: 20px;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             gap: 8px;
         }
         
         .icon-btn {
             background: rgba(255,255,255,0.2);
-            border: none;
+            border: 2px solid rgba(255,255,255,0.5);
             color: white;
             padding: 8px 12px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .icon-btn:hover {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 0 20px rgba(255,215,0,0.6);
+            transform: scale(1.1);
         }
         
         .back-btn {
             position: absolute;
-            left: 20px;
-            top: 20px;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
             background: rgba(255,255,255,0.2);
-            border: none;
+            border: 2px solid rgba(255,255,255,0.5);
             color: white;
             padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 0 20px rgba(255,215,0,0.6);
         }
         
         .container {
-            padding: 16px;
+            padding: 20px;
             max-width: 600px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
         
         .card {
             background: var(--bg-secondary);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px var(--shadow);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 0 0 2px var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         
         .card h2 {
-            font-size: 20px;
-            margin-bottom: 8px;
-            color: var(--text-primary);
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--gold);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         
         .card h3 {
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 12px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary);
+            text-transform: uppercase;
         }
         
         .exercise-description {
@@ -131,46 +220,82 @@
             padding: 12px;
             border-radius: 8px;
             margin: 12px 0;
-            font-size: 14px;
+            font-size: 12px;
             line-height: 1.6;
             color: var(--text-secondary);
+            border-left: 3px solid var(--primary);
         }
         
         .description-title {
-            font-weight: 600;
-            color: var(--primary);
+            font-weight: 700;
+            color: var(--gold);
             margin-bottom: 6px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
         }
         
         .btn {
             width: 100%;
             padding: 16px;
-            border: none;
+            border: 3px solid var(--primary);
             border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
             margin-bottom: 12px;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '▶';
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover::before {
+            opacity: 1;
+            left: 15px;
         }
         
         .btn:active {
-            transform: scale(0.98);
+            transform: scale(0.95);
         }
         
         .btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
+            box-shadow: 0 4px 15px var(--shadow), inset 0 -3px 0 rgba(0,0,0,0.3);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 0 30px var(--glow), inset 0 -3px 0 rgba(0,0,0,0.3);
         }
         
         .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0,255,136,0.4), inset 0 -3px 0 rgba(0,0,0,0.3);
+            border-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 0 30px rgba(0,255,136,0.8), inset 0 -3px 0 rgba(0,0,0,0.3);
         }
         
         .btn-secondary {
-            background: var(--border-color);
+            background: var(--bg-accent);
             color: var(--text-primary);
+            border-color: var(--text-tertiary);
         }
         
         .day-card {
@@ -178,25 +303,48 @@
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 8px var(--shadow);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 0 0 2px var(--primary);
             cursor: pointer;
-            transition: all 0.2s;
-            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+            border-left: 6px solid var(--gold);
+            position: relative;
+        }
+        
+        .day-card::after {
+            content: '▶';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+        
+        .day-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 30px rgba(233,69,96,0.6), inset 0 0 0 2px var(--gold);
+        }
+        
+        .day-card:hover::after {
+            right: 15px;
         }
         
         .day-card:active {
-            transform: scale(0.98);
+            transform: translateX(5px) scale(0.98);
         }
         
         .day-name {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            color: var(--primary);
-            text-transform: capitalize;
+            color: var(--gold);
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            letter-spacing: 1px;
         }
         
         .day-focus {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-secondary);
             margin-top: 4px;
         }
@@ -207,14 +355,25 @@
             align-items: center;
             margin-bottom: 10px;
             position: relative;
+            background: var(--bg-accent);
+            padding: 8px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .set-row:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(233,69,96,0.3);
         }
         
         .set-label {
             width: 50px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 12px;
             flex-shrink: 0;
+            text-transform: uppercase;
         }
         
         .set-input {
@@ -227,83 +386,88 @@
             flex-shrink: 0;
             background: var(--bg-secondary);
             color: var(--text-primary);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s;
         }
         
         .set-input:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(255,215,0,0.5);
         }
         
         .set-note-btn {
             background: var(--bg-accent);
-            border: none;
+            border: 2px solid var(--primary);
             padding: 6px 10px;
             border-radius: 6px;
-            font-size: 12px;
-            color: var(--primary);
+            font-size: 14px;
+            color: var(--gold);
             cursor: pointer;
             margin-left: 4px;
+            transition: all 0.3s;
+        }
+        
+        .set-note-btn:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 15px rgba(233,69,96,0.6);
         }
         
         .last-workout {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-tertiary);
             margin-top: 4px;
             font-style: italic;
         }
         
         .pr-badge {
-            background: gold;
-            color: #333;
+            background: var(--gold);
+            color: #000;
             padding: 4px 8px;
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             margin-left: 8px;
+            text-transform: uppercase;
+            animation: pulse-gold 2s infinite;
+        }
+        
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+            50% { box-shadow: 0 0 20px rgba(255,215,0,1); }
         }
         
         .timer-display {
             position: fixed;
-            bottom: 90px;
+            bottom: 110px;
             right: 20px;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             padding: 16px 20px;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            box-shadow: 0 4px 12px var(--shadow);
+            box-shadow: 0 8px 30px var(--shadow), inset 0 0 0 3px var(--gold);
             z-index: 90;
-            min-width: 70px;
-            min-height: 70px;
+            min-width: 80px;
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Press Start 2P', cursive;
+            border: 4px solid var(--gold);
         }
         
         .timer-display.finished {
-            background: var(--success);
-            animation: pulse 0.5s infinite;
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+            animation: victory-pulse 0.5s infinite;
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--border-color);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            transition: width 0.3s;
+        @keyframes victory-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(0,255,136,0.8); }
+            50% { transform: scale(1.1); box-shadow: 0 0 50px rgba(0,255,136,1); }
         }
         
         .nav {
@@ -311,12 +475,12 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-top: 3px solid var(--border-color);
             display: flex;
             justify-content: space-around;
             padding: 12px 8px;
-            box-shadow: 0 -2px 10px var(--shadow);
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.8);
         }
         
         .nav-btn {
@@ -329,26 +493,43 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            transition: all 0.2s;
+            transition: all 0.3s;
             min-width: 60px;
+            position: relative;
         }
         
         .nav-btn.active {
             background: var(--bg-accent);
+            box-shadow: 0 0 20px rgba(233,69,96,0.5), inset 0 0 0 2px var(--primary);
+        }
+        
+        .nav-btn.active::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 0 0 3px 3px;
         }
         
         .nav-icon {
-            font-size: 22px;
+            font-size: 20px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
         
         .nav-label {
-            font-size: 10px;
-            font-weight: 600;
+            font-size: 9px;
+            font-weight: 700;
             color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .nav-btn.active .nav-label {
-            color: var(--primary);
+            color: var(--gold);
         }
         
         .stat-grid {
@@ -363,35 +544,38 @@
             border-radius: 12px;
             padding: 16px;
             text-align: center;
-            box-shadow: 0 2px 8px var(--shadow);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 0 0 2px var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gold);
         }
         
         .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold) 0%, #ffed4e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            font-family: 'Press Start 2P', cursive;
         }
         
         .stat-label {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-secondary);
-            margin-top: 4px;
-        }
-        
-        .info-badge {
-            display: inline-block;
-            background: #fff3cd;
-            color: #856404;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
             margin-top: 8px;
-        }
-        
-        [data-theme="dark"] .info-badge {
-            background: #4a4419;
-            color: #ffc107;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
         }
         
         textarea, input[type="text"], input[type="number"] {
@@ -399,10 +583,11 @@
             padding: 12px;
             border: 2px solid var(--border-color);
             border-radius: 8px;
-            font-family: inherit;
+            font-family: 'Orbitron', sans-serif;
             font-size: 14px;
             background: var(--bg-secondary);
             color: var(--text-primary);
+            transition: all 0.3s;
         }
         
         textarea {
@@ -412,42 +597,32 @@
         
         textarea:focus, input:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(255,215,0,0.4);
         }
         
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
+        .info-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gold) 0%, #ffed4e 100%);
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 8px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(255,215,0,0.5);
         }
         
-        .modal {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
+        /* Level up animation */
+        @keyframes levelUp {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
         }
         
-        .modal h3 {
-            margin-bottom: 16px;
-        }
-        
-        .chart-container {
-            width: 100%;
-            height: 200px;
-            margin: 16px 0;
-            position: relative;
+        .level-up {
+            animation: levelUp 0.5s ease-out;
         }
     </style>
 </head>
@@ -527,7 +702,7 @@
             const [customWorkouts, setCustomWorkouts] = useState(WORKOUTS);
             const [measurements, setMeasurements] = useState([]);
             const [personalRecords, setPersonalRecords] = useState({});
-            const [darkMode, setDarkMode] = useState(false);
+            const [darkMode, setDarkMode] = useState(true);
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
@@ -549,8 +724,10 @@
                 if (savedPRs) {
                     try { setPersonalRecords(JSON.parse(savedPRs)); } catch (e) {}
                 }
-                if (savedDarkMode === 'true') {
-                    setDarkMode(true);
+                if (savedDarkMode === 'false') {
+                    setDarkMode(false);
+                    document.documentElement.setAttribute('data-theme', 'light');
+                } else {
                     document.documentElement.setAttribute('data-theme', 'dark');
                 }
                 
@@ -573,7 +750,7 @@
             };
 
             if (loading) {
-                return <div className="container"><h2>Loading...</h2></div>;
+                return <div className="container"><h2 style={{textAlign: 'center', color: 'var(--gold)'}}>⚔️ Loading Quest... ⚔️</h2></div>;
             }
 
             return (
@@ -602,12 +779,12 @@
 
         function Header({ view, setView, setSelectedDay, darkMode, toggleDarkMode }) {
             const titles = {
-                home: 'Workout Pro',
-                workout: 'Log Workout',
-                stats: 'Stats & PRs',
-                measurements: 'Measurements',
-                edit: 'Edit Workouts',
-                history: 'History'
+                home: '⚔️ WORKOUT QUEST ⚔️',
+                workout: '⚔️ BATTLE LOG ⚔️',
+                stats: '📊 STATS & RECORDS 📊',
+                measurements: '📏 HERO STATUS 📏',
+                edit: '⚙️ QUEST EDITOR ⚙️',
+                history: '📜 QUEST LOG 📜'
             };
 
             const exportData = () => {
@@ -621,27 +798,27 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `workout-data-${new Date().toISOString().split('T')[0]}.json`;
+                a.download = `workout-quest-data-${new Date().toISOString().split('T')[0]}.json`;
                 a.click();
                 
-                alert('Data exported! ✓');
+                alert('⚔️ Quest data exported! ⚔️');
             };
 
             return (
                 <div className="header" style={{position: 'relative'}}>
                     {view !== 'home' && (
                         <button className="back-btn" onClick={() => { setView('home'); setSelectedDay(null); }}>
-                            ← Back
+                            ◀ BACK
                         </button>
                     )}
                     <h1>{titles[view]}</h1>
                     <div className="header-actions">
-                        <button className="icon-btn" onClick={toggleDarkMode}>
+                        <button className="icon-btn" onClick={toggleDarkMode} title="Toggle Theme">
                             {darkMode ? '☀️' : '🌙'}
                         </button>
                         {view === 'home' && (
-                            <button className="icon-btn" onClick={exportData}>
-                                📤
+                            <button className="icon-btn" onClick={exportData} title="Export Data">
+                                💾
                             </button>
                         )}
                     </div>
@@ -657,20 +834,20 @@
                         <div className="nav-label">Home</div>
                     </button>
                     <button className={`nav-btn ${view === 'workout' ? 'active' : ''}`} onClick={() => setView('workout')}>
-                        <div className="nav-icon">💪</div>
-                        <div className="nav-label">Workout</div>
+                        <div className="nav-icon">⚔️</div>
+                        <div className="nav-label">Battle</div>
                     </button>
                     <button className={`nav-btn ${view === 'stats' ? 'active' : ''}`} onClick={() => setView('stats')}>
                         <div className="nav-icon">📊</div>
                         <div className="nav-label">Stats</div>
                     </button>
                     <button className={`nav-btn ${view === 'measurements' ? 'active' : ''}`} onClick={() => setView('measurements')}>
-                        <div className="nav-icon">📏</div>
-                        <div className="nav-label">Body</div>
+                        <div className="nav-icon">💪</div>
+                        <div className="nav-label">Hero</div>
                     </button>
                     <button className={`nav-btn ${view === 'history' ? 'active' : ''}`} onClick={() => setView('history')}>
-                        <div className="nav-icon">📅</div>
-                        <div className="nav-label">History</div>
+                        <div className="nav-icon">📜</div>
+                        <div className="nav-label">Log</div>
                     </button>
                 </div>
             );
@@ -687,7 +864,6 @@
                 return logWeek === currentWeek && workoutLog[key].completed;
             }).length;
 
-            // Calculate streak
             let streak = 0;
             const dates = Object.keys(workoutLog).sort().reverse();
             for (let i = 0; i < dates.length; i++) {
@@ -705,57 +881,55 @@
                     <div className="stat-grid">
                         <div className="stat-card">
                             <div className="stat-value">{weekWorkouts}/5</div>
-                            <div className="stat-label">This Week</div>
+                            <div className="stat-label">Weekly Quests</div>
                         </div>
                         <div className="stat-card">
-                            <div className="stat-value" style={{color: todayWorkout?.completed ? '#11998e' : '#999'}}>
+                            <div className="stat-value" style={{WebkitTextFillColor: todayWorkout?.completed ? '#00ff88' : '#666'}}>
                                 {todayWorkout?.completed ? '✓' : '—'}
                             </div>
                             <div className="stat-label">Today</div>
                         </div>
                         <div className="stat-card">
-                            <div className="stat-value">{streak}</div>
-                            <div className="stat-label">Day Streak 🔥</div>
+                            <div className="stat-value">{streak} 🔥</div>
+                            <div className="stat-label">Day Streak</div>
                         </div>
                         <div className="stat-card">
                             <div className="stat-value">{Object.keys(workoutLog).length}</div>
-                            <div className="stat-label">Total Workouts</div>
+                            <div className="stat-label">Total Battles</div>
                         </div>
                     </div>
 
                     <button className="btn btn-primary" onClick={() => setView('workout')}>
-                        💪 Start Workout
+                        ⚔️ Begin Battle
                     </button>
 
                     <button className="btn btn-success" onClick={() => setView('stats')}>
-                        📊 View Stats & PRs
+                        📊 View Records
                     </button>
 
                     <div className="card">
-                        <h2 style={{marginBottom: '12px'}}>Weekly Schedule</h2>
-                        <div style={{fontSize: '14px', lineHeight: '1.8', color: 'var(--text-secondary)'}}>
-                            <div><strong>Monday:</strong> Upper Push + Core</div>
-                            <div><strong>Tuesday:</strong> Lower + Core</div>
-                            <div><strong>Wednesday:</strong> Cardio + Mobility</div>
-                            <div><strong>Thursday:</strong> Upper Pull + Core</div>
-                            <div><strong>Friday:</strong> Lower + Core</div>
+                        <h2>⚔️ Weekly Quest Schedule</h2>
+                        <div style={{fontSize: '13px', lineHeight: '2', color: 'var(--text-secondary)'}}>
+                            <div><strong style={{color: 'var(--gold)'}}>Monday:</strong> Upper Push + Core</div>
+                            <div><strong style={{color: 'var(--gold)'}}>Tuesday:</strong> Lower + Core</div>
+                            <div><strong style={{color: 'var(--gold)'}}>Wednesday:</strong> Cardio + Mobility</div>
+                            <div><strong style={{color: 'var(--gold)'}}>Thursday:</strong> Upper Pull + Core</div>
+                            <div><strong style={{color: 'var(--gold)'}}>Friday:</strong> Lower + Core</div>
                         </div>
                     </div>
 
                     <div className="card">
-                        <h2 style={{marginBottom: '8px'}}>Daily Targets</h2>
-                        <div style={{fontSize: '14px', lineHeight: '1.8', color: 'var(--text-secondary)'}}>
-                            <div>Protein: <strong>220g</strong></div>
-                            <div>Calories: <strong>2,400-2,500</strong></div>
-                            <div>Carbs: <strong>200-220g</strong> (training)</div>
-                            <div>Fats: <strong>70-80g</strong></div>
+                        <h2>🎯 Daily Targets</h2>
+                        <div style={{fontSize: '13px', lineHeight: '2', color: 'var(--text-secondary)'}}>
+                            <div>Protein: <strong style={{color: 'var(--gold)'}}>220g</strong></div>
+                            <div>Calories: <strong style={{color: 'var(--gold)'}}>2,400-2,500</strong></div>
+                            <div>Carbs: <strong style={{color: 'var(--gold)'}}>200-220g</strong> (training)</div>
+                            <div>Fats: <strong style={{color: 'var(--gold)'}}>70-80g</strong></div>
                         </div>
                     </div>
                 </div>
             );
         }
-
-        // Continue in next part due to length...
         
         function Workout({ selectedDay, setSelectedDay, workoutLog, setWorkoutLog, customWorkouts, personalRecords, setPersonalRecords }) {
             const [sets, setSets] = useState([]);
@@ -774,7 +948,6 @@
                     const workout = customWorkouts[selectedDay];
                     setWorkoutExercises([...workout.exercises]);
                     
-                    // Load last workout data
                     const lastWorkout = getLastWorkout(selectedDay);
                     
                     setSets(workout.exercises.map(ex => ({
@@ -783,7 +956,7 @@
                     })));
                     setExpandedEx({});
                     setEditMode(false);
-}
+                }
             }, [selectedDay, customWorkouts]);
 
             useEffect(() => {
@@ -793,7 +966,6 @@
                             setRestTime(restTime - 1);
                         }, 1000);
                     } else if (restTime === 0 && timer !== null) {
-                        // Timer finished - vibrate if supported
                         if (navigator.vibrate) {
                             navigator.vibrate([200, 100, 200]);
                         }
@@ -863,7 +1035,7 @@
             if (!selectedDay) {
                 return (
                     <div>
-                        <h2 style={{marginBottom: '16px', fontSize: '20px'}}>Select Workout Day</h2>
+                        <h2 style={{marginBottom: '20px', fontSize: '16px', textAlign: 'center', color: 'var(--gold)', textTransform: 'uppercase'}}>⚔️ Select Your Quest ⚔️</h2>
                         {Object.entries(customWorkouts).map(([key, workout]) => (
                             <div key={key} className="day-card" onClick={() => setSelectedDay(key)}>
                                 <div className="day-name">{key}</div>
@@ -880,7 +1052,6 @@
             const saveWorkout = () => {
                 const today = new Date().toISOString().split('T')[0];
                 
-                // Check for PRs
                 let newPRs = [];
                 sets.forEach((exercise, idx) => {
                     exercise.logs.forEach(log => {
@@ -907,9 +1078,9 @@
                 setSelectedDay(null);
                 
                 if (newPRs.length > 0) {
-                    alert(`🎉 NEW PR! ${newPRs.join(', ')}`);
+                    alert(`🎉 NEW RECORD! 🎉\n${newPRs.join(', ')}\n⚔️ LEVEL UP! ⚔️`);
                 } else {
-                    alert('Workout saved! 💪');
+                    alert('⚔️ QUEST COMPLETE! ⚔️\nVictory is yours, warrior! 💪');
                 }
             };
 
@@ -918,7 +1089,7 @@
             };
 
             const removeExercise = (idx) => {
-                if (confirm('Remove this exercise from today\'s workout?')) {
+                if (confirm('Remove this challenge from today\'s quest?')) {
                     const newExercises = workoutExercises.filter((_, i) => i !== idx);
                     const newSets = sets.filter((_, i) => i !== idx);
                     setWorkoutExercises(newExercises);
@@ -927,10 +1098,10 @@
             };
 
             const addQuickExercise = () => {
-                const name = prompt('Exercise name:');
+                const name = prompt('Challenge name:');
                 if (!name) return;
                 
-                const setsCount = prompt('How many sets?', '3');
+                const setsCount = prompt('How many battles?', '3');
                 if (!setsCount) return;
 
                 const newEx = {
@@ -951,11 +1122,11 @@
             return (
                 <div>
                     <div className="card">
-                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px'}}>
                             <div>
                                 <h2>{workout.name}</h2>
-                                <div style={{color: 'var(--text-secondary)', fontSize: '14px', marginTop: '4px'}}>
-                                    {workout.focus} • {workoutExercises.length} exercises
+                                <div style={{color: 'var(--text-secondary)', fontSize: '12px', marginTop: '4px'}}>
+                                    {workout.focus} • {workoutExercises.length} challenges
                                 </div>
                             </div>
                             <div style={{display: 'flex', gap: '8px'}}>
@@ -963,12 +1134,12 @@
                                     onClick={() => setShowPlateCalc(!showPlateCalc)}
                                     style={{
                                         background: 'var(--bg-accent)',
-                                        border: 'none',
+                                        border: '2px solid var(--primary)',
                                         padding: '8px 12px',
                                         borderRadius: '8px',
                                         fontSize: '13px',
-                                        color: 'var(--primary)',
-                                        fontWeight: '600',
+                                        color: 'var(--gold)',
+                                        fontWeight: '700',
                                         cursor: 'pointer'
                                     }}
                                 >
@@ -978,24 +1149,24 @@
                                     onClick={() => setEditMode(!editMode)}
                                     style={{
                                         background: editMode ? 'var(--primary)' : 'var(--bg-accent)',
-                                        border: 'none',
+                                        border: '2px solid var(--primary)',
                                         padding: '8px 16px',
                                         borderRadius: '8px',
                                         fontSize: '13px',
-                                        color: editMode ? 'white' : 'var(--primary)',
-                                        fontWeight: '600',
+                                        color: editMode ? 'white' : 'var(--gold)',
+                                        fontWeight: '700',
                                         cursor: 'pointer'
                                     }}
                                 >
-                                    {editMode ? '✓ Done' : '✏️ Edit'}
+                                    {editMode ? '✓ DONE' : '✏️ EDIT'}
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     {showPlateCalc && (
-                        <div className="card" style={{background: 'var(--bg-accent)', borderLeft: '4px solid var(--primary)'}}>
-                            <h3>Plate Calculator</h3>
+                        <div className="card" style={{background: 'var(--bg-accent)', borderColor: 'var(--gold)'}}>
+                            <h3>🔢 Plate Calculator</h3>
                             <input
                                 type="number"
                                 value={plateCalcWeight}
@@ -1004,33 +1175,34 @@
                                 style={{marginBottom: '12px'}}
                             />
                             {plateCalcWeight && (
-                                <div style={{fontSize: '14px', color: 'var(--text-secondary)'}}>
-                                    <strong>Per side:</strong> {calculatePlates(parseFloat(plateCalcWeight))}
+                                <div style={{fontSize: '13px', color: 'var(--text-secondary)'}}>
+                                    <strong style={{color: 'var(--gold)'}}>Per side:</strong> {calculatePlates(parseFloat(plateCalcWeight))}
                                 </div>
                             )}
                         </div>
                     )}
 
                     {editMode && (
-                        <div className="card" style={{background: 'var(--bg-accent)', borderLeft: '4px solid var(--primary)'}}>
-                            <div style={{fontSize: '13px', color: 'var(--primary)', marginBottom: '12px', fontWeight: '600'}}>
-                                Edit Mode: Remove exercises or add new ones
+                        <div className="card" style={{background: 'var(--bg-accent)', borderColor: 'var(--gold)'}}>
+                            <div style={{fontSize: '12px', color: 'var(--gold)', marginBottom: '12px', fontWeight: '700', textTransform: 'uppercase'}}>
+                                ⚙️ Edit Mode: Customize Your Quest
                             </div>
                             <button
                                 onClick={addQuickExercise}
                                 style={{
                                     width: '100%',
-                                    background: 'var(--primary)',
+                                    background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)',
                                     color: 'white',
-                                    border: 'none',
+                                    border: '2px solid var(--gold)',
                                     padding: '12px',
                                     borderRadius: '8px',
-                                    fontSize: '14px',
-                                    fontWeight: '600',
-                                    cursor: 'pointer'
+                                    fontSize: '13px',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    textTransform: 'uppercase'
                                 }}
                             >
-                                + Add Exercise
+                                + Add Challenge
                             </button>
                         </div>
                     )}
@@ -1038,16 +1210,14 @@
                     {workoutExercises.map((exercise, exIdx) => {
                         const exerciseSets = sets[exIdx]?.logs || [];
                         const isExpanded = expandedEx[exIdx];
-                        
-                        // Get last workout data for this exercise
                         const lastExData = lastWorkout?.exercises?.[exIdx];
                         
                         return (
-                            <div key={exIdx} className="card" style={{borderLeft: '4px solid var(--primary)'}}>
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px'}}>
+                            <div key={exIdx} className="card" style={{borderLeft: '6px solid var(--gold)'}}>
+                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px', flexWrap: 'wrap', gap: '8px'}}>
                                     <div style={{flex: 1}}>
-                                        <h3 style={{marginBottom: '4px'}}>{exercise.name}</h3>
-                                        <div style={{fontSize: '13px', color: 'var(--text-secondary)'}}>
+                                        <h3 style={{marginBottom: '4px', fontSize: '14px'}}>{exercise.name}</h3>
+                                        <div style={{fontSize: '11px', color: 'var(--text-secondary)'}}>
                                             {exercise.sets} sets × {exercise.reps} reps
                                         </div>
                                     </div>
@@ -1056,13 +1226,14 @@
                                             onClick={() => toggleDescription(exIdx)}
                                             style={{
                                                 background: isExpanded ? 'var(--primary)' : 'var(--bg-accent)',
-                                                border: 'none',
+                                                border: '2px solid var(--primary)',
                                                 padding: '6px 12px',
                                                 borderRadius: '6px',
-                                                fontSize: '12px',
-                                                color: isExpanded ? 'white' : 'var(--primary)',
-                                                fontWeight: '600',
-                                                cursor: 'pointer'
+                                                fontSize: '11px',
+                                                color: isExpanded ? 'white' : 'var(--gold)',
+                                                fontWeight: '700',
+                                                cursor: 'pointer',
+                                                textTransform: 'uppercase'
                                             }}
                                         >
                                             {isExpanded ? '▼' : '▶'} Form
@@ -1072,16 +1243,17 @@
                                                 onClick={() => removeExercise(exIdx)}
                                                 style={{
                                                     background: 'var(--danger-bg)',
-                                                    border: 'none',
+                                                    border: '2px solid var(--danger)',
                                                     padding: '6px 12px',
                                                     borderRadius: '6px',
-                                                    fontSize: '12px',
+                                                    fontSize: '11px',
                                                     color: 'var(--danger)',
-                                                    fontWeight: '600',
-                                                    cursor: 'pointer'
+                                                    fontWeight: '700',
+                                                    cursor: 'pointer',
+                                                    textTransform: 'uppercase'
                                                 }}
                                             >
-                                                Remove
+                                                ✕
                                             </button>
                                         )}
                                     </div>
@@ -1089,7 +1261,7 @@
 
                                 {isExpanded && exercise.description && (
                                     <div className="exercise-description" style={{marginBottom: '12px'}}>
-                                        <div className="description-title">How to Perform:</div>
+                                        <div className="description-title">⚔️ Battle Instructions:</div>
                                         {exercise.description}
                                     </div>
                                 )}
@@ -1126,11 +1298,11 @@
                                                         setSets(newSets);
                                                     }}
                                                 />
-                                                <span style={{fontSize: '14px', color: 'var(--text-secondary)', width: '35px', flexShrink: 0}}>lbs</span>
+                                                <span style={{fontSize: '12px', color: 'var(--text-secondary)', width: '35px', flexShrink: 0, fontWeight: '700'}}>lbs</span>
                                                 <button
                                                     className="set-note-btn"
                                                     onClick={() => {
-                                                        const note = prompt('Add note for this set:');
+                                                        const note = prompt('Add battle note:');
                                                         if (note !== null) {
                                                             const newSets = [...sets];
                                                             newSets[exIdx].logs[setIdx].note = note;
@@ -1153,13 +1325,14 @@
                                                         }}
                                                         style={{
                                                             background: 'var(--danger-bg)',
-                                                            border: 'none',
+                                                            border: '2px solid var(--danger)',
                                                             padding: '6px 10px',
                                                             borderRadius: '6px',
                                                             fontSize: '12px',
                                                             color: 'var(--danger)',
                                                             cursor: 'pointer',
-                                                            marginLeft: '4px'
+                                                            marginLeft: '4px',
+                                                            fontWeight: '700'
                                                         }}
                                                     >
                                                         ✕
@@ -1167,8 +1340,8 @@
                                                 )}
                                             </div>
                                             {set.note && (
-                                                <div style={{fontSize: '11px', color: 'var(--text-tertiary)', marginLeft: '60px', marginTop: '4px', fontStyle: 'italic'}}>
-                                                    Note: {set.note}
+                                                <div style={{fontSize: '10px', color: 'var(--text-tertiary)', marginLeft: '60px', marginTop: '4px', fontStyle: 'italic'}}>
+                                                    📝 {set.note}
                                                 </div>
                                             )}
                                             {lastExData?.logs?.[setIdx] && (
@@ -1190,13 +1363,14 @@
                                                 width: '100%',
                                                 marginTop: '8px',
                                                 background: 'var(--bg-accent)',
-                                                border: '2px dashed var(--primary)',
+                                                border: '2px dashed var(--gold)',
                                                 padding: '10px',
                                                 borderRadius: '8px',
-                                                fontSize: '13px',
-                                                color: 'var(--primary)',
-                                                fontWeight: '600',
-                                                cursor: 'pointer'
+                                                fontSize: '12px',
+                                                color: 'var(--gold)',
+                                                fontWeight: '700',
+                                                cursor: 'pointer',
+                                                textTransform: 'uppercase'
                                             }}
                                         >
                                             + Add Set
@@ -1208,16 +1382,16 @@
                     })}
 
                     <div className="card">
-                        <h3>Workout Notes</h3>
+                        <h3>📜 Battle Notes</h3>
                         <textarea
-                            placeholder="How did it feel? Energy levels, any issues..."
+                            placeholder="How did the battle go? Energy, struggles, victories..."
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                         />
                     </div>
 
                     <button className="btn btn-success" onClick={saveWorkout}>
-                        ✓ Complete Workout
+                        ⚔️ Complete Quest ⚔️
                     </button>
 
                     {timer !== null && (
@@ -1230,9 +1404,6 @@
         }
 
         function Stats({ workoutLog, customWorkouts }) {
-            const [selectedExercise, setSelectedExercise] = useState(null);
-            
-            // Calculate total volume
             const totalVolume = Object.values(workoutLog).reduce((sum, workout) => {
                 if (!workout.exercises) return sum;
                 return sum + workout.exercises.reduce((exSum, ex) => {
@@ -1242,7 +1413,6 @@
                 }, 0);
             }, 0);
 
-            // Get all unique exercises
             const allExercises = new Set();
             Object.values(workoutLog).forEach(workout => {
                 workout.exercises?.forEach(ex => {
@@ -1250,7 +1420,6 @@
                 });
             });
 
-            // Calculate PRs
             const prs = {};
             Object.values(workoutLog).forEach(workout => {
                 workout.exercises?.forEach(ex => {
@@ -1279,24 +1448,24 @@
                         </div>
                         <div className="stat-card">
                             <div className="stat-value">{Object.keys(prs).length}</div>
-                            <div className="stat-label">Exercises Tracked</div>
+                            <div className="stat-label">Skills Mastered</div>
                         </div>
                     </div>
 
                     <div className="card">
-                        <h2 style={{marginBottom: '16px'}}>Personal Records 🏆</h2>
+                        <h2 style={{marginBottom: '16px'}}>🏆 Records Hall 🏆</h2>
                         {Object.entries(prs).length === 0 ? (
-                            <p style={{color: 'var(--text-tertiary)', textAlign: 'center'}}>Complete a workout to track PRs!</p>
+                            <p style={{color: 'var(--text-tertiary)', textAlign: 'center', fontSize: '13px'}}>Complete your first quest to unlock records!</p>
                         ) : (
                             <div>
                                 {Object.entries(prs).sort((a, b) => b[1].oneRM - a[1].oneRM).map(([name, data]) => (
                                     <div key={name} style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '12px'}}>
-                                        <div style={{fontWeight: '600', marginBottom: '4px'}}>{name}</div>
-                                        <div style={{fontSize: '14px', color: 'var(--text-secondary)'}}>
-                                            Best: {data.weight} lbs × {data.reps} reps
+                                        <div style={{fontWeight: '700', marginBottom: '4px', color: 'var(--gold)', fontSize: '13px'}}>{name}</div>
+                                        <div style={{fontSize: '12px', color: 'var(--text-secondary)'}}>
+                                            Best: <strong style={{color: 'var(--gold)'}}>{data.weight} lbs × {data.reps} reps</strong>
                                         </div>
-                                        <div style={{fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '2px'}}>
-                                            Estimated 1RM: {data.oneRM.toFixed(1)} lbs
+                                        <div style={{fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px'}}>
+                                            Est. 1RM: <strong>{data.oneRM.toFixed(1)} lbs</strong>
                                         </div>
                                     </div>
                                 ))}
@@ -1305,9 +1474,9 @@
                     </div>
 
                     <div className="card">
-                        <h2 style={{marginBottom: '12px'}}>1RM Calculator</h2>
-                        <p style={{fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '12px'}}>
-                            Enter weight and reps to estimate your one-rep max
+                        <h2 style={{marginBottom: '12px'}}>🎯 1RM Calculator</h2>
+                        <p style={{fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px'}}>
+                            Calculate your maximum power level
                         </p>
                         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
                             <input type="number" id="calc-weight" placeholder="Weight (lbs)" />
@@ -1320,11 +1489,11 @@
                                 const reps = parseInt(document.getElementById('calc-reps').value);
                                 if (weight && reps) {
                                     const oneRM = weight * (1 + reps / 30);
-                                    alert(`Estimated 1RM: ${oneRM.toFixed(1)} lbs`);
+                                    alert(`⚔️ POWER LEVEL ⚔️\n\nEstimated 1RM: ${oneRM.toFixed(1)} lbs`);
                                 }
                             }}
                         >
-                            Calculate 1RM
+                            Calculate Power
                         </button>
                     </div>
                 </div>
@@ -1342,7 +1511,7 @@
 
             const addMeasurement = () => {
                 if (!newMeasurement.weight) {
-                    alert('Weight is required');
+                    alert('⚠️ Weight is required!');
                     return;
                 }
                 
@@ -1353,6 +1522,7 @@
                 
                 setMeasurements([...measurements, entry]);
                 setNewMeasurement({ weight: '', waist: '', chest: '', arms: '', legs: '' });
+                alert('⚔️ Hero status updated! ⚔️');
             };
 
             const latest = measurements[measurements.length - 1];
@@ -1367,7 +1537,7 @@
                             <div className="stat-label">Current Weight (lbs)</div>
                         </div>
                         <div className="stat-card">
-                            <div className="stat-value" style={{color: weightChange < 0 ? 'var(--success)' : 'var(--danger)'}}>
+                            <div className="stat-value" style={{WebkitTextFillColor: weightChange < 0 ? '#00ff88' : '#ff4757'}}>
                                 {weightChange > 0 ? '+' : ''}{weightChange}
                             </div>
                             <div className="stat-label">Change (lbs)</div>
@@ -1375,7 +1545,7 @@
                     </div>
 
                     <div className="card">
-                        <h3>Log New Measurement</h3>
+                        <h3>📊 Update Hero Stats</h3>
                         <div style={{display: 'grid', gap: '12px'}}>
                             <input
                                 type="number"
@@ -1414,21 +1584,21 @@
                             />
                         </div>
                         <button className="btn btn-primary" onClick={addMeasurement}>
-                            Add Measurement
+                            Update Stats
                         </button>
                     </div>
 
                     <div className="card">
-                        <h3>Measurement History</h3>
+                        <h3>📜 Stats History</h3>
                         {measurements.length === 0 ? (
-                            <p style={{color: 'var(--text-tertiary)', textAlign: 'center'}}>No measurements yet</p>
+                            <p style={{color: 'var(--text-tertiary)', textAlign: 'center', fontSize: '13px'}}>No measurements recorded yet</p>
                         ) : (
                             <div>
                                 {measurements.slice().reverse().slice(0, 10).map((m, idx) => (
                                     <div key={idx} style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', marginBottom: '12px'}}>
-                                        <div style={{fontWeight: '600'}}>{new Date(m.date).toLocaleDateString()}</div>
-                                        <div style={{fontSize: '14px', color: 'var(--text-secondary)', marginTop: '4px'}}>
-                                            Weight: {m.weight} lbs
+                                        <div style={{fontWeight: '700', color: 'var(--gold)', fontSize: '12px'}}>{new Date(m.date).toLocaleDateString()}</div>
+                                        <div style={{fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px'}}>
+                                            Weight: <strong>{m.weight} lbs</strong>
                                             {m.waist && ` • Waist: ${m.waist}"`}
                                             {m.chest && ` • Chest: ${m.chest}"`}
                                             {m.arms && ` • Arms: ${m.arms}"`}
@@ -1458,17 +1628,17 @@
                     [selectedDay]: editedWorkout
                 });
                 setSelectedDay(null);
-                alert('Workout updated! ✓');
+                alert('⚔️ Quest updated! ⚔️');
             };
 
             const resetToDefault = () => {
-                if (confirm('Reset this workout to default?')) {
+                if (confirm('Reset this quest to default?')) {
                     setCustomWorkouts({
                         ...customWorkouts,
                         [selectedDay]: JSON.parse(JSON.stringify(WORKOUTS[selectedDay]))
                     });
                     setSelectedDay(null);
-                    alert('Reset to default! ✓');
+                    alert('⚔️ Quest reset! ⚔️');
                 }
             };
 
@@ -1479,7 +1649,7 @@
             };
 
             const removeExercise = (idx) => {
-                if (confirm('Remove this exercise?')) {
+                if (confirm('Remove this challenge?')) {
                     const updated = {...editedWorkout};
                     updated.exercises = updated.exercises.filter((_, i) => i !== idx);
                     setEditedWorkout(updated);
@@ -1489,11 +1659,11 @@
             if (!selectedDay) {
                 return (
                     <div>
-                        <h2 style={{marginBottom: '16px', fontSize: '20px'}}>Select Day to Edit</h2>
+                        <h2 style={{marginBottom: '16px', fontSize: '16px', textAlign: 'center', color: 'var(--gold)', textTransform: 'uppercase'}}>⚙️ Select Quest to Edit ⚙️</h2>
                         {Object.entries(customWorkouts).map(([key, workout]) => (
                             <div key={key} className="day-card" onClick={() => selectDay(key)}>
                                 <div className="day-name">{key}</div>
-                                <div className="day-focus">{workout.name} • {workout.exercises.length} exercises</div>
+                                <div className="day-focus">{workout.name} • {workout.exercises.length} challenges</div>
                             </div>
                         ))}
                     </div>
@@ -1503,9 +1673,9 @@
             return (
                 <div>
                     <div className="card">
-                        <h2>{selectedDay} - Edit Workout</h2>
+                        <h2>{selectedDay} - Edit Quest</h2>
                         <div style={{marginTop: '12px'}}>
-                            <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Workout Name:</label>
+                            <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Quest Name:</label>
                             <input
                                 type="text"
                                 value={editedWorkout.name}
@@ -1515,20 +1685,21 @@
                     </div>
 
                     {editedWorkout.exercises.map((ex, idx) => (
-                        <div key={idx} className="card" style={{borderLeft: '4px solid var(--primary)'}}>
+                        <div key={idx} className="card" style={{borderLeft: '6px solid var(--gold)'}}>
                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px'}}>
-                                <h3 style={{flex: 1, marginBottom: '8px'}}>{ex.name}</h3>
+                                <h3 style={{flex: 1, marginBottom: '8px', fontSize: '13px'}}>{ex.name}</h3>
                                 <button
                                     onClick={() => removeExercise(idx)}
                                     style={{
                                         background: 'var(--danger-bg)', 
-                                        border: 'none', 
+                                        border: '2px solid var(--danger)', 
                                         padding: '6px 12px', 
                                         borderRadius: '6px',
                                         color: 'var(--danger)',
-                                        fontSize: '12px',
-                                        fontWeight: '600',
-                                        cursor: 'pointer'
+                                        fontSize: '11px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        textTransform: 'uppercase'
                                     }}
                                 >
                                     Remove
@@ -1536,7 +1707,7 @@
                             </div>
 
                             <div style={{marginBottom: '12px'}}>
-                                <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Exercise Name:</label>
+                                <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Challenge Name:</label>
                                 <input
                                     type="text"
                                     value={ex.name}
@@ -1546,7 +1717,7 @@
 
                             <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px'}}>
                                 <div>
-                                    <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Sets:</label>
+                                    <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Sets:</label>
                                     <input
                                         type="number"
                                         value={ex.sets}
@@ -1554,7 +1725,7 @@
                                     />
                                 </div>
                                 <div>
-                                    <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Reps:</label>
+                                    <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Reps:</label>
                                     <input
                                         type="text"
                                         value={ex.reps}
@@ -1562,7 +1733,7 @@
                                     />
                                 </div>
                                 <div>
-                                    <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Rest (sec):</label>
+                                    <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Rest (sec):</label>
                                     <input
                                         type="number"
                                         value={ex.rest || 90}
@@ -1572,11 +1743,11 @@
                             </div>
 
                             <div>
-                                <label style={{display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px'}}>Description:</label>
+                                <label style={{display: 'block', fontSize: '11px', fontWeight: '700', marginBottom: '6px', color: 'var(--gold)', textTransform: 'uppercase'}}>Instructions:</label>
                                 <textarea
                                     value={ex.description || ''}
                                     onChange={(e) => updateExercise(idx, 'description', e.target.value)}
-                                    placeholder="How to perform this exercise..."
+                                    placeholder="How to perform this challenge..."
                                     style={{minHeight: '60px'}}
                                 />
                             </div>
@@ -1584,7 +1755,7 @@
                     ))}
 
                     <button className="btn btn-success" onClick={saveChanges}>
-                        ✓ Save Changes
+                        ⚔️ Save Quest ⚔️
                     </button>
                     
                     <button 
@@ -1603,10 +1774,10 @@
 
             return (
                 <div>
-                    <h2 style={{marginBottom: '16px', fontSize: '20px'}}>Workout History</h2>
+                    <h2 style={{marginBottom: '16px', fontSize: '16px', textAlign: 'center', color: 'var(--gold)', textTransform: 'uppercase'}}>📜 Quest Log 📜</h2>
                     {dates.length === 0 ? (
                         <div className="card">
-                            <p style={{textAlign: 'center', color: 'var(--text-tertiary)'}}>No workouts logged yet</p>
+                            <p style={{textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '13px'}}>No quests completed yet. Begin your journey!</p>
                         </div>
                     ) : (
                         dates.map(date => {
@@ -1615,15 +1786,15 @@
                             
                             return (
                                 <div key={date} className="card">
-                                    <div style={{fontWeight: '700', fontSize: '16px', marginBottom: '8px', color: 'var(--primary)'}}>
+                                    <div style={{fontWeight: '700', fontSize: '14px', marginBottom: '8px', color: 'var(--gold)'}}>
                                         {dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
                                     </div>
-                                    <div style={{fontSize: '14px', color: 'var(--text-secondary)'}}>
+                                    <div style={{fontSize: '12px', color: 'var(--text-secondary)'}}>
                                         ✓ {customWorkouts[workout.day]?.name}
                                     </div>
                                     {workout.notes && (
-                                        <div style={{fontSize: '13px', color: 'var(--text-tertiary)', marginTop: '8px', fontStyle: 'italic'}}>
-                                            "{workout.notes}"
+                                        <div style={{fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '8px', fontStyle: 'italic'}}>
+                                            📝 "{workout.notes}"
                                         </div>
                                     )}
                                 </div>

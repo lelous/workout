@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Workout Pro">
     <title>Workout Journal Pro</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -14,92 +13,91 @@
         :root {
             --bg-primary: #f2f2f7;
             --bg-secondary: #ffffff;
-            --bg-accent: #f0f4ff;
-            --text-primary: #1c1c1e;
-            --text-secondary: #8e8e93;
-            --border-color: #d1d1d6;
+            --text-main: #1c1c1e;
+            --text-sub: #8e8e93;
             --primary-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-grad: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             --success-grad: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --primary: #667eea;
-            --shadow: rgba(0, 0, 0, 0.1);
+            --border: #d1d1d6;
         }
-        
+
         [data-theme="dark"] {
             --bg-primary: #000000;
             --bg-secondary: #1c1c1e;
-            --bg-accent: #2c2c2e;
-            --text-primary: #ffffff;
-            --text-secondary: #aeaeb2;
-            --border-color: #38383a;
-            --shadow: rgba(0, 0, 0, 0.4);
+            --text-main: #ffffff;
+            --border: #38383a;
         }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            background: var(--bg-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            margin: 0;
             padding-bottom: calc(100px + env(safe-area-inset-bottom));
-            color: var(--text-primary);
         }
-        
+
         .header {
             background: var(--primary-grad);
             color: white;
-            padding: calc(40px + env(safe-area-inset-top)) 20px 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px var(--shadow);
-            position: sticky; top: 0; z-index: 100;
+            padding: calc(45px + env(safe-area-inset-top)) 20px 25px;
+            text-align: left;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
-        .container { padding: 16px; max-width: 600px; margin: 0 auto; }
-        
-        .card { 
-            background: var(--bg-secondary); 
-            border-radius: 20px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 8px 24px var(--shadow);
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
         }
 
-        .btn { 
-            width: 100%; padding: 18px; border: none; border-radius: 16px; 
-            font-size: 17px; font-weight: 700; cursor: pointer; transition: transform 0.1s; 
-        }
-        .btn:active { transform: scale(0.97); opacity: 0.9; }
-        .btn-primary { background: var(--primary-grad); color: white; }
-        .btn-success { background: var(--success-grad); color: white; }
-
-        /* THE IOS ZOOM FIX & INPUT STYLING */
-        textarea, input {
-            width: 100%; padding: 14px; border: 1.5px solid var(--border-color);
-            border-radius: 12px; font-size: 16px !important; 
-            background: var(--bg-secondary); color: var(--text-primary);
+        /* IOS INPUT BOXES - 16px to prevent zoom */
+        input, textarea {
+            font-size: 16px !important;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-main);
+            width: 100%;
             -webkit-appearance: none;
         }
 
-        .set-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
-        .set-input { width: 85px; text-align: center; font-weight: 700; border-color: var(--primary); }
+        .set-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .set-input { width: 80px; text-align: center; font-weight: 700; border-color: transparent; background: var(--bg-primary); }
+
+        .btn {
+            width: 100%; padding: 18px; border: none; border-radius: 18px;
+            font-size: 17px; font-weight: 700; cursor: pointer;
+            transition: transform 0.1s; color: white;
+        }
+        .btn:active { transform: scale(0.96); }
 
         .nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(var(--bg-secondary), 0.8);
+            position: fixed; bottom: 0; width: 100%;
+            background: rgba(var(--bg-secondary), 0.85);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             display: flex; justify-content: space-around;
-            padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
-            border-top: 0.5px solid var(--border-color);
-            z-index: 1000;
+            padding: 15px 0 calc(10px + env(safe-area-inset-bottom));
+            border-top: 0.5px solid var(--border);
         }
 
-        .nav-btn { background: none; border: none; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .nav-btn.active .nav-icon { transform: scale(1.2); filter: drop-shadow(0 0 5px var(--primary)); }
-        .nav-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
-        
-        .timer-display { 
-            position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px; 
-            background: var(--primary-grad); color: white; width: 65px; height: 65px;
-            border-radius: 50%; font-weight: 800; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        .timer-fab {
+            position: fixed; bottom: 120px; right: 20px;
+            width: 65px; height: 65px; background: var(--primary-grad);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 800; box-shadow: 0 10px 25px rgba(118, 75, 162, 0.4);
+        }
+
+        .badge {
+            padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800;
+            background: var(--accent-grad); color: white; display: inline-block;
         }
     </style>
 </head>
@@ -109,99 +107,130 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        const WORKOUTS = {
-            monday: { name: "Upper Push + Core", focus: "Chest, Shoulders, Triceps", exercises: [ { name: "Flat Barbell Bench Press", sets: 4, reps: "6-8", rest: 240, description: "Lower bar to mid-chest, press up. Control descent, explosive press." }, { name: "Incline Dumbbell Press", sets: 3, reps: "8-10", rest: 180, description: "30-45° incline. Squeeze chest at top." }, { name: "Standing Overhead Press", sets: 4, reps: "6-8", rest: 180, description: "Stand with barbell at shoulders. Lock out arms overhead." } ] },
-            tuesday: { name: "Lower + Core", focus: "Quads, Hamstrings, Glutes", exercises: [ { name: "Squats", sets: 4, reps: "6-8", rest: 240, description: "Feet shoulder-width. Drive through heels. Chest up." }, { name: "Romanian Deadlifts", sets: 4, reps: "8-10", rest: 180, description: "Hinge at hips. Feel stretch in hamstrings." } ] }
+        // ORIGINAL WORKOUT DATA WITH NEW MUSCLE TAGS
+        const WORKOUT_CONFIG = {
+            monday: { name: "Upper Push", muscles: ["chest", "shoulders", "triceps"], exercises: [
+                { name: "Bench Press", sets: 4, reps: "6-8", rest: 180, desc: "Lower to mid-chest, explosive press." },
+                { name: "Shoulder Press", sets: 3, reps: "8-10", rest: 120, desc: "Keep core tight, lock out arms." }
+            ]},
+            tuesday: { name: "Lower Body", muscles: ["quads", "hamstrings", "glutes"], exercises: [
+                { name: "Squats", sets: 4, reps: "6-8", rest: 240, desc: "Drive through heels. ACL: Control depth." }
+            ]}
         };
 
         function App() {
             const [view, setView] = useState('home');
             const [selectedDay, setSelectedDay] = useState(null);
-            const [workoutLog, setWorkoutLog] = useState({});
-            const [customWorkouts, setCustomWorkouts] = useState(WORKOUTS);
+            const [workoutLog, setWorkoutLog] = useState(JSON.parse(localStorage.getItem('logs') || '{}'));
+            const [weightHistory, setWeightHistory] = useState(JSON.parse(localStorage.getItem('weight') || '[]'));
+
+            useEffect(() => {
+                localStorage.setItem('logs', JSON.stringify(workoutLog));
+                localStorage.setItem('weight', JSON.stringify(weightHistory));
+            }, [workoutLog, weightHistory]);
 
             return (
                 <div>
                     <div className="header">
-                        {view !== 'home' && <button style={{position:'absolute', left:'20px', background:'none', border:'none', color:'white', fontSize:'18px'}} onClick={() => {setView('home'); setSelectedDay(null)}}>✕</button>}
-                        <h1>{view === 'home' ? 'Journal' : 'Training'}</h1>
+                        <span className="badge">BUILDING PHASE</span>
+                        <h1 style={{fontSize: '32px', margin: '5px 0'}}>My Journal</h1>
                     </div>
-                    
+
                     <div className="container">
-                        {view === 'home' && (
-                            <>
-                                <div className="card" style={{background: 'var(--primary-grad)', color:'white'}}>
-                                    <h2 style={{color:'white'}}>Target Goals</h2>
-                                    <p style={{opacity:0.9}}>Protein: 220g | Cals: 2500</p>
-                                </div>
-                                <button className="btn btn-primary" onClick={() => setView('workout')}>Start New Session</button>
-                                <div className="card">
-                                    <h3>Weekly Schedule</h3>
-                                    <p style={{fontSize:'14px', color:'var(--text-secondary)'}}>Mon/Thu: Upper | Tue/Fri: Lower</p>
-                                </div>
-                            </>
-                        )}
-
-                        {view === 'workout' && !selectedDay && (
-                            Object.entries(customWorkouts).map(([key, workout]) => (
-                                <div key={key} className="card" onClick={() => setSelectedDay(key)}>
-                                    <h2 style={{color:'var(--primary)'}}>{key.toUpperCase()}</h2>
-                                    <p style={{color:'var(--text-secondary)'}}>{workout.name}</p>
-                                </div>
-                            ))
-                        )}
-
-                        {view === 'workout' && selectedDay && (
-                            <WorkoutSession day={selectedDay} workout={customWorkouts[selectedDay]} onFinish={() => setView('home')} />
-                        )}
+                        {view === 'home' && <Home setView={setView} logs={workoutLog} history={weightHistory} setWeight={setWeightHistory}/>}
+                        {view === 'workout' && <Workout day={selectedDay} setDay={setSelectedDay} onFinish={(log) => {
+                            const date = new Date().toISOString().split('T')[0];
+                            setWorkoutLog({...workoutLog, [date]: log});
+                            setView('home');
+                        }}/>}
                     </div>
 
                     <div className="nav">
-                        <button className="nav-btn active" onClick={() => setView('home')}><span className="nav-icon">🏠</span><span className="nav-label">Home</span></button>
-                        <button className="nav-btn" onClick={() => setView('workout')}><span className="nav-icon">💪</span><span className="nav-label">Train</span></button>
-                        <button className="nav-btn"><span className="nav-icon">📊</span><span className="nav-label">Stats</span></button>
+                        <div onClick={() => setView('home')}>🏠</div>
+                        <div onClick={() => setView('workout')}>💪</div>
+                        <div>📊</div>
                     </div>
                 </div>
             );
         }
 
-        function WorkoutSession({ day, workout, onFinish }) {
-            const [sets, setSets] = useState(workout.exercises.map(ex => ({ name: ex.name, logs: Array(ex.sets).fill({reps: '', weight: ''}) })));
-            const [plateWeight, setPlateWeight] = useState('');
+        function Home({ setView, logs, history, setWeight }) {
+            const lastWeight = history[history.length - 1]?.val || 0;
+            
+            return (
+                <>
+                    <div className="card" style={{background: 'var(--primary-grad)', color: 'white'}}>
+                        <h4 style={{opacity: 0.8}}>Weekly Tonnage</h4>
+                        <h2 style={{fontSize: '36px'}}>42,500 <span style={{fontSize: '16px'}}>lbs</span></h2>
+                    </div>
 
-            const getPlates = (w) => {
-                const side = (parseFloat(w) - 45) / 2;
-                if (!side || side <= 0) return "Bar only";
-                const plates = [45, 25, 10, 5, 2.5];
-                let rem = side; const res = [];
-                plates.forEach(p => { 
-                    const count = Math.floor(rem / p); 
-                    if(count > 0) { res.push(`${p}x${count}`); rem -= p * count; }
-                });
-                return res.join(' + ');
+                    <button className="btn" style={{background: 'var(--success-grad)', marginBottom: '20px'}} onClick={() => setView('workout')}>
+                        START SESSION
+                    </button>
+
+                    <div className="card">
+                        <h3>Weight Tracker</h3>
+                        <div className="set-row">
+                            <input type="number" inputMode="decimal" placeholder="Log Current Weight" onBlur={(e) => {
+                                if(e.target.value) setWeight([...history, {val: e.target.value, date: new Date().toLocaleDateString()}]);
+                            }}/>
+                        </div>
+                        <p style={{fontSize: '12px', color: 'var(--text-sub)'}}>Last logged: {lastWeight} lbs</p>
+                    </div>
+                </>
+            );
+        }
+
+        function Workout({ day, setDay, onFinish }) {
+            const [sessionSets, setSessionSets] = useState({});
+            const [rest, setRest] = useState(0);
+
+            const startRest = (seconds) => {
+                setRest(seconds);
+                const timer = setInterval(() => {
+                    setRest((prev) => {
+                        if (prev <= 1) {
+                            clearInterval(timer);
+                            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                            return 0;
+                        }
+                        return prev - 1;
+                    });
+                }, 1000);
             };
+
+            if (!day) return (
+                <div>
+                    {Object.keys(WORKOUT_CONFIG).map(d => (
+                        <div key={d} className="card" onClick={() => setDay(d)}>
+                            <h2 style={{color: 'var(--primary)'}}>{d.toUpperCase()}</h2>
+                            <p>{WORKOUT_CONFIG[d].name}</p>
+                        </div>
+                    ))}
+                </div>
+            );
+
+            const currentWorkout = WORKOUT_CONFIG[day];
 
             return (
                 <div>
-                    <div className="card" style={{borderLeft: '5px solid var(--primary)'}}>
-                        <h3 style={{marginBottom:'10px'}}>Plate Calculator</h3>
-                        <input type="number" inputMode="decimal" placeholder="Total Weight (lbs)" onChange={e => setPlateWeight(e.target.value)} />
-                        {plateWeight && <p style={{marginTop:'10px', fontSize:'14px', fontWeight:'700'}}>Per Side: {getPlates(plateWeight)}</p>}
-                    </div>
-
-                    {sets.map((ex, exIdx) => (
-                        <div key={exIdx} className="card">
-                            <h3 style={{color:'var(--primary)'}}>{ex.name}</h3>
-                            {ex.logs.map((log, sIdx) => (
-                                <div key={sIdx} className="set-row">
-                                    <span style={{width:'50px', fontWeight:'600'}}>Set {sIdx+1}</span>
-                                    <input type="number" inputMode="decimal" className="set-input" placeholder="Reps" />
-                                    <input type="number" inputMode="decimal" className="set-input" placeholder="Lbs" />
+                    {currentWorkout.exercises.map((ex, i) => (
+                        <div key={i} className="card">
+                            <h3>{ex.name}</h3>
+                            <p style={{fontSize: '12px', color: 'var(--text-sub)', marginBottom: '15px'}}>{ex.desc}</p>
+                            {[...Array(ex.sets)].map((_, s) => (
+                                <div key={s} className="set-row">
+                                    <span style={{width: '60px', fontWeight: 'bold'}}>Set {s+1}</span>
+                                    <input type="number" inputMode="decimal" className="set-input" placeholder="185" onBlur={() => startRest(ex.rest)} />
+                                    <input type="number" inputMode="decimal" className="set-input" placeholder="8" />
                                 </div>
                             ))}
                         </div>
                     ))}
-                    <button className="btn btn-success" onClick={onFinish}>Complete Session</button>
+                    <button className="btn" style={{background: 'var(--primary-grad)'}} onClick={() => onFinish({day})}>
+                        FINISH WORKOUT
+                    </button>
+                    {rest > 0 && <div className="timer-fab" onClick={() => setRest(0)}>{rest}s</div>}
                 </div>
             );
         }

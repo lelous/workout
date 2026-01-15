@@ -8,7 +8,7 @@
     <title>Workout Journal Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -40,7 +40,6 @@
             transition: background 0.3s ease;
         }
         
-        /* IOS INPUT FIXES */
         textarea, input, select {
             font-family: var(--font-main);
             font-size: 16px !important; padding: 12px; border-radius: 12px;
@@ -85,7 +84,6 @@
         .btn-secondary { background: var(--bg-accent); color: var(--text-primary); border: 1px solid var(--border-color); }
         .btn-danger { background: rgba(255, 59, 48, 0.1); color: var(--danger); width: auto; padding: 8px 12px; font-size: 13px; }
         
-        /* Minimalist Action Buttons (No Boxes) */
         .action-btn-minimal {
             background: transparent; border: none; color: var(--text-secondary);
             padding: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -96,29 +94,31 @@
         .set-label { width: 45px; font-weight: 600; font-size: 13px; color: var(--text-secondary); }
         .set-input { width: 75px; text-align: center; font-weight: 700; flex-shrink: 0; }
         
-        /* Timer Fab */
         .timer-display {
             position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px;
-            background: var(--primary-grad); color: white; width: 65px; height: 65px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            background: var(--primary-grad); color: white; width: 70px; height: 70px;
+            border-radius: 50%; display: flex; flexDirection: column; align-items: center; justify-content: center;
             font-weight: 800; font-size: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 99;
         }
+        .timer-controls { display:flex; gap:15px; margin-top:2px; }
+        .timer-mod { font-size: 10px; cursor: pointer; opacity: 0.8; }
+
+        .session-timer {
+            background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 12px;
+            font-size: 14px; font-weight: 700; font-feature-settings: "tnum";
+            color: var(--primary); cursor: pointer;
+        }
         
-        /* Nav Bar */
         .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(var(--bg-secondary), 0.9); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border-color); z-index: 1000; }
         .nav-btn { background: transparent; border: none; padding: 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; color: var(--text-secondary); }
         .nav-btn.active { color: var(--primary); }
         .nav-label { font-size: 10px; font-weight: 600; font-family: var(--font-main); }
         
         svg { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        
         .day-card { background: var(--bg-secondary); padding: 16px; border-radius: 16px; margin-bottom: 12px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .stat-card { background: var(--bg-secondary); padding: 15px; border-radius: 16px; text-align: center; box-shadow: var(--shadow); }
         .stat-val { font-size: 24px; font-weight: 800; color: var(--primary); }
-        .stat-lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
-        
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
         .history-exercise { border-bottom: 1px solid var(--border-color); padding: 8px 0; font-size: 14px; }
         
@@ -134,8 +134,11 @@
         .plate-5 { background: #333; height: 35px; } 
         .plate-2_5 { background: #333; height: 30px; }
 
-        .chart-wrapper { width: 100%; height: 150px; position: relative; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 0; }
-        .chart-bar { background: var(--primary); width: 100%; border-radius: 4px 4px 0 0; opacity: 0.7; transition: height 0.5s; }
+        /* Chart SVG */
+        .chart-svg { width: 100%; height: 180px; font-size: 10px; }
+        .chart-grid { stroke: var(--border-color); stroke-width: 1; stroke-dasharray: 4; }
+        .chart-line { fill: none; stroke: var(--primary); stroke-width: 3; }
+        .chart-label { fill: var(--text-secondary); text-anchor: middle; }
     </style>
 </head>
 <body>
@@ -278,6 +281,8 @@
             const [plateCalc, setPlateCalc] = useState('');
             const [expandedEx, setExpandedEx] = useState({});
             const [editMode, setEditMode] = useState(false);
+            const [sessionStart] = useState(Date.now());
+            const [elapsed, setElapsed] = useState(0);
 
             const getHistory = (exName, setIndex) => {
                 const dates = Object.keys(workoutLog).sort().reverse();
@@ -324,6 +329,11 @@
             }, [selectedDay]);
 
             useEffect(() => {
+                const timer = setInterval(() => setElapsed(Math.floor((Date.now() - sessionStart) / 1000)), 1000);
+                return () => clearInterval(timer);
+            }, [sessionStart]);
+
+            useEffect(() => {
                 let timer;
                 if (rest > 0) timer = setInterval(() => setRest(r => r - 1), 1000);
                 if (rest === 0 && navigator.vibrate) navigator.vibrate([200, 100, 200]);
@@ -344,7 +354,7 @@
                     }
                 }));
                 setPersonalRecords(newPrs);
-                setWorkoutLog({...workoutLog, [date]: { day: selectedDay, exercises: sets, tonnage, completed: true }});
+                setWorkoutLog({...workoutLog, [date]: { day: selectedDay, exercises: sets, tonnage, duration: elapsed, completed: true }});
                 
                 if (hitPr) {
                     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
@@ -361,6 +371,12 @@
                 const plates = [45, 25, 10, 5, 2.5]; let rem = side; const res = [];
                 plates.forEach(p => { const c = Math.floor(rem/p); if(c>0){ res.push({weight: p, count: c}); rem -= p*c; }});
                 return res;
+            };
+
+            const formatTime = (s) => {
+                const m = Math.floor(s / 60);
+                const sec = s % 60;
+                return `${m}:${sec < 10 ? '0' : ''}${sec}`;
             };
 
             if (!selectedDay) return (
@@ -380,7 +396,10 @@
                 <div>
                     <div className="card">
                         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                            <h2 style={{margin:0, textTransform:'capitalize'}}>{selectedDay}</h2>
+                            <div>
+                                <h2 style={{margin:0, textTransform:'capitalize'}}>{selectedDay}</h2>
+                                <div className="session-timer" onClick={() => { const adj = prompt("Edit minutes:", Math.floor(elapsed/60)); if(adj) setElapsed(adj*60); }}>⏱️ {formatTime(elapsed)}</div>
+                            </div>
                             <button className="action-btn-minimal" onClick={() => setEditMode(!editMode)}><Icons.Edit/></button>
                         </div>
                     </div>
@@ -432,7 +451,15 @@
                         </div>
                     ))}
                     <button className="btn btn-success" onClick={finish}>Complete Workout</button>
-                    {rest > 0 && <div className="timer-display" onClick={() => setRest(0)}>{rest}s</div>}
+                    {rest > 0 && (
+                        <div className="timer-display">
+                            <div>{rest}s</div>
+                            <div className="timer-controls">
+                                <span className="timer-mod" onClick={() => setRest(rest - 10)}>-10</span>
+                                <span className="timer-mod" onClick={() => setRest(rest + 30)}>+30</span>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
@@ -496,15 +523,29 @@
         
         function Measurements({ measurements, setMeasurements }) { 
             const [form, setForm] = useState({weight:''});
-            const points = measurements.slice(-7).map((m, i) => `${i * 50 + 10},${100 - (m.weight/300 * 100)}`).join(' ');
+            const points = measurements.slice(-7).map((m, i) => {
+                const range = 50; // visual height range
+                const y = 100 - ((m.weight - 100) / 200 * 100); 
+                return `${i * 50 + 10},${y}`;
+            }).join(' ');
 
             return (
                 <div>
                     <div className="card">
                         <h3>Weight Trend</h3>
-                        <svg viewBox="0 0 300 100" style={{width:'100%', height:'100px', borderBottom:'1px solid #eee'}}>
-                            <polyline fill="none" stroke="#667eea" strokeWidth="3" points={points} />
-                        </svg>
+                        <div className="chart-wrapper">
+                            {/* Simple Grid Lines */}
+                            <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
+                                <line x1="0" y1="25" x2="300" y2="25" className="chart-grid" />
+                                <line x1="0" y1="50" x2="300" y2="50" className="chart-grid" />
+                                <line x1="0" y1="75" x2="300" y2="75" className="chart-grid" />
+                                <polyline points={points} className="chart-line" />
+                            </svg>
+                            {/* X-Axis Labels */}
+                            <div style={{position:'absolute', bottom:0, width:'100%', display:'flex', justifyContent:'space-between', fontSize:'10px', color:'var(--text-secondary)'}}>
+                                {measurements.slice(-7).map((m,i) => <span key={i}>{new Date(m.date).getDate()}</span>)}
+                            </div>
+                        </div>
                     </div>
                     <div className="card"><h3>Log Weight</h3><div style={{display:'flex', gap:'10px'}}><input type="number" inputMode="decimal" placeholder="Lbs" value={form.weight} onChange={e => setForm({weight:e.target.value})} /><button className="btn btn-primary" onClick={() => { if(form.weight) setMeasurements([...measurements, {date:new Date().toISOString(), weight:form.weight}]); setForm({weight:''}); }}>Save</button></div></div>
                 </div>
@@ -517,6 +558,7 @@
                     {Object.entries(workoutLog).reverse().map(([date, data]) => (
                         <div key={date} className="card">
                             <div className="history-header"><div><h4 style={{margin:0}}>{new Date(date).toLocaleDateString()}</h4><p style={{fontWeight:'bold'}}>{data.day}</p></div><button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteWorkout(date)}><Icons.Trash /></button></div>
+                            {data.duration && <p style={{fontSize:'12px', color:'var(--text-secondary)'}}>⏱️ Duration: {Math.floor(data.duration/60)}m {data.duration%60}s</p>}
                             {data.exercises && data.exercises.map((ex, i) => {
                                 const setsSummary = ex.logs.filter(l => l.weight && l.reps).map(l => `${l.weight}x${l.reps}`).join(', ');
                                 if (!setsSummary) return null;

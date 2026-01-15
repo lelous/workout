@@ -155,9 +155,18 @@
 
         .chart-svg { width: 100%; height: 180px; font-size: 10px; overflow: visible; }
         .chart-grid { stroke: var(--border-color); stroke-width: 1; stroke-dasharray: 4; }
-        .chart-line { fill: none; stroke: var(--primary); stroke-width: 3; }
-        .chart-label { fill: var(--text-secondary); text-anchor: end; dominant-baseline: middle; }
+        .chart-line { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+        .chart-label { fill: var(--text-secondary); text-anchor: end; dominant-baseline: middle; font-size: 10px; }
         .chart-axis { fill: var(--text-secondary); text-anchor: middle; font-size: 10px; }
+        
+        .segmented-control {
+            display: flex; background: var(--bg-primary); padding: 4px; border-radius: 12px; margin-bottom: 16px;
+        }
+        .segment-btn {
+            flex: 1; border: none; background: transparent; padding: 8px; font-size: 13px; font-weight: 600;
+            color: var(--text-secondary); border-radius: 8px; cursor: pointer; transition: 0.2s;
+        }
+        .segment-btn.active { background: var(--bg-secondary); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -364,7 +373,8 @@
                         </div>
                         <div style={{display:'flex', alignItems:'center'}}>
                             <div style={{width:'30px', height:'150px', display:'flex', flexDirection:'column', justifyContent:'space-between', fontSize:'10px', color:'var(--text-secondary)', textAlign:'right', paddingRight:'5px'}}>
-                                <span>{Math.round(maxW)}</span><span>{Math.round(minW)}</span>
+                                {measurements.length > 0 && <span>{Math.round(maxW)}</span>}
+                                {measurements.length > 0 && <span>{Math.round(minW)}</span>}
                             </div>
                             <div className="chart-wrapper" style={{width:'100%', height:'150px'}}>
                                 <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
@@ -606,10 +616,69 @@
             );
         }
 
-        function Stats({ workoutLog, personalRecords }) { 
+        function Stats({ workoutLog, personalRecords }) {
+            const [selectedLift, setSelectedLift] = useState(null);
+            const [chartMode, setChartMode] = useState('max'); // 'max' or 'vol'
+            
+            const getLiftHistory = () => {
+                if(!selectedLift) return [];
+                return Object.entries(workoutLog)
+                    .sort((a,b) => new Date(a[0]) - new Date(b[0]))
+                    .map(([date, data]) => {
+                        const ex = data.exercises?.find(e => e.name === selectedLift);
+                        if(!ex) return null;
+                        const maxWeight = Math.max(...ex.logs.map(l => parseFloat(l.weight) || 0));
+                        const volume = ex.logs.reduce((acc, l) => acc + ((parseFloat(l.weight)||0) * (parseFloat(l.reps)||0)), 0);
+                        return maxWeight > 0 ? { date, weight: maxWeight, volume } : null;
+                    })
+                    .filter(Boolean);
+            };
+
+            const liftData = getLiftHistory();
+            const points = liftData.map((d, i) => {
+                const val = chartMode === 'max' ? d.weight : d.volume;
+                const max = Math.max(...liftData.map(l => chartMode === 'max' ? l.weight : l.volume)) * 1.1;
+                const min = Math.min(...liftData.map(l => chartMode === 'max' ? l.weight : l.volume)) * 0.9;
+                const y = 100 - ((val - min) / (max - min) * 100);
+                const x = (i / (liftData.length > 1 ? liftData.length - 1 : 1)) * 300;
+                return `${x},${y}`;
+            }).join(' ');
+
             return (
                 <div>
                     <div className="stat-grid"><div className="stat-card"><div className="stat-val">{Object.keys(personalRecords).length}</div><div className="stat-lbl">PRs</div></div></div>
+                    
+                    <div className="card">
+                        <h3>Lift Progress</h3>
+                        <select onChange={(e) => setSelectedLift(e.target.value)} value={selectedLift || ''} style={{marginBottom:'15px', width:'100%', padding:'10px'}}>
+                            <option value="">Select Exercise</option>
+                            {Object.keys(personalRecords).map(k => <option key={k} value={k}>{k.replace(/-/g, ' ').toUpperCase()}</option>)}
+                        </select>
+                        
+                        {selectedLift && (
+                            <div className="segmented-control">
+                                <button className={`segment-btn ${chartMode==='max'?'active':''}`} onClick={()=>setChartMode('max')}>Max Weight</button>
+                                <button className={`segment-btn ${chartMode==='vol'?'active':''}`} onClick={()=>setChartMode('vol')}>Volume</button>
+                            </div>
+                        )}
+
+                        {selectedLift && liftData.length > 1 && (
+                            <div className="chart-wrapper">
+                                <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
+                                    <line x1="0" y1="25" x2="300" y2="25" className="chart-grid" />
+                                    <line x1="0" y1="50" x2="300" y2="50" className="chart-grid" />
+                                    <line x1="0" y1="75" x2="300" y2="75" className="chart-grid" />
+                                    <polyline points={points} className="chart-line" />
+                                </svg>
+                                <div style={{display:'flex', justifyContent:'space-between', fontSize:'10px', color:'var(--text-secondary)'}}>
+                                    <span>{new Date(liftData[0].date).toLocaleDateString(undefined, {month:'short', day:'numeric'})}</span>
+                                    <span>{new Date(liftData[liftData.length-1].date).toLocaleDateString(undefined, {month:'short', day:'numeric'})}</span>
+                                </div>
+                            </div>
+                        )}
+                        {selectedLift && liftData.length <= 1 && <p style={{color:'var(--text-secondary)'}}>Need more data to show chart.</p>}
+                    </div>
+
                     <div className="card"><h3>Personal Records</h3>
                         {Object.entries(personalRecords).map(([k,v]) => <div key={k} style={{borderBottom:'1px solid #eee', padding:'8px 0', display:'flex', justifyContent:'space-between'}}><span>{k}</span><b>{Math.round(v)} lbs</b></div>)}
                     </div>

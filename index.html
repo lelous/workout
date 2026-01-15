@@ -9,12 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
     <style>
         :root {
             --bg-primary: #f2f2f7; --bg-secondary: #ffffff; --bg-accent: #f8f9fa;
@@ -32,96 +30,37 @@
             --border-color: #38383a; --shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            font-family: var(--font-main);
-            background: var(--bg-primary); color: var(--text-primary);
-            padding-bottom: calc(90px + env(safe-area-inset-bottom));
-            transition: background 0.3s ease;
-        }
-        
-        textarea, input, select {
-            font-family: var(--font-main);
-            font-size: 16px !important; padding: 12px; border-radius: 12px;
-            border: 1px solid var(--border-color); background: var(--bg-secondary);
-            color: var(--text-primary); width: 100%; -webkit-appearance: none;
-        }
-        
-        .header {
-            background: var(--primary-grad); color: white;
-            padding: calc(45px + env(safe-area-inset-top)) 20px 20px;
-            text-align: center; position: sticky; top: 0; z-index: 100;
-            border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;
-            box-shadow: var(--shadow);
-        }
+        body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-primary); padding-bottom: calc(90px + env(safe-area-inset-bottom)); transition: background 0.3s ease; }
+        textarea, input, select { font-family: var(--font-main); font-size: 16px !important; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); width: 100%; -webkit-appearance: none; }
+        .header { background: var(--primary-grad); color: white; padding: calc(45px + env(safe-area-inset-top)) 20px 20px; text-align: center; position: sticky; top: 0; z-index: 100; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: var(--shadow); }
         .header-actions { position: absolute; right: 20px; bottom: 20px; display: flex; gap: 12px; }
-        
-        .icon-btn {
-            background: rgba(255,255,255,0.15); border: none; color: white; padding: 8px;
-            border-radius: 50%; width: 36px; height: 36px; cursor: pointer; backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .back-btn {
-            position: absolute; left: 20px; bottom: 20px; background: rgba(255,255,255,0.15);
-            border: none; color: white; padding: 8px 12px 8px 8px;
-            border-radius: 12px; font-weight: 600; font-family: var(--font-main);
-            display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 14px;
-        }
-        
+        .header-left { position: absolute; left: 20px; bottom: 20px; display: flex; gap: 12px; }
+        .icon-btn { background: rgba(255,255,255,0.15); border: none; color: white; padding: 8px; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; }
+        .back-btn { background: rgba(255,255,255,0.15); border: none; color: white; padding: 8px 12px 8px 8px; border-radius: 12px; font-weight: 600; font-family: var(--font-main); display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 14px; }
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
         .card { background: var(--bg-secondary); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
         .card h3 { color: var(--primary); margin-bottom: 10px; font-size: 18px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; }
-        
-        .btn {
-            width: 100%; padding: 16px; border: none; border-radius: 14px;
-            font-size: 16px; font-weight: 700; color: white; margin-bottom: 10px;
-            font-family: var(--font-main);
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; color: white; margin-bottom: 10px; font-family: var(--font-main); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn:active { transform: scale(0.98); opacity: 0.8; }
         .btn-primary { background: var(--primary-grad); }
         .btn-success { background: var(--success-grad); }
         .btn-secondary { background: var(--bg-accent); color: var(--text-primary); border: 1px solid var(--border-color); }
         .btn-danger { background: rgba(255, 59, 48, 0.1); color: var(--danger); width: auto; padding: 8px 12px; font-size: 13px; }
-        
-        .action-btn-minimal {
-            background: transparent; border: none; color: var(--text-secondary);
-            padding: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
+        .action-btn-minimal { background: transparent; border: none; color: var(--text-secondary); padding: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .action-btn-minimal:active { color: var(--primary); transform: scale(0.95); }
-        
         .set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
         .set-label { width: 45px; font-weight: 600; font-size: 13px; color: var(--text-secondary); }
         .set-input { width: 75px; text-align: center; font-weight: 700; flex-shrink: 0; }
-        
-        /* Updated Autofill Button - Minimal */
-        .autofill-btn {
-            background: transparent; color: var(--primary); border: none;
-            width: 36px; height: 36px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; opacity: 0.8;
-        }
-        .autofill-btn:active { opacity: 1; transform: scale(1.1); }
-        
-        .timer-display {
-            position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px;
-            background: var(--primary-grad); color: white; width: 70px; height: 70px;
-            border-radius: 50%; display: flex; flexDirection: column; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 99;
-        }
+        .autofill-btn { background: transparent; color: var(--primary); border: none; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0.7; }
+        .autofill-btn:active { opacity: 1; transform: scale(1.2); }
+        .timer-display { position: fixed; bottom: calc(110px + env(safe-area-inset-bottom)); right: 20px; background: var(--primary-grad); color: white; width: 70px; height: 70px; border-radius: 50%; display: flex; flexDirection: column; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 99; }
         .timer-controls { display:flex; gap:15px; margin-top:2px; }
         .timer-mod { font-size: 10px; cursor: pointer; opacity: 0.8; }
-
-        .session-timer {
-            background: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 12px;
-            font-size: 14px; font-weight: 700; font-feature-settings: "tnum";
-            color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 6px;
-        }
-        
+        .session-timer { background: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 12px; font-size: 14px; font-weight: 700; font-feature-settings: "tnum"; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 6px; }
         .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(var(--bg-secondary), 0.9); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border-color); z-index: 1000; }
         .nav-btn { background: transparent; border: none; padding: 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; color: var(--text-secondary); }
         .nav-btn.active { color: var(--primary); }
         .nav-label { font-size: 10px; font-weight: 600; font-family: var(--font-main); }
-        
         svg { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .day-card { background: var(--bg-secondary); padding: 16px; border-radius: 16px; margin-bottom: 12px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
@@ -130,11 +69,6 @@
         .stat-lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
         .history-exercise { border-bottom: 1px solid var(--border-color); padding: 8px 0; font-size: 14px; }
-        
-        .reorder-controls { display: flex; gap: 4px; }
-        .reorder-btn { background: var(--bg-accent); border: none; border-radius: 6px; width: 30px; height: 30px; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
-        /* Visual Plates */
         .barbell-container { display: flex; align-items: center; justify-content: center; margin-top: 15px; overflow-x: auto; padding: 10px 0; }
         .bar-end { width: 15px; height: 10px; background: #999; border-radius: 2px; }
         .bar-shaft { width: 40px; height: 10px; background: #999; }
@@ -145,8 +79,6 @@
         .plate-10 { background: #E0E0E0; height: 40px; } 
         .plate-5 { background: #333; height: 35px; } 
         .plate-2_5 { background: #333; height: 30px; }
-
-        /* Chart SVG */
         .chart-svg { width: 100%; height: 180px; font-size: 10px; }
         .chart-grid { stroke: var(--border-color); stroke-width: 1; stroke-dasharray: 4; }
         .chart-line { fill: none; stroke: var(--primary); stroke-width: 3; }
@@ -171,18 +103,15 @@
             Edit: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>,
             ChevronRight: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"></polyline></svg>,
             Magic: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path></svg>,
-            Settings: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>,
+            User: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>,
             Up: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg>,
             Down: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>,
-            Warmup: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.1.2-2.2.6-3.3.9 1.7 2.2 2.9 2.9 3.3z"></path></svg>,
-            Upload: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            Warmup: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.1.2-2.2.6-3.3.9 1.7 2.2 2.9 2.9 3.3z"></path></svg>
         };
 
         const DEFAULT_WORKOUTS = {
-            monday: { name: "Upper Push", focus: "Chest, Shoulders, Triceps", exercises: [ { name: "Flat Barbell Bench Press", sets: 4, reps: "6-8", rest: 240, description: "Lie on flat bench, feet flat on floor. Lower bar to mid-chest, press up." }, { name: "Incline Dumbbell Press", sets: 3, reps: "8-10", rest: 180, description: "Set bench to 30-45°. Press dumbbells up from chest level." }, { name: "Standing Overhead Press", sets: 4, reps: "6-8", rest: 180, description: "Stand with barbell at shoulders. Press overhead, lock out arms." }, { name: "Cable Flyes", sets: 3, reps: "12-15", rest: 90, description: "Set cables at chest height. Bring handles together in front of chest." }, { name: "Lateral Raises", sets: 3, reps: "12-15", rest: 60, description: "Raise dumbbells out to sides until parallel to floor." }, { name: "Dips", sets: 3, reps: "8-12", rest: 120, description: "Lean forward slightly for chest emphasis. Lower until upper arms parallel." }, { name: "Tricep Pushdowns", sets: 3, reps: "12-15", rest: 60, description: "Keep elbows pinned to sides. Push down until arms fully extended." }, { name: "Cable Woodchops", sets: 3, reps: "12/side", rest: 45, description: "Stand sideways to cable. Pull from high to low across body." }, { name: "Hanging Leg Raises", sets: 3, reps: "10-15", rest: 60, description: "Hang from bar. Raise legs to 90°. Lower abs pull legs up." } ] },
-            tuesday: { name: "Lower", focus: "Quads, Hamstrings, Glutes", exercises: [ { name: "Squats", sets: 4, reps: "6-8", rest: 240, description: "Feet shoulder-width. Sit back and down. Knees track over toes." }, { name: "Romanian Deadlifts", sets: 4, reps: "8-10", rest: 180, description: "Slight knee bend. Hinge at hips. Push hips back." }, { name: "Bulgarian Split Squats", sets: 3, reps: "10-12/leg", rest: 120, description: "Rear foot elevated. Lower front knee to 90°." }, { name: "Leg Press", sets: 3, reps: "12-15", rest: 120, description: "Lower until knees at 90°. Push through heels." }, { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Curl heels toward glutes. Squeeze hamstrings." }, { name: "Walking Lunges", sets: 3, reps: "12/leg", rest: 90, description: "Step forward, lower back knee." }, { name: "Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Rise up on balls of feet. Hold squeeze at top." }, { name: "Med Ball Slams", sets: 3, reps: "10/side", rest: 45, description: "Rotate and slam ball to outside of foot." }, { name: "Pallof Press", sets: 3, reps: "12/side", rest: 60, description: "Stand sideways to cable. Press straight out." } ] },
-            thursday: { name: "Upper Pull", focus: "Back, Rear Delts", exercises: [ { name: "Pull-Ups", sets: 4, reps: "6-10", rest: 180, description: "Pull chest to bar. Full extension at bottom." }, { name: "T-Bar Rows", sets: 4, reps: "8-10", rest: 180, description: "Hinge at hips. Pull to lower chest. Squeeze shoulder blades." }, { name: "Barbell/DB Rows", sets: 4, reps: "8-12", rest: 180, description: "Pull to hip/lower chest. Retract shoulder blades." }, { name: "Cable Rows", sets: 3, reps: "10-12", rest: 120, description: "Sit upright. Pull handle to lower chest." }, { name: "Face Pulls", sets: 3, reps: "15-20", rest: 90, description: "Pull to face level. External rotation at end." }, { name: "Chest-Supported Rows", sets: 3, reps: "12-15", rest: 90, description: "Set bench to 30-45°. Lie chest-down. Pull handles to lower chest." }, { name: "Cable Oblique Twists", sets: 3, reps: "12/side", rest: 45, description: "Stand sideways. Pull across body." }, { name: "RKC Plank", sets: 3, reps: "30-45 sec", rest: 60, description: "Maximum tension - squeeze glutes, quads." } ] },
-            friday: { name: "Lower", focus: "Quads, Hamstrings, Glutes", exercises: [ { name: "Front/Goblet Squat", sets: 4, reps: "8-10", rest: 180, description: "Torso upright. Elbows up." }, { name: "Leg Press", sets: 4, reps: "10-12", rest: 120, description: "Feet shoulder-width, mid-platform. Lower to 90°." }, { name: "Hack Squat", sets: 3, reps: "12-15", rest: 90, description: "Lower controlled. Drive through heels. Quad focus." }, { name: "Stiff-Leg Deadlifts", sets: 3, reps: "10-12", rest: 120, description: "Slight knee bend. Hinge at hips. Feel stretch in hamstrings." }, { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Lying or seated. Curl heels to glutes. Slow negative." }, { name: "Reverse Lunges", sets: 3, reps: "10/leg", rest: 90, description: "Hold goblet dumbbell. Step back. Lower back knee down." }, { name: "Seated Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Knees bent targets soleus. Hold top squeeze." }, { name: "Copenhagen Plank", sets: 3, reps: "20-30 sec/side", rest: 60, description: "Side plank. Top foot on bench." }, { name: "Mountain Climbers", sets: 3, reps: "20 total", rest: 45, description: "Plank position. Drive knees to chest alternating." } ] }
+            monday: { name: "Upper Push", exercises: [ { name: "Bench Press", sets: 3, reps: "8-10" } ] },
+            tuesday: { name: "Lower", exercises: [ { name: "Squat", sets: 3, reps: "5" } ] }
         };
 
         function App() {
@@ -196,19 +125,15 @@
             const [loading, setLoading] = useState(true);
 
             useEffect(() => {
-                const savedLog = localStorage.getItem('workouts');
-                const savedCustom = localStorage.getItem('customWorkouts');
-                const savedMeasurements = localStorage.getItem('measurements');
-                const savedPrs = localStorage.getItem('personal-records');
-                const savedDarkMode = localStorage.getItem('dark-mode');
+                const load = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; }};
+                const savedCustom = load('customWorkouts');
                 
-                if (savedLog) try { setWorkoutLog(JSON.parse(savedLog)); } catch (e) {}
-                if (savedCustom) {
-                    try { const parsed = JSON.parse(savedCustom); setCustomWorkouts(parsed.monday ? parsed : DEFAULT_WORKOUTS); } catch (e) { setCustomWorkouts(DEFAULT_WORKOUTS); }
-                }
-                if (savedMeasurements) try { setMeasurements(JSON.parse(savedMeasurements)); } catch (e) {}
-                if (savedPrs) try { setPersonalRecords(JSON.parse(savedPrs)); } catch (e) {}
-                if (savedDarkMode === 'true') { setDarkMode(true); document.documentElement.setAttribute('data-theme', 'dark'); }
+                setWorkoutLog(load('workouts') || {});
+                // Fix for possible corrupt data - ensure monday exists or use default
+                setCustomWorkouts((savedCustom && Object.keys(savedCustom).length > 0) ? savedCustom : DEFAULT_WORKOUTS);
+                setMeasurements(load('measurements') || []);
+                setPersonalRecords(load('personal-records') || {});
+                if (localStorage.getItem('dark-mode') === 'true') { setDarkMode(true); document.documentElement.setAttribute('data-theme', 'dark'); }
                 setLoading(false);
             }, []);
 
@@ -223,7 +148,7 @@
             }, [workoutLog, customWorkouts, measurements, personalRecords, darkMode, loading]);
 
             const toggleDarkMode = () => { setDarkMode(!darkMode); document.documentElement.setAttribute('data-theme', !darkMode ? 'dark' : 'light'); };
-            const deleteWorkout = (date) => { if (confirm('Permanently delete log?')) { const n = { ...workoutLog }; delete n[date]; setWorkoutLog(n); } };
+            const deleteWorkout = (date) => { if (confirm('Delete?')) { const n = { ...workoutLog }; delete n[date]; setWorkoutLog(n); } };
 
             if (loading) return <div className="container"><h2>Loading...</h2></div>;
 
@@ -234,7 +159,7 @@
                         {view === 'home' && <Home setView={setView} workoutLog={workoutLog} customWorkouts={customWorkouts} />}
                         {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} customWorkouts={customWorkouts} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} personalRecords={personalRecords} setPersonalRecords={setPersonalRecords} />}
                         {view === 'stats' && <Stats workoutLog={workoutLog} personalRecords={personalRecords} />}
-                        {view === 'edit' && <Manage customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} measurements={measurements} setMeasurements={setMeasurements} />}
+                        {view === 'manage' && <Manage customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} measurements={measurements} setMeasurements={setMeasurements} />}
                         {view === 'history' && <History workoutLog={workoutLog} customWorkouts={customWorkouts} deleteWorkout={deleteWorkout} />}
                     </div>
                     <Nav view={view} setView={setView} />
@@ -243,14 +168,10 @@
         }
 
         function Header({ view, setView, setSelectedDay, darkMode, toggleDarkMode }) {
-            const exportData = () => {
-                const blob = new Blob([JSON.stringify(localStorage)], {type: "application/json"});
-                const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "backup.json"; a.click();
-            };
             return (
                 <div className="header">
                     {view === 'home' ? (
-                        <div className="header-actions" style={{left:20, right:'auto'}}><button className="icon-btn" onClick={() => setView('edit')}><Icons.Settings /></button></div>
+                        <div className="header-left"><button className="icon-btn" onClick={() => setView('manage')}><Icons.User /></button></div>
                     ) : (
                         <button className="back-btn" onClick={() => {setView('home'); setSelectedDay(null)}}><Icons.Back /> Back</button>
                     )}
@@ -266,11 +187,7 @@
             const tabs = [ {id:'home',icon:<Icons.Home/>,label:'Home'}, {id:'workout',icon:<Icons.Dumbbell/>,label:'Train'}, {id:'stats',icon:<Icons.Chart/>,label:'Stats'}, {id:'history',icon:<Icons.History/>,label:'History'} ];
             return (
                 <div className="nav">
-                    {tabs.map(t => (
-                        <button key={t.id} className={`nav-btn ${view === t.id ? 'active' : ''}`} onClick={() => setView(t.id)}>
-                            {t.icon}<span className="nav-label">{t.label}</span>
-                        </button>
-                    ))}
+                    {tabs.map(t => <button key={t.id} className={`nav-btn ${view === t.id ? 'active' : ''}`} onClick={() => setView(t.id)}>{t.icon}<span className="nav-label">{t.label}</span></button>)}
                 </div>
             );
         }
@@ -283,14 +200,9 @@
                         <h1 style={{fontSize:'48px', margin:'5px 0'}}>{Object.keys(workoutLog).length}</h1>
                     </div>
                     <button className="btn btn-primary" onClick={() => setView('workout')}>Start New Session</button>
-                    <div className="card"><h3>Weekly Schedule</h3>
-                        <div style={{fontSize:'14px', lineHeight:'1.6', color:'var(--text-secondary)'}}>
-                            {Object.entries(customWorkouts).map(([k,v]) => (
-                                <div key={k}><strong style={{textTransform:'capitalize'}}>{k}:</strong> {v.name}</div>
-                            ))}
-                        </div>
+                    <div className="card"><h3>Schedule</h3>
+                        {Object.entries(customWorkouts).map(([k,v]) => <div key={k} style={{padding:'4px 0', borderBottom:'1px solid #eee', textTransform:'capitalize'}}><strong>{k}</strong>: {v.name}</div>)}
                     </div>
-                    <div className="card"><h3>Daily Targets</h3><p style={{fontSize:'14px', lineHeight:'1.6', color:'var(--text-secondary)'}}>Protein: 220g | Cals: 2500<br/>Carbs: 220g | Fats: 80g</p></div>
                 </div>
             );
         }
@@ -330,8 +242,7 @@
                 <div>
                     <div style={{display:'flex', gap:'10px', marginBottom:'20px'}}><button className="icon-btn" style={{background:'gray'}} onClick={() => setViewDay(null)}><Icons.Back/></button><h2>{viewDay}</h2></div>
                     <div style={{marginBottom:'20px'}}>
-                        <label style={{fontSize:'12px', color:'var(--text-secondary)'}}>Workout Name</label>
-                        <input value={customWorkouts[viewDay].name} onChange={e => { const n = {...customWorkouts}; n[viewDay].name = e.target.value; setCustomWorkouts(n); }} />
+                        <input value={customWorkouts[viewDay].name} onChange={e => { const n = {...customWorkouts}; n[viewDay].name = e.target.value; setCustomWorkouts(n); }} placeholder="Routine Name" />
                     </div>
                     {customWorkouts[viewDay].exercises.map((ex, i) => (
                         <div key={i} className="card" style={{display:'flex', justifyContent:'space-between'}}>
@@ -351,9 +262,12 @@
                 <div>
                     <div className="card">
                         <h3>Weight Trend</h3>
-                        <div className="chart-wrapper" style={{width:'100%', height:'150px'}}>
+                        <div className="chart-wrapper">
                             <svg className="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
-                                <polyline points={points} className="chart-line" style={{fill:'none', stroke:'var(--primary)', strokeWidth:3}} />
+                                <line x1="0" y1="25" x2="300" y2="25" className="chart-grid" />
+                                <line x1="0" y1="50" x2="300" y2="50" className="chart-grid" />
+                                <line x1="0" y1="75" x2="300" y2="75" className="chart-grid" />
+                                {measurements.length > 1 && <polyline points={points} className="chart-line" />}
                             </svg>
                         </div>
                         <div style={{display:'flex', gap:'10px', marginTop:'10px'}}>
@@ -424,7 +338,7 @@
                 if (selectedDay && customWorkouts[selectedDay]) {
                     setSets(customWorkouts[selectedDay].exercises.map(ex => ({
                         name: ex.name,
-                        logs: Array(ex.sets).fill().map(() => ({ reps: '', weight: '', note: '' }))
+                        logs: Array(ex.sets || 3).fill().map(() => ({ reps: '', weight: '', note: '' }))
                     })));
                 }
             }, [selectedDay]);
@@ -455,7 +369,7 @@
                     }
                 }));
                 setPersonalRecords(newPrs);
-                setWorkoutLog({...workoutLog, [date]: { day: selectedDay, exercises: sets, tonnage, completed: true }});
+                setWorkoutLog({...workoutLog, [date]: { day: selectedDay, exercises: sets, tonnage, duration: elapsed, completed: true }});
                 
                 if (hitPr) {
                     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
@@ -504,8 +418,9 @@
                         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                             <div>
                                 <h2 style={{margin:0, textTransform:'capitalize'}}>{selectedDay}</h2>
-                                <div className="session-timer" onClick={() => setPaused(!paused)} onDoubleClick={editTime}>
-                                    {paused ? '⏸' : '⏱️'} {formatTime(elapsed)}
+                                <div className="session-timer-container">
+                                    <div className="session-timer" onClick={() => setPaused(!paused)}>{paused ? '⏸' : '⏱️'} {formatTime(elapsed)}</div>
+                                    <button className="action-btn-minimal" onClick={editTime}><Icons.Edit/></button>
                                 </div>
                             </div>
                             <button className="action-btn-minimal" onClick={() => setEditMode(!editMode)}><Icons.Edit/></button>
@@ -590,4 +505,18 @@
                         <div key={date} className="card">
                             <div className="history-header"><div><h4 style={{margin:0}}>{new Date(date).toLocaleDateString()}</h4><p style={{fontWeight:'bold'}}>{data.day}</p></div><button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteWorkout(date)}><Icons.Trash /></button></div>
                             {data.duration && <p style={{fontSize:'12px', color:'var(--text-secondary)'}}>⏱️ Duration: {Math.floor(data.duration/60)}m {data.duration%60}s</p>}
-                            {data.exercises && data.exercises.map((ex, i)
+                            {data.exercises && data.exercises.map((ex, i) => {
+                                const setsSummary = ex.logs.filter(l => l.weight && l.reps).map(l => `${l.weight}x${l.reps}`).join(', ');
+                                if (!setsSummary) return null;
+                                return <div key={i} className="history-exercise"><strong>{ex.name}</strong><div className="history-sets">{setsSummary}</div></div>;
+                            })}
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

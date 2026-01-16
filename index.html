@@ -92,6 +92,7 @@
         .btn-primary { background: var(--primary-grad); }
         .btn-success { background: var(--success-grad); }
         .btn-secondary { background: var(--bg-accent); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-danger-full { background: var(--danger); color: white; }
         .btn-danger { background: rgba(255, 59, 48, 0.1); color: var(--danger); width: auto; padding: 8px 12px; font-size: 13px; }
         
         .action-btn-minimal {
@@ -538,6 +539,7 @@
         const DEFAULT_WORKOUTS = {
             monday: { name: "Upper Push", focus: "Chest, Shoulders, Triceps", muscleGroups: ["chest", "shoulders", "triceps"], exercises: [ { name: "Flat Barbell Bench Press", sets: 4, reps: "6-8", rest: 240, description: "Lie on flat bench, feet flat on floor. Lower bar to mid-chest, press up." }, { name: "Incline Dumbbell Press", sets: 3, reps: "8-10", rest: 180, description: "Set bench to 30-45°. Press dumbbells up from chest level." }, { name: "Standing Overhead Press", sets: 4, reps: "6-8", rest: 180, description: "Stand with barbell at shoulders. Press overhead, lock out arms." }, { name: "Cable Flyes", sets: 3, reps: "12-15", rest: 90, description: "Set cables at chest height. Bring handles together in front of chest." }, { name: "Lateral Raises", sets: 3, reps: "12-15", rest: 60, description: "Raise dumbbells out to sides until parallel to floor." }, { name: "Dips", sets: 3, reps: "8-12", rest: 120, description: "Lean forward slightly for chest emphasis. Lower until upper arms parallel." }, { name: "Tricep Pushdowns", sets: 3, reps: "12-15", rest: 60, description: "Keep elbows pinned to sides. Push down until arms fully extended." } ] },
             tuesday: { name: "Lower", focus: "Quads, Hamstrings, Glutes", muscleGroups: ["quads", "hamstrings", "glutes"], exercises: [ { name: "Squats", sets: 4, reps: "6-8", rest: 240, description: "Feet shoulder-width. Sit back and down. Knees track over toes." }, { name: "Romanian Deadlifts", sets: 4, reps: "8-10", rest: 180, description: "Slight knee bend. Hinge at hips. Push hips back." }, { name: "Bulgarian Split Squats", sets: 3, reps: "10-12/leg", rest: 120, description: "Rear foot elevated. Lower front knee to 90°." }, { name: "Leg Press", sets: 3, reps: "12-15", rest: 120, description: "Lower until knees at 90°. Push through heels." }, { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Curl heels toward glutes. Squeeze hamstrings." }, { name: "Walking Lunges", sets: 3, reps: "12/leg", rest: 90, description: "Step forward, lower back knee." }, { name: "Calf Raises", sets: 4, reps: "15-20", rest: 60, description: "Rise up on balls of feet. Hold squeeze at top." } ] },
+            wednesday: { name: "Cardio & Core", focus: "Conditioning, Abs", muscleGroups: ["core"], exercises: [ { name: "Treadmill Incline Walk", sets: 1, reps: "30 min", rest: 0, description: "3.5-4.0 mph at 12-15% incline. Zone 2 cardio." }, { name: "Plank", sets: 3, reps: "60s", rest: 60, description: "Forearms on ground. Keep body straight. Squeeze glutes and abs." }, { name: "Dead Bug", sets: 3, reps: "12/side", rest: 60, description: "Lie on back. Opposite arm and leg extend. Keep lower back flat." }, { name: "Russian Twists", sets: 3, reps: "20 total", rest: 60, description: "Hold weight at chest. Rotate side to side. Feet elevated." }, { name: "Bicycle Crunches", sets: 3, reps: "20 total", rest: 60, description: "Opposite elbow to knee. Slow and controlled." }, { name: "Hollow Body Hold", sets: 3, reps: "30s", rest: 60, description: "Lower back pressed to floor. Arms overhead. Legs extended." }, { name: "Mountain Climbers", sets: 3, reps: "30s", rest: 60, description: "Plank position. Drive knees to chest alternating. Fast pace." } ] },
             thursday: { name: "Upper Pull", focus: "Back, Rear Delts", muscleGroups: ["back", "biceps"], exercises: [ { name: "Pull-Ups", sets: 4, reps: "6-10", rest: 180, description: "Pull chest to bar. Full extension at bottom." }, { name: "T-Bar Rows", sets: 4, reps: "8-10", rest: 180, description: "Hinge at hips. Pull to lower chest. Squeeze shoulder blades." }, { name: "Barbell/DB Rows", sets: 4, reps: "8-12", rest: 180, description: "Pull to hip/lower chest. Retract shoulder blades." }, { name: "Cable Rows", sets: 3, reps: "10-12", rest: 120, description: "Sit upright. Pull handle to lower chest." }, { name: "Face Pulls", sets: 3, reps: "15-20", rest: 90, description: "Pull to face level. External rotation at end." }, { name: "Chest-Supported Rows", sets: 3, reps: "12-15", rest: 90, description: "Set bench to 30-45°. Lie chest-down. Pull handles to lower chest." } ] },
             friday: { name: "Lower", focus: "Quads, Hamstrings, Glutes", muscleGroups: ["quads", "hamstrings", "glutes"], exercises: [ { name: "Front/Goblet Squat", sets: 4, reps: "8-10", rest: 180, description: "Torso upright. Elbows up." }, { name: "Leg Press", sets: 4, reps: "10-12", rest: 120, description: "Feet shoulder-width, mid-platform. Lower to 90°." }, { name: "Hack Squat", sets: 3, reps: "12-15", rest: 90, description: "Lower controlled. Drive through heels. Quad focus." }, { name: "Stiff-Leg Deadlifts", sets: 3, reps: "10-12", rest: 120, description: "Slight knee bend. Hinge at hips. Feel stretch in hamstrings." }, { name: "Leg Curls", sets: 3, reps: "12-15", rest: 90, description: "Lying or seated. Curl heels to glutes. Slow negative." }, { name: "Reverse Lunges", sets: 3, reps: "10/leg", rest: 90, description: "Hold goblet dumbbell. Step back. Lower back knee down." } ] }
         };
@@ -595,7 +597,7 @@
             const [personalRecords, setPersonalRecords] = useState({});
             const [darkMode, setDarkMode] = useState(false);
             const [loading, setLoading] = useState(true);
-            const [nutrition, setNutrition] = useState({ protein: 0, carbs: 0, fats: 0, calories: 0 });
+            const [nutrition, setNutrition] = useState({ protein: 180, carbs: 250, fats: 70, calories: 2800 });
 
             useEffect(() => {
                 const load = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; }};
@@ -604,7 +606,7 @@
                 setCustomWorkouts((savedCustom && Object.keys(savedCustom).length > 0) ? savedCustom : DEFAULT_WORKOUTS);
                 setMeasurements(load('measurements') || []);
                 setPersonalRecords(load('personal-records') || {});
-                setNutrition(load('nutrition') || { protein: 0, carbs: 0, fats: 0, calories: 0 });
+                setNutrition(load('nutrition') || { protein: 180, carbs: 250, fats: 70, calories: 2800 });
                 if (localStorage.getItem('dark-mode') === 'true') { setDarkMode(true); document.documentElement.setAttribute('data-theme', 'dark'); }
                 setLoading(false);
             }, []);
@@ -642,8 +644,8 @@
                             {view === 'home' && <Home setView={setView} workoutLog={workoutLog} customWorkouts={customWorkouts} nutrition={nutrition} setNutrition={setNutrition} />}
                             {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} personalRecords={personalRecords} setPersonalRecords={setPersonalRecords} />}
                             {view === 'stats' && <Stats workoutLog={workoutLog} personalRecords={personalRecords} customWorkouts={customWorkouts} />}
-                            {view === 'manage' && <Manage customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} measurements={measurements} setMeasurements={setMeasurements} workoutLog={workoutLog} />}
-                            {view === 'history' && <History workoutLog={workoutLog} customWorkouts={customWorkouts} deleteWorkout={deleteWorkout} />}
+                            {view === 'manage' && <Manage customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} measurements={measurements} setMeasurements={setMeasurements} workoutLog={workoutLog} nutrition={nutrition} setNutrition={setNutrition} />}
+                            {view === 'history' && <History workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} customWorkouts={customWorkouts} deleteWorkout={deleteWorkout} />}
                         </div>
                         <ActiveWorkoutBanner view={view} setView={setView} setSelectedDay={setSelectedDay} customWorkouts={customWorkouts} />
                         <Nav view={view} setView={setView} />
@@ -775,11 +777,6 @@
                                 last4Weeks[0] < last4Weeks[1] * 0.7 && 
                                 last4Weeks[1] < last4Weeks[2] * 0.7;
 
-            const updateNutrition = (field, value) => {
-                const newNutrition = { ...nutrition, [field]: parseFloat(value) || 0 };
-                setNutrition(newNutrition);
-            };
-
             return (
                 <div>
                     {needsDeload && (
@@ -799,30 +796,24 @@
                     </div>
 
                     <div className="card">
-                        <h3>Today's Nutrition</h3>
-                        <div className="stat-grid" style={{marginBottom:'15px'}}>
+                        <h3>Daily Nutrition Targets</h3>
+                        <div className="stat-grid" style={{marginBottom:'0'}}>
                             <div className="stat-card">
-                                <div className="stat-val">{nutrition.protein}g</div>
+                                <div className="stat-val">{nutrition.protein || 180}g</div>
                                 <div className="stat-lbl">Protein</div>
                             </div>
                             <div className="stat-card">
-                                <div className="stat-val">{nutrition.carbs}g</div>
+                                <div className="stat-val">{nutrition.carbs || 250}g</div>
                                 <div className="stat-lbl">Carbs</div>
                             </div>
                             <div className="stat-card">
-                                <div className="stat-val">{nutrition.fats}g</div>
+                                <div className="stat-val">{nutrition.fats || 70}g</div>
                                 <div className="stat-lbl">Fats</div>
                             </div>
                             <div className="stat-card">
-                                <div className="stat-val">{nutrition.calories}</div>
+                                <div className="stat-val">{nutrition.calories || 2800}</div>
                                 <div className="stat-lbl">Calories</div>
                             </div>
-                        </div>
-                        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px'}}>
-                            <input type="number" inputMode="decimal" placeholder="Protein (g)" onChange={e => updateNutrition('protein', e.target.value)} style={{fontSize:'14px', padding:'10px'}} />
-                            <input type="number" inputMode="decimal" placeholder="Carbs (g)" onChange={e => updateNutrition('carbs', e.target.value)} style={{fontSize:'14px', padding:'10px'}} />
-                            <input type="number" inputMode="decimal" placeholder="Fats (g)" onChange={e => updateNutrition('fats', e.target.value)} style={{fontSize:'14px', padding:'10px'}} />
-                            <input type="number" inputMode="decimal" placeholder="Calories" onChange={e => updateNutrition('calories', e.target.value)} style={{fontSize:'14px', padding:'10px'}} />
                         </div>
                     </div>
                     
@@ -836,7 +827,7 @@
             );
         }
 
-        function Manage({ customWorkouts, setCustomWorkouts, measurements, setMeasurements, workoutLog }) {
+        function Manage({ customWorkouts, setCustomWorkouts, measurements, setMeasurements, workoutLog, nutrition, setNutrition }) {
             const { showToast } = React.useContext(ToastContext);
             const [viewDay, setViewDay] = useState(null);
             const [newDay, setNewDay] = useState('');
@@ -986,6 +977,62 @@
 
             return (
                 <div>
+                    <div className="card">
+                        <h3>Nutrition Targets</h3>
+                        <div className="stat-grid" style={{marginBottom:'15px'}}>
+                            <div className="stat-card">
+                                <div className="stat-val">{nutrition.protein}g</div>
+                                <div className="stat-lbl">Protein</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-val">{nutrition.carbs}g</div>
+                                <div className="stat-lbl">Carbs</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-val">{nutrition.fats}g</div>
+                                <div className="stat-lbl">Fats</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-val">{nutrition.calories}</div>
+                                <div className="stat-lbl">Calories</div>
+                            </div>
+                        </div>
+                        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px'}}>
+                            <input 
+                                type="number" 
+                                inputMode="decimal" 
+                                placeholder="Protein (g)" 
+                                value={nutrition.protein}
+                                onChange={e => setNutrition({...nutrition, protein: parseInt(e.target.value) || 0})} 
+                                style={{fontSize:'14px', padding:'10px'}} 
+                            />
+                            <input 
+                                type="number" 
+                                inputMode="decimal" 
+                                placeholder="Carbs (g)" 
+                                value={nutrition.carbs}
+                                onChange={e => setNutrition({...nutrition, carbs: parseInt(e.target.value) || 0})} 
+                                style={{fontSize:'14px', padding:'10px'}} 
+                            />
+                            <input 
+                                type="number" 
+                                inputMode="decimal" 
+                                placeholder="Fats (g)" 
+                                value={nutrition.fats}
+                                onChange={e => setNutrition({...nutrition, fats: parseInt(e.target.value) || 0})} 
+                                style={{fontSize:'14px', padding:'10px'}} 
+                            />
+                            <input 
+                                type="number" 
+                                inputMode="decimal" 
+                                placeholder="Calories" 
+                                value={nutrition.calories}
+                                onChange={e => setNutrition({...nutrition, calories: parseInt(e.target.value) || 0})} 
+                                style={{fontSize:'14px', padding:'10px'}} 
+                            />
+                        </div>
+                    </div>
+                    
                     <div className="card">
                         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                             <h3>Weight Trend</h3>
@@ -1359,6 +1406,18 @@
                 setSelectedDay(null);
                 setWorkoutStarted(false);
                 setWorkoutNotes({});
+            };
+
+            const discardWorkout = () => {
+                if (confirm('Discard this workout? All progress will be lost.')) {
+                    localStorage.removeItem('active-workout-session');
+                    setSelectedDay(null);
+                    setWorkoutStarted(false);
+                    setSets([]);
+                    setWorkoutNotes({});
+                    showToast('Workout discarded', 'info');
+                    haptic('medium');
+                }
             };
 
             const calculatePlates = (val) => {
@@ -1757,6 +1816,7 @@
                         <Icons.Plus /> Add Exercise
                     </button>
                     <button className="btn btn-success" onClick={finish}>Complete Workout</button>
+                    <button className="btn btn-danger-full" onClick={discardWorkout}>Discard Workout</button>
                     
                     {rest > 0 && (
                         <div className="timer-display">
@@ -2040,9 +2100,11 @@
             ); 
         }
         
-        function History({ workoutLog, customWorkouts, deleteWorkout }) {
+        function History({ workoutLog, setWorkoutLog, customWorkouts, deleteWorkout }) {
             const { showToast } = React.useContext(ToastContext);
             const [swipeState, setSwipeState] = useState({});
+            const [editingWorkout, setEditingWorkout] = useState(null);
+            const [editData, setEditData] = useState(null);
             
             const handleTouchStart = (date, e) => {
                 setSwipeState({
@@ -2078,6 +2140,53 @@
                 deleteWorkout(date);
                 showToast('Workout deleted', 'success');
                 haptic('medium');
+            };
+
+            const startEdit = (date, data) => {
+                setEditingWorkout(date);
+                setEditData(JSON.parse(JSON.stringify(data))); // Deep copy
+                haptic('light');
+            };
+
+            const cancelEdit = () => {
+                setEditingWorkout(null);
+                setEditData(null);
+                haptic('light');
+            };
+
+            const saveEdit = () => {
+                if (!editingWorkout || !editData) return;
+                
+                // Recalculate tonnage
+                let tonnage = 0;
+                editData.exercises.forEach(ex => ex.logs.forEach(l => {
+                    if (l.weight && l.reps) {
+                        tonnage += parseFloat(l.weight) * parseFloat(l.reps);
+                    }
+                }));
+                editData.tonnage = tonnage;
+                
+                // Update workout log
+                const newLog = {...workoutLog};
+                newLog[editingWorkout] = editData;
+                setWorkoutLog(newLog);
+                
+                showToast('Workout updated', 'success');
+                haptic('medium');
+                setEditingWorkout(null);
+                setEditData(null);
+            };
+
+            const updateEditSet = (exIdx, setIdx, field, value) => {
+                const newData = {...editData};
+                newData.exercises[exIdx].logs[setIdx][field] = value;
+                setEditData(newData);
+            };
+
+            const updateEditNote = (exIdx, value) => {
+                const newData = {...editData};
+                newData.exercises[exIdx].note = value;
+                setEditData(newData);
             };
             
             return (
@@ -2118,13 +2227,23 @@
                                                     {customWorkouts[data.day]?.name || data.day}
                                                 </p>
                                             </div>
-                                            <button 
-                                                className="action-btn-minimal" 
-                                                style={{color:'var(--danger)'}} 
-                                                onClick={() => handleDelete(date)}
-                                            >
-                                                <Icons.Trash />
-                                            </button>
+                                            <div style={{display:'flex', gap:'8px'}}>
+                                                <button 
+                                                    className="action-btn-minimal" 
+                                                    onClick={() => startEdit(date, data)}
+                                                    title="Edit workout"
+                                                >
+                                                    <Icons.Edit />
+                                                </button>
+                                                <button 
+                                                    className="action-btn-minimal" 
+                                                    style={{color:'var(--danger)'}} 
+                                                    onClick={() => handleDelete(date)}
+                                                    title="Delete workout"
+                                                >
+                                                    <Icons.Trash />
+                                                </button>
+                                            </div>
                                         </div>
                                         
                                         <div style={{display:'flex', gap:'15px', marginBottom:'10px', fontSize:'13px', color:'var(--text-secondary)'}}>
@@ -2166,6 +2285,70 @@
                             <h3 style={{marginBottom:'10px'}}>No Workouts Yet</h3>
                             <p style={{color:'var(--text-secondary)'}}>Start your first session to begin tracking your progress</p>
                         </div>
+                    )}
+                    
+                    {/* Edit Workout Modal */}
+                    {editingWorkout && editData && (
+                        <>
+                            <div className="modal-backdrop" onClick={cancelEdit} style={{zIndex: 10000}} />
+                            <div style={{
+                                position: 'fixed',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                background: 'var(--bg-secondary)',
+                                borderRadius: '20px',
+                                padding: '24px',
+                                maxWidth: '90vw',
+                                maxHeight: '80vh',
+                                overflow: 'auto',
+                                zIndex: 10001,
+                                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                                width: '500px'
+                            }}>
+                                <h2 style={{marginBottom: '20px'}}>Edit Workout</h2>
+                                
+                                {editData.exercises.map((ex, exIdx) => (
+                                    <div key={exIdx} style={{marginBottom: '20px', padding: '16px', background: 'var(--bg-accent)', borderRadius: '12px'}}>
+                                        <h3 style={{marginBottom: '12px', fontSize: '16px'}}>{ex.name}</h3>
+                                        
+                                        {ex.logs.map((log, setIdx) => (
+                                            <div key={setIdx} style={{display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center'}}>
+                                                <span style={{width: '30px', fontWeight: '700', fontSize: '14px', color: 'var(--text-secondary)'}}>{setIdx + 1}</span>
+                                                <input
+                                                    type="number"
+                                                    inputMode="decimal"
+                                                    placeholder="Reps"
+                                                    value={log.reps}
+                                                    onChange={(e) => updateEditSet(exIdx, setIdx, 'reps', e.target.value)}
+                                                    style={{width: '70px', padding: '8px', fontSize: '14px'}}
+                                                />
+                                                <input
+                                                    type="number"
+                                                    inputMode="decimal"
+                                                    placeholder="Lbs"
+                                                    value={log.weight}
+                                                    onChange={(e) => updateEditSet(exIdx, setIdx, 'weight', e.target.value)}
+                                                    style={{width: '70px', padding: '8px', fontSize: '14px'}}
+                                                />
+                                            </div>
+                                        ))}
+                                        
+                                        <textarea
+                                            placeholder="Exercise notes..."
+                                            value={ex.note || ''}
+                                            onChange={(e) => updateEditNote(exIdx, e.target.value)}
+                                            style={{marginTop: '8px', minHeight: '50px', fontSize: '13px'}}
+                                        />
+                                    </div>
+                                ))}
+                                
+                                <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
+                                    <button className="btn btn-primary" onClick={saveEdit}>Save Changes</button>
+                                    <button className="btn btn-secondary" onClick={cancelEdit}>Cancel</button>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </div>
             );

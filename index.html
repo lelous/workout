@@ -37,7 +37,7 @@
         body {
             font-family: var(--font-main);
             background: var(--bg-primary); color: var(--text-primary);
-            padding-bottom: calc(90px + env(safe-area-inset-bottom));
+            padding-bottom: calc(130px + env(safe-area-inset-bottom));
             transition: background 0.3s ease;
         }
         
@@ -224,6 +224,48 @@
         }
         .nav-btn.active { color: var(--primary); }
         .nav-label { font-size: 10px; font-weight: 600; font-family: var(--font-main); }
+        
+        /* Active Workout Banner */
+        .active-workout-banner {
+            position: fixed;
+            bottom: calc(76px + env(safe-area-inset-bottom));
+            left: 0;
+            right: 0;
+            background: var(--primary-grad);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 999;
+            cursor: pointer;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+            animation: subtlePulse 3s ease-in-out infinite;
+        }
+        @keyframes subtlePulse {
+            0%, 100% { box-shadow: 0 -2px 12px rgba(0,0,0,0.15); }
+            50% { box-shadow: 0 -2px 20px rgba(102,126,234,0.4); }
+        }
+        .active-workout-banner:active {
+            transform: scale(0.98);
+        }
+        .workout-banner-text {
+            flex: 1;
+        }
+        .workout-banner-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            text-transform: capitalize;
+        }
+        .workout-banner-time {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .workout-banner-icon {
+            font-size: 20px;
+        }
         
         svg { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         
@@ -600,6 +642,7 @@
                             {view === 'manage' && <Manage customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} measurements={measurements} setMeasurements={setMeasurements} workoutLog={workoutLog} />}
                             {view === 'history' && <History workoutLog={workoutLog} customWorkouts={customWorkouts} deleteWorkout={deleteWorkout} />}
                         </div>
+                        <ActiveWorkoutBanner view={view} setView={setView} setSelectedDay={setSelectedDay} customWorkouts={customWorkouts} />
                         <Nav view={view} setView={setView} />
                     </div>
                 </ToastProvider>
@@ -627,6 +670,68 @@
             return (
                 <div className="nav">
                     {tabs.map(t => <button key={t.id} className={`nav-btn ${view === t.id ? 'active' : ''}`} onClick={() => { setView(t.id); haptic('light'); }}>{t.icon}<span className="nav-label">{t.label}</span></button>)}
+                </div>
+            );
+        }
+
+        function ActiveWorkoutBanner({ view, setView, setSelectedDay, customWorkouts }) {
+            const [sessionData, setSessionData] = useState(null);
+            const [elapsed, setElapsed] = useState(0);
+
+            useEffect(() => {
+                const checkSession = () => {
+                    const saved = localStorage.getItem('active-workout-session');
+                    if (saved) {
+                        try {
+                            const data = JSON.parse(saved);
+                            // Only show if session is less than 8 hours old
+                            if (Date.now() - data.timestamp < 8 * 60 * 60 * 1000) {
+                                setSessionData(data);
+                                // Calculate elapsed time
+                                const timeDiff = Math.floor((Date.now() - data.timestamp) / 1000) + (data.elapsed || 0);
+                                setElapsed(timeDiff);
+                            } else {
+                                localStorage.removeItem('active-workout-session');
+                            }
+                        } catch (e) {
+                            console.error('Failed to parse session:', e);
+                        }
+                    } else {
+                        setSessionData(null);
+                    }
+                };
+
+                checkSession();
+                const interval = setInterval(checkSession, 1000);
+                return () => clearInterval(interval);
+            }, [view]);
+
+            const formatTime = (seconds) => {
+                const h = Math.floor(seconds / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                const s = seconds % 60;
+                if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                return `${m}:${s.toString().padStart(2, '0')}`;
+            };
+
+            const returnToWorkout = () => {
+                setSelectedDay(sessionData.day);
+                setView('workout');
+                haptic('medium');
+            };
+
+            // Don't show banner if no session or already on workout view
+            if (!sessionData || view === 'workout') return null;
+
+            const workoutName = customWorkouts[sessionData.day]?.name || sessionData.day;
+
+            return (
+                <div className="active-workout-banner" onClick={returnToWorkout}>
+                    <div className="workout-banner-text">
+                        <div className="workout-banner-title">💪 {workoutName}</div>
+                        <div className="workout-banner-time">⏱️ {formatTime(elapsed)} • Tap to resume</div>
+                    </div>
+                    <div className="workout-banner-icon">▶</div>
                 </div>
             );
         }

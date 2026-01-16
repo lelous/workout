@@ -595,6 +595,7 @@
             const [personalRecords, setPersonalRecords] = useState({});
             const [darkMode, setDarkMode] = useState(false);
             const [loading, setLoading] = useState(true);
+            const [nutrition, setNutrition] = useState({ protein: 0, carbs: 0, fats: 0, calories: 0 });
 
             useEffect(() => {
                 const load = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; }};
@@ -603,6 +604,7 @@
                 setCustomWorkouts((savedCustom && Object.keys(savedCustom).length > 0) ? savedCustom : DEFAULT_WORKOUTS);
                 setMeasurements(load('measurements') || []);
                 setPersonalRecords(load('personal-records') || {});
+                setNutrition(load('nutrition') || { protein: 0, carbs: 0, fats: 0, calories: 0 });
                 if (localStorage.getItem('dark-mode') === 'true') { setDarkMode(true); document.documentElement.setAttribute('data-theme', 'dark'); }
                 setLoading(false);
             }, []);
@@ -613,9 +615,10 @@
                     localStorage.setItem('customWorkouts', JSON.stringify(customWorkouts));
                     localStorage.setItem('measurements', JSON.stringify(measurements));
                     localStorage.setItem('personal-records', JSON.stringify(personalRecords));
+                    localStorage.setItem('nutrition', JSON.stringify(nutrition));
                     localStorage.setItem('dark-mode', darkMode);
                 }
-            }, [workoutLog, customWorkouts, measurements, personalRecords, darkMode, loading]);
+            }, [workoutLog, customWorkouts, measurements, personalRecords, darkMode, nutrition, loading]);
 
             const toggleDarkMode = () => { 
                 setDarkMode(!darkMode); 
@@ -636,7 +639,7 @@
                     <div>
                         <Header view={view} setView={setView} setSelectedDay={setSelectedDay} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
                         <div className="container">
-                            {view === 'home' && <Home setView={setView} workoutLog={workoutLog} customWorkouts={customWorkouts} />}
+                            {view === 'home' && <Home setView={setView} workoutLog={workoutLog} customWorkouts={customWorkouts} nutrition={nutrition} setNutrition={setNutrition} />}
                             {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} personalRecords={personalRecords} setPersonalRecords={setPersonalRecords} />}
                             {view === 'stats' && <Stats workoutLog={workoutLog} personalRecords={personalRecords} customWorkouts={customWorkouts} />}
                             {view === 'manage' && <Manage customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} measurements={measurements} setMeasurements={setMeasurements} workoutLog={workoutLog} />}
@@ -728,15 +731,15 @@
             return (
                 <div className="active-workout-banner" onClick={returnToWorkout}>
                     <div className="workout-banner-text">
-                        <div className="workout-banner-title">💪 {workoutName}</div>
-                        <div className="workout-banner-time">⏱️ {formatTime(elapsed)} • Tap to resume</div>
+                        <div className="workout-banner-title">{workoutName}</div>
+                        <div className="workout-banner-time">{formatTime(elapsed)} • Tap to resume</div>
                     </div>
                     <div className="workout-banner-icon">▶</div>
                 </div>
             );
         }
 
-        function Home({ setView, workoutLog, customWorkouts }) {
+        function Home({ setView, workoutLog, customWorkouts, nutrition, setNutrition }) {
             const { showToast } = React.useContext(ToastContext);
             
             const today = new Date();
@@ -772,6 +775,11 @@
                                 last4Weeks[0] < last4Weeks[1] * 0.7 && 
                                 last4Weeks[1] < last4Weeks[2] * 0.7;
 
+            const updateNutrition = (field, value) => {
+                const newNutrition = { ...nutrition, [field]: parseFloat(value) || 0 };
+                setNutrition(newNutrition);
+            };
+
             return (
                 <div>
                     {needsDeload && (
@@ -789,6 +797,35 @@
                         <h1 style={{fontSize:'48px', margin:'5px 0'}}>{weeklyCount}/5</h1>
                         <p style={{opacity:0.8, fontSize:'14px'}}>Workouts this week</p>
                     </div>
+
+                    <div className="card">
+                        <h3>Today's Nutrition</h3>
+                        <div className="stat-grid" style={{marginBottom:'15px'}}>
+                            <div className="stat-card">
+                                <div className="stat-val">{nutrition.protein}g</div>
+                                <div className="stat-lbl">Protein</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-val">{nutrition.carbs}g</div>
+                                <div className="stat-lbl">Carbs</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-val">{nutrition.fats}g</div>
+                                <div className="stat-lbl">Fats</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-val">{nutrition.calories}</div>
+                                <div className="stat-lbl">Calories</div>
+                            </div>
+                        </div>
+                        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px'}}>
+                            <input type="number" inputMode="decimal" placeholder="Protein (g)" onChange={e => updateNutrition('protein', e.target.value)} style={{fontSize:'14px', padding:'10px'}} />
+                            <input type="number" inputMode="decimal" placeholder="Carbs (g)" onChange={e => updateNutrition('carbs', e.target.value)} style={{fontSize:'14px', padding:'10px'}} />
+                            <input type="number" inputMode="decimal" placeholder="Fats (g)" onChange={e => updateNutrition('fats', e.target.value)} style={{fontSize:'14px', padding:'10px'}} />
+                            <input type="number" inputMode="decimal" placeholder="Calories" onChange={e => updateNutrition('calories', e.target.value)} style={{fontSize:'14px', padding:'10px'}} />
+                        </div>
+                    </div>
+                    
                     <button className="btn btn-primary" onClick={() => { setView('workout'); haptic('medium'); }}>Start New Session</button>
                     <button className="btn btn-secondary" onClick={() => setView('stats')}>Stats & Analytics</button>
                     
@@ -891,7 +928,9 @@
                         ex.logs.forEach((log, idx) => {
                             if (log.weight && log.reps) {
                                 const vol = parseFloat(log.weight) * parseFloat(log.reps);
-                                csv += `${date},${data.day},${ex.name},${idx + 1},${log.weight},${log.reps},${vol},"${(log.note || '').replace(/"/g, '""')}"\n`;
+                                // Include exercise note only on first set
+                                const note = idx === 0 ? (ex.note || '') : '';
+                                csv += `${date},${data.day},${ex.name},${idx + 1},${log.weight},${log.reps},${vol},"${note.replace(/"/g, '""')}"\n`;
                             }
                         });
                     });
@@ -1049,13 +1088,13 @@
             const [sessionStart] = useState(Date.now());
             const [elapsed, setElapsed] = useState(0);
             const [paused, setPaused] = useState(false);
-            const [noteModal, setNoteModal] = useState(null);
-            const [noteText, setNoteText] = useState('');
             const [completedSets, setCompletedSets] = useState({});
             const [draggedDay, setDraggedDay] = useState(null);
             const [addExerciseModal, setAddExerciseModal] = useState(false);
             const [newExerciseName, setNewExerciseName] = useState('');
             const [reorderMode, setReorderMode] = useState(false);
+            const [workoutStarted, setWorkoutStarted] = useState(false);
+            const [workoutNotes, setWorkoutNotes] = useState({});
 
             // Get history for an exercise/set
             const getHistory = (exName, setIndex) => {
@@ -1170,7 +1209,7 @@
                 const newSets = [...sets];
                 newSets.push({
                     name: newExerciseName.trim(),
-                    logs: Array(3).fill().map(() => ({ reps: '', weight: '', note: '' }))
+                    logs: Array(3).fill().map(() => ({ reps: '', weight: '' }))
                 });
                 setSets(newSets);
                 setNewExerciseName('');
@@ -1200,34 +1239,26 @@
             };
 
             const openNoteModal = (exIdx, setIdx) => {
-                setNoteModal({ exIdx, setIdx });
-                setNoteText(sets[exIdx].logs[setIdx].note || '');
+                // Deprecated - notes are now per-exercise, not per-set
             };
 
             const saveNote = () => {
-                if (noteModal) {
-                    const newSets = [...sets];
-                    newSets[noteModal.exIdx].logs[noteModal.setIdx].note = noteText;
-                    setSets(newSets);
-                    setNoteModal(null);
-                    setNoteText('');
-                    showToast('Note saved!', 'success');
-                    haptic('medium');
-                }
+                // Deprecated - notes are now per-exercise, not per-set
             };
 
             // Auto-save workout session to prevent data loss
             useEffect(() => {
-                if (selectedDay && sets.length > 0) {
+                if (selectedDay && sets.length > 0 && workoutStarted) {
                     const sessionData = {
                         day: selectedDay,
                         sets: sets,
                         elapsed: elapsed,
-                        timestamp: Date.now()
+                        timestamp: Date.now(),
+                        workoutNotes: workoutNotes
                     };
                     localStorage.setItem('active-workout-session', JSON.stringify(sessionData));
                 }
-            }, [sets, elapsed, selectedDay]);
+            }, [sets, elapsed, selectedDay, workoutStarted, workoutNotes]);
 
             // Restore previous session or initialize new workout
             useEffect(() => {
@@ -1240,6 +1271,8 @@
                             // Only restore if it's the same day and within last 8 hours
                             if (sessionData.day === selectedDay && (Date.now() - sessionData.timestamp) < 8 * 60 * 60 * 1000) {
                                 setSets(sessionData.sets);
+                                setWorkoutNotes(sessionData.workoutNotes || {});
+                                setWorkoutStarted(true);
                                 showToast('Restored previous session', 'info');
                                 haptic('light');
                                 return;
@@ -1249,13 +1282,16 @@
                         }
                     }
                     
-                    // Initialize new workout
-                    setSets(customWorkouts[selectedDay].exercises.map(ex => ({
-                        name: ex.name,
-                        logs: Array(ex.sets || 3).fill().map(() => ({ reps: '', weight: '', note: '' }))
-                    })));
+                    // Initialize new workout only if not already started
+                    if (!workoutStarted) {
+                        setSets(customWorkouts[selectedDay].exercises.map(ex => ({
+                            name: ex.name,
+                            logs: Array(ex.sets || 3).fill().map(() => ({ reps: '', weight: '' }))
+                        })));
+                        setWorkoutNotes({});
+                    }
                 }
-            }, [selectedDay]);
+            }, [selectedDay, workoutStarted]);
 
             useEffect(() => {
                 const timer = setInterval(() => { 
@@ -1281,7 +1317,13 @@
                 let newPrs = {...personalRecords};
                 let hitPr = false;
                 
-                sets.forEach(ex => ex.logs.forEach(l => {
+                // Add notes to each exercise
+                const setsWithNotes = sets.map((ex, idx) => ({
+                    ...ex,
+                    note: workoutNotes[idx] || ''
+                }));
+                
+                setsWithNotes.forEach(ex => ex.logs.forEach(l => {
                     if(l.weight && l.reps) {
                         tonnage += parseFloat(l.weight) * parseFloat(l.reps);
                         const oneRM = parseFloat(l.weight) * (1 + parseFloat(l.reps)/30);
@@ -1296,13 +1338,13 @@
                 setPersonalRecords(newPrs);
                 setWorkoutLog({...workoutLog, [date]: { 
                     day: selectedDay, 
-                    exercises: sets, 
+                    exercises: setsWithNotes, 
                     tonnage, 
                     duration: elapsed, 
                     completed: true 
                 }});
                 
-                // Clear autosaved session
+                // Clear autosaved session and reset workout state
                 localStorage.removeItem('active-workout-session');
                 
                 if (hitPr) {
@@ -1315,6 +1357,8 @@
                 }
                 
                 setSelectedDay(null);
+                setWorkoutStarted(false);
+                setWorkoutNotes({});
             };
 
             const calculatePlates = (val) => {
@@ -1410,6 +1454,83 @@
                                 </div>
                             );
                         })}
+                    </div>
+                );
+            }
+
+            // Workout Overview Screen
+            if (selectedDay && !workoutStarted) {
+                const workout = customWorkouts[selectedDay];
+                const totalSets = workout.exercises.reduce((sum, ex) => sum + (ex.sets || 3), 0);
+                const estimatedTime = totalSets * 3; // Rough estimate: 3 min per set
+                
+                return (
+                    <div>
+                        <div className="card" style={{background: 'var(--primary-grad)', color: 'white', textAlign: 'center'}}>
+                            <h1 style={{margin: 0, marginBottom: '8px', textTransform: 'capitalize', color: 'white'}}>{selectedDay}</h1>
+                            <h2 style={{margin: 0, opacity: 0.9, fontWeight: 600, color: 'white'}}>{workout.name}</h2>
+                            <div style={{display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '15px', fontSize: '14px', opacity: 0.9}}>
+                                <span>{workout.exercises.length} exercises</span>
+                                <span>•</span>
+                                <span>{totalSets} sets</span>
+                                <span>•</span>
+                                <span>~{estimatedTime} min</span>
+                            </div>
+                        </div>
+
+                        <div className="card">
+                            <h3 style={{marginBottom: '15px'}}>Exercises</h3>
+                            {workout.exercises.map((ex, idx) => (
+                                <div key={idx} style={{
+                                    padding: '12px',
+                                    borderBottom: idx < workout.exercises.length - 1 ? '1px solid var(--border-color)' : 'none',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
+                                    <div style={{flex: 1}}>
+                                        <div style={{fontWeight: '600', marginBottom: '4px'}}>{ex.name}</div>
+                                        {ex.description && (
+                                            <div style={{fontSize: '12px', color: 'var(--text-secondary)'}}>{ex.description}</div>
+                                        )}
+                                    </div>
+                                    <div style={{
+                                        background: 'var(--bg-accent)',
+                                        padding: '4px 12px',
+                                        borderRadius: '8px',
+                                        fontSize: '13px',
+                                        fontWeight: '600',
+                                        color: 'var(--text-secondary)',
+                                        whiteSpace: 'nowrap',
+                                        marginLeft: '12px'
+                                    }}>
+                                        {ex.sets || 3} × {ex.reps}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <button 
+                            className="btn btn-success" 
+                            style={{fontSize: '18px', padding: '20px'}}
+                            onClick={() => { 
+                                setWorkoutStarted(true); 
+                                showToast('Workout started!', 'success');
+                                haptic('heavy'); 
+                            }}
+                        >
+                            Start Workout
+                        </button>
+                        <button 
+                            className="btn btn-secondary" 
+                            onClick={() => { 
+                                setSelectedDay(null); 
+                                setWorkoutStarted(false);
+                                haptic('light'); 
+                            }}
+                        >
+                            Cancel
+                        </button>
                     </div>
                 );
             }
@@ -1599,13 +1720,6 @@
                                                 </button>
                                                 <button 
                                                     className="action-btn-minimal" 
-                                                    onClick={() => openNoteModal(exIdx, sIdx)}
-                                                    title="Add note"
-                                                >
-                                                    <Icons.Note />
-                                                </button>
-                                                <button 
-                                                    className="action-btn-minimal" 
                                                     style={{color:'var(--danger)'}} 
                                                     onClick={() => removeSet(exIdx, sIdx)}
                                                     title="Remove set"
@@ -1613,15 +1727,28 @@
                                                     <Icons.Close/>
                                                 </button>
                                             </div>
-                                            {set.note && (
-                                                <div style={{fontSize:'11px', color:'var(--text-tertiary)', marginLeft:'50px', fontStyle:'italic', marginTop:'-8px', marginBottom:'8px'}}>
-                                                    📝 {set.note}
-                                                </div>
-                                            )}
                                         </div>
                                     );
                                 })}
                                 <button className="add-set-btn" onClick={() => addSet(exIdx)}>+ Add Set</button>
+                                
+                                {/* Exercise Notes */}
+                                <div style={{marginTop: '12px'}}>
+                                    <textarea
+                                        placeholder="Exercise notes (e.g., 'felt strong today', 'lower back tight')..."
+                                        value={workoutNotes[exIdx] || ''}
+                                        onChange={(e) => {
+                                            const newNotes = {...workoutNotes};
+                                            newNotes[exIdx] = e.target.value;
+                                            setWorkoutNotes(newNotes);
+                                        }}
+                                        style={{
+                                            minHeight: '60px',
+                                            fontSize: '13px',
+                                            resize: 'vertical'
+                                        }}
+                                    />
+                                </div>
                             </div>
                         );
                     })}
@@ -1639,26 +1766,6 @@
                                 <span className="timer-mod" onClick={() => { setRest(rest + 30); haptic('light'); }}>+30</span>
                             </div>
                         </div>
-                    )}
-                    
-                    {noteModal && (
-                        <>
-                            <div className="modal-backdrop" onClick={() => setNoteModal(null)} />
-                            <div className="note-modal">
-                                <h3 style={{marginBottom:'15px'}}>Set Note</h3>
-                                <textarea 
-                                    value={noteText}
-                                    onChange={e => setNoteText(e.target.value)}
-                                    placeholder="Add notes about this set (e.g., 'felt easy', 'lower back tight')..."
-                                    style={{marginBottom:'15px', minHeight:'100px'}}
-                                    autoFocus
-                                />
-                                <div style={{display:'flex', gap:'10px'}}>
-                                    <button className="btn btn-primary" onClick={saveNote}>Save Note</button>
-                                    <button className="btn btn-secondary" onClick={() => setNoteModal(null)}>Cancel</button>
-                                </div>
-                            </div>
-                        </>
                     )}
                     
                     {addExerciseModal && (
@@ -2042,6 +2149,11 @@
                                                     <div style={{fontSize:'13px', color:'var(--text-secondary)', marginTop:'4px'}}>
                                                         {setsSummary}
                                                     </div>
+                                                    {ex.note && (
+                                                        <div style={{fontSize:'12px', color:'var(--text-tertiary)', marginTop:'4px', fontStyle:'italic'}}>
+                                                            Note: {ex.note}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             );
                                         })}

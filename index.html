@@ -595,7 +595,7 @@
                         <Header view={view} setView={setView} setSelectedDay={setSelectedDay} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
                         <div className="container">
                             {view === 'home' && <Home setView={setView} workoutLog={workoutLog} customWorkouts={customWorkouts} />}
-                            {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} customWorkouts={customWorkouts} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} personalRecords={personalRecords} setPersonalRecords={setPersonalRecords} />}
+                            {view === 'workout' && <Workout selectedDay={selectedDay} setSelectedDay={setSelectedDay} customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} workoutLog={workoutLog} setWorkoutLog={setWorkoutLog} personalRecords={personalRecords} setPersonalRecords={setPersonalRecords} />}
                             {view === 'stats' && <Stats workoutLog={workoutLog} personalRecords={personalRecords} customWorkouts={customWorkouts} />}
                             {view === 'manage' && <Manage customWorkouts={customWorkouts} setCustomWorkouts={setCustomWorkouts} measurements={measurements} setMeasurements={setMeasurements} workoutLog={workoutLog} />}
                             {view === 'history' && <History workoutLog={workoutLog} customWorkouts={customWorkouts} deleteWorkout={deleteWorkout} />}
@@ -725,6 +725,20 @@
                 if (dir === 1 && idx < exs.length - 1) { [exs[idx], exs[idx+1]] = [exs[idx+1], exs[idx]]; }
                 setCustomWorkouts(n);
                 haptic('light');
+            };
+            
+            const moveDay = (fromIdx, toIdx) => {
+                const days = Object.keys(customWorkouts);
+                const [movedDay] = days.splice(fromIdx, 1);
+                days.splice(toIdx, 0, movedDay);
+                
+                const reordered = {};
+                days.forEach(day => {
+                    reordered[day] = customWorkouts[day];
+                });
+                setCustomWorkouts(reordered);
+                haptic('light');
+                showToast('Day order updated', 'success');
             };
             
             const deleteEx = (day, idx) => { 
@@ -862,15 +876,36 @@
 
                     <div className="card">
                         <h3>Schedule Editor</h3>
-                        {Object.keys(customWorkouts).map(d => (
-                            <div key={d} style={{display:'flex', justifyContent:'space-between', padding:'10px 0', borderBottom:'1px solid var(--border-color)'}}>
-                                <span style={{fontWeight:'bold', textTransform:'capitalize', cursor:'pointer'}} onClick={() => setViewDay(d)}>{d}</span>
-                                <div style={{display:'flex', gap:'10px'}}>
-                                    <button className="action-btn-minimal" onClick={() => setViewDay(d)}><Icons.Edit/></button>
-                                    <button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteDay(d)}><Icons.Trash/></button>
+                        {Object.keys(customWorkouts).map((d, idx) => {
+                            const days = Object.keys(customWorkouts);
+                            return (
+                                <div key={d} style={{display:'flex', justifyContent:'space-between', padding:'10px 0', borderBottom:'1px solid var(--border-color)', alignItems:'center'}}>
+                                    <span style={{fontWeight:'bold', textTransform:'capitalize', cursor:'pointer', flex: 1}} onClick={() => setViewDay(d)}>{d}</span>
+                                    <div style={{display:'flex', gap:'8px', alignItems:'center'}}>
+                                        <button 
+                                            className="autofill-btn" 
+                                            onClick={() => moveDay(idx, idx - 1)}
+                                            style={{opacity: idx === 0 ? 0.3 : 1}}
+                                            disabled={idx === 0}
+                                            title="Move up"
+                                        >
+                                            <Icons.Up/>
+                                        </button>
+                                        <button 
+                                            className="autofill-btn" 
+                                            onClick={() => moveDay(idx, idx + 1)}
+                                            style={{opacity: idx === days.length - 1 ? 0.3 : 1}}
+                                            disabled={idx === days.length - 1}
+                                            title="Move down"
+                                        >
+                                            <Icons.Down/>
+                                        </button>
+                                        <button className="action-btn-minimal" onClick={() => setViewDay(d)} title="Edit"><Icons.Edit/></button>
+                                        <button className="action-btn-minimal" style={{color:'var(--danger)'}} onClick={() => deleteDay(d)} title="Delete"><Icons.Trash/></button>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                         <div style={{marginTop:'20px', display:'flex', gap:'10px'}}>
                             <input placeholder="New Day Name" value={newDay} onChange={e => setNewDay(e.target.value)} />
                             <button className="btn btn-success" style={{width:'auto'}} onClick={addDay}>Add</button>
@@ -900,7 +935,7 @@
             );
         }
 
-        function Workout({ selectedDay, setSelectedDay, customWorkouts, workoutLog, setWorkoutLog, personalRecords, setPersonalRecords }) {
+        function Workout({ selectedDay, setSelectedDay, customWorkouts, setCustomWorkouts, workoutLog, setWorkoutLog, personalRecords, setPersonalRecords }) {
             const { showToast } = React.useContext(ToastContext);
             const [sets, setSets] = useState([]);
             const [rest, setRest] = useState(0);
@@ -912,6 +947,9 @@
             const [noteModal, setNoteModal] = useState(null);
             const [noteText, setNoteText] = useState('');
             const [completedSets, setCompletedSets] = useState({});
+            const [draggedDay, setDraggedDay] = useState(null);
+            const [addExerciseModal, setAddExerciseModal] = useState(false);
+            const [newExerciseName, setNewExerciseName] = useState('');
 
             // Get history for an exercise/set
             const getHistory = (exName, setIndex) => {
@@ -1021,6 +1059,40 @@
                 haptic('light');
             };
 
+            const addExerciseToWorkout = () => {
+                if (!newExerciseName.trim()) return;
+                const newSets = [...sets];
+                newSets.push({
+                    name: newExerciseName.trim(),
+                    logs: Array(3).fill().map(() => ({ reps: '', weight: '', note: '' }))
+                });
+                setSets(newSets);
+                setNewExerciseName('');
+                setAddExerciseModal(false);
+                showToast('Exercise added', 'success');
+                haptic('medium');
+            };
+
+            const removeExercise = (exIdx) => {
+                if (confirm('Remove this exercise from workout?')) {
+                    const newSets = [...sets];
+                    newSets.splice(exIdx, 1);
+                    setSets(newSets);
+                    showToast('Exercise removed', 'success');
+                    haptic('medium');
+                }
+            };
+
+            const moveExercise = (exIdx, direction) => {
+                const newSets = [...sets];
+                const targetIdx = exIdx + direction;
+                if (targetIdx < 0 || targetIdx >= newSets.length) return;
+                
+                [newSets[exIdx], newSets[targetIdx]] = [newSets[targetIdx], newSets[exIdx]];
+                setSets(newSets);
+                haptic('light');
+            };
+
             const openNoteModal = (exIdx, setIdx) => {
                 setNoteModal({ exIdx, setIdx });
                 setNoteText(sets[exIdx].logs[setIdx].note || '');
@@ -1038,8 +1110,40 @@
                 }
             };
 
+            // Auto-save workout session to prevent data loss
+            useEffect(() => {
+                if (selectedDay && sets.length > 0) {
+                    const sessionData = {
+                        day: selectedDay,
+                        sets: sets,
+                        elapsed: elapsed,
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem('active-workout-session', JSON.stringify(sessionData));
+                }
+            }, [sets, elapsed, selectedDay]);
+
+            // Restore previous session or initialize new workout
             useEffect(() => {
                 if (selectedDay && customWorkouts[selectedDay]) {
+                    // Try to restore saved session
+                    const saved = localStorage.getItem('active-workout-session');
+                    if (saved) {
+                        try {
+                            const sessionData = JSON.parse(saved);
+                            // Only restore if it's the same day and within last 8 hours
+                            if (sessionData.day === selectedDay && (Date.now() - sessionData.timestamp) < 8 * 60 * 60 * 1000) {
+                                setSets(sessionData.sets);
+                                showToast('Restored previous session', 'info');
+                                haptic('light');
+                                return;
+                            }
+                        } catch (e) {
+                            console.error('Failed to restore session:', e);
+                        }
+                    }
+                    
+                    // Initialize new workout
                     setSets(customWorkouts[selectedDay].exercises.map(ex => ({
                         name: ex.name,
                         logs: Array(ex.sets || 3).fill().map(() => ({ reps: '', weight: '', note: '' }))
@@ -1092,6 +1196,9 @@
                     completed: true 
                 }});
                 
+                // Clear autosaved session
+                localStorage.removeItem('active-workout-session');
+                
                 if (hitPr) {
                     confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
                     haptic('success');
@@ -1136,20 +1243,71 @@
                 }
             };
 
-            if (!selectedDay) return (
-                <div>
-                    <h2 style={{marginBottom:'20px'}}>Select Workout</h2>
-                    {Object.entries(customWorkouts).map(([k, v]) => (
-                        <div key={k} className="day-card" onClick={() => { setSelectedDay(k); haptic('medium'); }}>
-                            <div>
-                                <div style={{fontWeight:'700', fontSize:'16px', textTransform:'capitalize', marginBottom:'4px'}}>{k}</div>
-                                <div style={{fontSize:'13px', color:'var(--text-secondary)'}}>{v.name}</div>
-                            </div>
-                            <Icons.ChevronRight />
+            if (!selectedDay) {
+                const workoutDays = Object.keys(customWorkouts);
+                const [reorderMode, setReorderMode] = useState(false);
+                
+                const moveDay = (fromIdx, toIdx) => {
+                    const days = Object.keys(customWorkouts);
+                    const [movedDay] = days.splice(fromIdx, 1);
+                    days.splice(toIdx, 0, movedDay);
+                    
+                    const reordered = {};
+                    days.forEach(day => {
+                        reordered[day] = customWorkouts[day];
+                    });
+                    setCustomWorkouts(reordered);
+                    haptic('light');
+                };
+                
+                return (
+                    <div>
+                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'20px'}}>
+                            <h2 style={{margin:0}}>Select Workout</h2>
+                            <button 
+                                className="btn btn-secondary" 
+                                style={{width:'auto', padding:'8px 16px', margin:0, fontSize:'14px'}}
+                                onClick={() => { setReorderMode(!reorderMode); haptic('light'); }}
+                            >
+                                {reorderMode ? '✓ Done' : '☰ Reorder'}
+                            </button>
                         </div>
-                    ))}
-                </div>
-            );
+                        {workoutDays.map((k, idx) => {
+                            const v = customWorkouts[k];
+                            return (
+                                <div key={k} className="day-card" onClick={() => { if (!reorderMode) { setSelectedDay(k); haptic('medium'); } }}>
+                                    <div style={{flex: 1}}>
+                                        <div style={{fontWeight:'700', fontSize:'16px', textTransform:'capitalize', marginBottom:'4px'}}>{k}</div>
+                                        <div style={{fontSize:'13px', color:'var(--text-secondary)'}}>{v.name}</div>
+                                    </div>
+                                    {reorderMode ? (
+                                        <div style={{display:'flex', gap:'8px'}}>
+                                            <button 
+                                                className="icon-btn" 
+                                                style={{background:'var(--primary)', opacity: idx === 0 ? 0.3 : 1}}
+                                                onClick={(e) => { e.stopPropagation(); if (idx > 0) moveDay(idx, idx - 1); }}
+                                                disabled={idx === 0}
+                                            >
+                                                <Icons.Up />
+                                            </button>
+                                            <button 
+                                                className="icon-btn" 
+                                                style={{background:'var(--primary)', opacity: idx === workoutDays.length - 1 ? 0.3 : 1}}
+                                                onClick={(e) => { e.stopPropagation(); if (idx < workoutDays.length - 1) moveDay(idx, idx + 1); }}
+                                                disabled={idx === workoutDays.length - 1}
+                                            >
+                                                <Icons.Down />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <Icons.ChevronRight />
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                );
+            }
 
             const plates = calculatePlates(plateCalc);
 
@@ -1212,9 +1370,31 @@
                                     </div>
                                 )}
                                 
-                                <div style={{display:'flex', justifyContent:'space-between', marginBottom:'10px', alignItems:'center'}}>
-                                    <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
-                                        <h3 style={{margin:0}}>{ex.name}</h3>
+                                <div style={{display:'flex', justifyContent:'space-between', marginBottom:'10px', alignItems:'center', gap:'8px'}}>
+                                    <div style={{display:'flex', alignItems:'center', gap:'8px', flex: 1, minWidth: 0}}>
+                                        <div style={{display:'flex', flexDirection:'column', gap:'2px'}}>
+                                            <button 
+                                                className="autofill-btn" 
+                                                onClick={() => moveExercise(exIdx, -1)}
+                                                style={{opacity: exIdx === 0 ? 0.3 : 1, padding:'2px'}}
+                                                disabled={exIdx === 0}
+                                                title="Move up"
+                                            >
+                                                <Icons.Up/>
+                                            </button>
+                                            <button 
+                                                className="autofill-btn" 
+                                                onClick={() => moveExercise(exIdx, 1)}
+                                                style={{opacity: exIdx === sets.length - 1 ? 0.3 : 1, padding:'2px'}}
+                                                disabled={exIdx === sets.length - 1}
+                                                title="Move down"
+                                            >
+                                                <Icons.Down/>
+                                            </button>
+                                        </div>
+                                        <div style={{flex: 1, minWidth: 0}}>
+                                            <h3 style={{margin:0, wordBreak:'break-word'}}>{ex.name}</h3>
+                                        </div>
                                         {trend && (
                                             <span className={`trend-indicator trend-${trend}`} title={`Trend: ${trend}`}>
                                                 {trend === 'up' && '↗️'}
@@ -1222,6 +1402,8 @@
                                                 {trend === 'same' && '➡️'}
                                             </span>
                                         )}
+                                    </div>
+                                    <div style={{display:'flex', gap:'4px', flexShrink: 0}}>
                                         <button 
                                             className="action-btn-minimal" 
                                             style={{color: 'orange'}} 
@@ -1230,14 +1412,22 @@
                                         >
                                             <Icons.Warmup/>
                                         </button>
+                                        <button 
+                                            className="action-btn-minimal" 
+                                            onClick={() => setExpandedEx({...expandedEx, [exIdx]: !expandedEx[exIdx]})}
+                                            title="Show description"
+                                        >
+                                            {expandedEx[exIdx] ? '−' : '?'}
+                                        </button>
+                                        <button 
+                                            className="action-btn-minimal" 
+                                            style={{color:'var(--danger)'}}
+                                            onClick={() => removeExercise(exIdx)}
+                                            title="Remove exercise"
+                                        >
+                                            <Icons.Trash/>
+                                        </button>
                                     </div>
-                                    <button 
-                                        className="action-btn-minimal" 
-                                        onClick={() => setExpandedEx({...expandedEx, [exIdx]: !expandedEx[exIdx]})}
-                                        title="Show description"
-                                    >
-                                        {expandedEx[exIdx] ? '−' : '?'}
-                                    </button>
                                 </div>
                                 
                                 {expandedEx[exIdx] && customWorkouts[selectedDay].exercises[exIdx] && (
@@ -1331,6 +1521,9 @@
                         );
                     })}
                     
+                    <button className="btn btn-secondary" onClick={() => { setAddExerciseModal(true); haptic('light'); }}>
+                        <Icons.Plus /> Add Exercise
+                    </button>
                     <button className="btn btn-success" onClick={finish}>Complete Workout</button>
                     
                     {rest > 0 && (
@@ -1358,6 +1551,28 @@
                                 <div style={{display:'flex', gap:'10px'}}>
                                     <button className="btn btn-primary" onClick={saveNote}>Save Note</button>
                                     <button className="btn btn-secondary" onClick={() => setNoteModal(null)}>Cancel</button>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    
+                    {addExerciseModal && (
+                        <>
+                            <div className="modal-backdrop" onClick={() => setAddExerciseModal(false)} />
+                            <div className="note-modal">
+                                <h3 style={{marginBottom:'15px'}}>Add Exercise</h3>
+                                <input 
+                                    type="text"
+                                    value={newExerciseName}
+                                    onChange={e => setNewExerciseName(e.target.value)}
+                                    placeholder="Exercise name (e.g., Bicep Curls)"
+                                    style={{marginBottom:'15px'}}
+                                    autoFocus
+                                    onKeyPress={e => { if (e.key === 'Enter') addExerciseToWorkout(); }}
+                                />
+                                <div style={{display:'flex', gap:'10px'}}>
+                                    <button className="btn btn-primary" onClick={addExerciseToWorkout}>Add Exercise</button>
+                                    <button className="btn btn-secondary" onClick={() => { setAddExerciseModal(false); setNewExerciseName(''); }}>Cancel</button>
                                 </div>
                             </div>
                         </>

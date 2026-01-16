@@ -1,0 +1,36 @@
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS files
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Local development
+.env
+.env.local
+.env.*.local
+
+# Build artifacts (if we ever add a build step)
+dist/
+build/
+
+# Package manager files (not needed for single-file app, but good practice)
+node_modules/
+package-lock.json
+yarn.lock

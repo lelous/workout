@@ -950,6 +950,7 @@
             const [draggedDay, setDraggedDay] = useState(null);
             const [addExerciseModal, setAddExerciseModal] = useState(false);
             const [newExerciseName, setNewExerciseName] = useState('');
+            const [reorderMode, setReorderMode] = useState(false);
 
             // Get history for an exercise/set
             const getHistory = (exName, setIndex) => {
@@ -1245,7 +1246,6 @@
 
             if (!selectedDay) {
                 const workoutDays = Object.keys(customWorkouts);
-                const [reorderMode, setReorderMode] = useState(false);
                 
                 const moveDay = (fromIdx, toIdx) => {
                     const days = Object.keys(customWorkouts);
